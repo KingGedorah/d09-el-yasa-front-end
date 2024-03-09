@@ -1,10 +1,13 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
+import fetchVerse from '../api/ayatquran';
 
 const AyatQuran = () => {
   const [verse, setVerse] = useState({});
   const [loading, setLoading] = useState(true);
-  const [surahNumber, setSurahNumber] = useState(null); // State untuk menyimpan nomor surat
-  // gaada API nama surat bjirrr jadi bikin pake hashmap aja wkwkwk
+  const [surahNumber, setSurahNumber] = useState(null);
+  // Object containing the names of surahs
   const surahNames = {
     "1": "Al-Fatihah",
     "2": "Al-Baqarah",
@@ -123,23 +126,18 @@ const AyatQuran = () => {
   };
 
   useEffect(() => {
-    const fetchVerse = async () => {
+    const fetchData = async () => {
       try {
-        const surahNumberRandom = Math.floor(Math.random() * 114) + 1; // Nomor surat secara acak antara 1 dan 114
-        setSurahNumber(surahNumberRandom); // Simpan nomor surat di dalam state
-        const response = await fetch(`https://al-quran-8d642.firebaseio.com/surat/${surahNumberRandom}.json?print=pretty`);
-        const data = await response.json();
-        const randomIndex = Math.floor(Math.random() * data.length);
-        const randomVerse = data[randomIndex];
+        const randomVerse = await fetchVerse();
         setVerse(randomVerse);
+        setSurahNumber(randomVerse.surahNumber); // Set the surah number
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching Quran verse:', error);
         setLoading(false);
       }
     };
 
-    fetchVerse();
+    fetchData();
   }, []);
 
   return (
