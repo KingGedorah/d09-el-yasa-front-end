@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { getAllArticles } from '../api/artikel';
 import ArticleImage from '../artikelimage/page'; // Import the modified ArticleImage component
+import '../styles/tailwind.css';
+
 
 const Page = () => {
   const [articles, setArticles] = useState([]);
@@ -25,43 +27,29 @@ const Page = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Articles</h1>
+    <div className="container mx-auto">
+      <h1 className="text-3xl font-bold mb-8">Articles</h1>
       {loading && <div>Loading...</div>}
       {error && <div>Error: {error.message}</div>}
       {!loading && !error && articles.length > 0 && (
-        <div className="card-container">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {articles.map(article => (
-            <div key={article.idArtikel} className="card">
-              <h2>{article.judulArtikel}</h2>
-              <p>{article.isiArtikel}</p>
+            <div key={article.idArtikel} className="border border-gray-300 rounded p-4">
+              <h2 className="text-xl font-bold mb-2">{article.judulArtikel}</h2>
+              <p className="text-gray-700">{article.isiArtikel}</p>
               {/* Check if article has image */}
               {article.imageArtikel ? (
                 <ArticleImage idArtikel={article.idArtikel} />
               ) : (
                 <div>
                   <p>Artikel doesn't have an image</p>
-                  <p>Image not found</p> {/* New line */}
+                  <p>Image not found</p>
                 </div>
               )}
             </div>
           ))}
         </div>
       )}
-      <style jsx>{`
-        .card-container {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-        }
-        .card {
-          width: 300px;
-          border: 1px solid #ccc;
-          border-radius: 8px;
-          padding: 16px;
-          margin-bottom: 16px;
-        }
-      `}</style>
     </div>
   );
 };
