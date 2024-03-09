@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 const AyatQuran = () => {
   const [verse, setVerse] = useState({});
   const [loading, setLoading] = useState(true);
+  const [surahNumber, setSurahNumber] = useState(null); // State untuk menyimpan nomor surat
   // gaada API nama surat bjirrr jadi bikin pake hashmap aja wkwkwk
   const surahNames = {
     "1": "Al-Fatihah",
@@ -120,12 +121,13 @@ const AyatQuran = () => {
     "113": "Al-Falaq",
     "114": "An-Nas",
   };
-  
 
   useEffect(() => {
     const fetchVerse = async () => {
       try {
-        const response = await fetch('https://al-quran-8d642.firebaseio.com/surat/1.json?print=pretty');
+        const surahNumberRandom = Math.floor(Math.random() * 114) + 1; // Nomor surat secara acak antara 1 dan 114
+        setSurahNumber(surahNumberRandom); // Simpan nomor surat di dalam state
+        const response = await fetch(`https://al-quran-8d642.firebaseio.com/surat/${surahNumberRandom}.json?print=pretty`);
         const data = await response.json();
         const randomIndex = Math.floor(Math.random() * data.length);
         const randomVerse = data[randomIndex];
@@ -148,7 +150,7 @@ const AyatQuran = () => {
         <div>
           <p className="text-right text-3xl mb-3">{verse.ar}</p>
           <p className='italic'>{verse.id}</p>
-          <p className='text-right'>{`${surahNames[verse.nomor]} - Ayat ${verse.nomor}`}</p>
+          {surahNumber && <p className='text-right'>{`${surahNames[surahNumber]} - Ayat ${verse.nomor}`}</p>}
         </div>
       )}
     </div>
