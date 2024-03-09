@@ -1,83 +1,87 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Sidebar = () => {
+  const [todaySchedule, setTodaySchedule] = useState(null);
+  const [todayDate, setTodayDate] = useState('');
+
+  useEffect(() => {
+    // Mendapatkan tanggal hari ini dalam format "DD MMMM YYYY" (misal: 10 Maret 2024)
+    const currentDate = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = currentDate.toLocaleDateString('id-ID', options);
+    setTodayDate(formattedDate);
+
+    // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+    const todayDateISO = currentDate.toISOString().split('T')[0];
+
+    // Mendapatkan data jadwal sholat dari API
+    fetch('https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master/adzan/jakartatimur/2024/03.json')
+      .then(response => response.json())
+      .then(data => {
+        // Cari data jadwal sholat untuk hari ini
+        const todayData = data.find(schedule => schedule.tanggal === todayDateISO);
+        setTodaySchedule(todayData);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
   return (
-
-            <div class="w-full lg:w-1/3">
-                <div class="bg-gray-200 rounded-lg p-4">
-					<button class="bg-blue-500 text-white py-2 px-4 rounded-md mb-4 block mx-auto">Tambah Post</button>
-
-                    <div class="mb-4">
-                        <h2 class="text-lg font-semibold mb-2">Jadwal Sholat Hari Ini</h2>
-                        <table class="w-full">
-                            <thead>
-                                <tr>
-                                    <th class="border border-gray-300 px-4 py-2">Waktu</th>
-                                    <th class="border border-gray-300 px-4 py-2">Sholat</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border border-gray-300 px-4 py-2">04:50</td>
-                                    <td class="border border-gray-300 px-4 py-2">Subuh</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-gray-300 px-4 py-2">12:30</td>
-                                    <td class="border border-gray-300 px-4 py-2">Dzuhur</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-gray-300 px-4 py-2">15:00</td>
-                                    <td class="border border-gray-300 px-4 py-2">Ashar</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-gray-300 px-4 py-2">17:45</td>
-                                    <td class="border border-gray-300 px-4 py-2">Maghrib</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-gray-300 px-4 py-2">19:00</td>
-                                    <td class="border border-gray-300 px-4 py-2">Isya</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold mb-2">Kalender</h2>
-        
-                        <div class="flex flex-col">
-                            <div class="flex justify-between mb-2">
-                                <button class="px-1">&lt;</button>
-                                <h3 class="text-lg font-semibold">November 2024</h3>
-                                <button class="px-1">&gt;</button>
-                            </div>
-                            <table class="table-auto">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2">M</th>
-                                        <th class="px-4 py-2">T</th>
-                                        <th class="px-4 py-2">W</th>
-                                        <th class="px-4 py-2">T</th>
-                                        <th class="px-4 py-2">F</th>
-                                        <th class="px-4 py-2">S</th>
-                                        <th class="px-4 py-2">S</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border px-4 py-2">1</td>
-                                        <td class="border px-4 py-2">2</td>
-                                        <td class="border px-4 py-2">3</td>
-                                        <td class="border px-4 py-2">4</td>
-                                        <td class="border px-4 py-2">5</td>
-                                        <td class="border px-4 py-2">6</td>
-                                        <td class="border px-4 py-2">7</td>
-                                    </tr>
-                               
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div className="w-full lg:w-1/3">
+      <div className="bg-gray-200 rounded-lg p-4">
+        <h2 className="text-lg font-semibold mb-2 underline">Jadwal Sholat Hari Ini</h2>
+        <h3 className="text-base font-normal mb-2">{todayDate && todayDate}</h3>
+        {todaySchedule && (
+          <div className="mb-4">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className="border border-gray-300 px-4 py-2">Waktu</th>
+                  <th className="border border-gray-300 px-4 py-2">Sholat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.imsyak}</td>
+                  <td className="border border-gray-300 px-4 py-2">Imsyak</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.shubuh}</td>
+                  <td className="border border-gray-300 px-4 py-2">Subuh</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.terbit}</td>
+                  <td className="border border-gray-300 px-4 py-2">Terbit</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.dhuha}</td>
+                  <td className="border border-gray-300 px-4 py-2">Dhuha</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.dzuhur}</td>
+                  <td className="border border-gray-300 px-4 py-2">Dzuhur</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.ashr}</td>
+                  <td className="border border-gray-300 px-4 py-2">Ashar</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.magrib}</td>
+                  <td className="border border-gray-300 px-4 py-2">Maghrib</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.isya}</td>
+                  <td className="border border-gray-300 px-4 py-2">Isya</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Kalender</h2>
+          {/* Tambahkan kode kalender di sini */}
+        </div>
+      </div>
+    </div>
   );
 };
 
