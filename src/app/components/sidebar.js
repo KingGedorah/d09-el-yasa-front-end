@@ -29,7 +29,7 @@ const Sidebar = () => {
     <div className="w-full lg:w-1/3">
       <div className="bg-gray-200 rounded-lg p-4">
         <h2 className="text-lg font-semibold mb-2 underline">Jadwal Sholat Hari Ini</h2>
-        <h3 className="text-base font-normal mb-2">{todayDate && todayDate}</h3>
+        <h3 className="text-base font-normal mb-2 text-center">{todayDate && todayDate}</h3>
         {todaySchedule && (
           <div className="mb-4">
             <table className="w-full">
