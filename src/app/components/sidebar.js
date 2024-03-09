@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import AyatQuran from './ayatquran'; 
 
 const Sidebar = () => {
   const [todaySchedule, setTodaySchedule] = useState(null);
   const [todayDate, setTodayDate] = useState('');
 
   useEffect(() => {
-    // Mendapatkan tanggal hari ini dalam format "DD MMMM YYYY" (misal: 10 Maret 2024)
+    // Mendapatkan tanggal hari ini dalam format "DD MMMM YYYY"
     const currentDate = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString('id-ID', options);
@@ -77,8 +78,8 @@ const Sidebar = () => {
           </div>
         )}
         <div>
-          <h2 className="text-lg font-semibold mb-2">Kalender</h2>
-          {/* Tambahkan kode kalender di sini */}
+          <h2 className="text-lg font-semibold mb-2 underline">Ayat Hari Ini</h2>
+          <AyatQuran />
         </div>
       </div>
     </div>
