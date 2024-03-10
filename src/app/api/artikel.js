@@ -37,3 +37,17 @@ export const fetchImageData = async (idArtikel) => {
       throw error; // Re-throw the error for handling in the component
     }
 };
+
+export const getArticleById = async (idArtikel) => {
+  try {
+    const response = await fetch(`${BASE_URL}/${idArtikel}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching article by ID:', error);
+    throw error;
+  }
+};
