@@ -68,7 +68,7 @@ const CreateArticle = () => {
 
             <div className="mb-4">
               <label htmlFor="gambar" className="block text-gray-700 font-bold mb-2">Gambar:</label>
-              <input name="gambar" className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" type="file" id="gambar" onChange={(e) => setGambar(e.target.files[0])} />
+              <input name="gambar" className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" type="file" id="gambar" onChange={(e) => setGambar(e.target.files[0])} required/>
             </div>
 
             <div className="mb-4">
