@@ -48,26 +48,38 @@ const CreateArticle = () => {
   return (
     <div>
       <Navbar />
-      <h1>Create Article</h1>
-      <form onSubmit={handleSubmit}>
+      <div class="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
+        <h1 class="text-2xl font-semibold mb-4">Buat Berita</h1>
+        <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="judulArtikel">Judul Artikel:</label>
-          <input type="text" id="judulArtikel" value={judulArtikel} onChange={(e) => setJudulArtikel(e.target.value)} />
+          <div class="mb-4">
+                <label htmlFor="judulArtikel" class="block text-gray-700 font-bold mb-2">Judul Berita</label>
+                <input type="text" id="judulArtikel" value={judulArtikel} onChange={(e) => setJudulArtikel(e.target.value)} name="judul" class="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500"/>
+          </div>
+
+          <div class="mb-4">
+          <label htmlFor="isiArtikel" class="block text-gray-700 font-bold mb-2">Isi Artikel:</label>
+          <textarea name="isi" rows="5" class="border border-gray-300 rounded-md py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiArtikel" value={isiArtikel} onChange={(e) => setIsiArtikel(e.target.value)} />
         </div>
-        <div>
-          <label htmlFor="isiArtikel">Isi Artikel:</label>
-          <textarea id="isiArtikel" value={isiArtikel} onChange={(e) => setIsiArtikel(e.target.value)} />
+
+        <div class="mb-4">
+          <label htmlFor="gambar" class="block text-gray-700 font-bold mb-2">Gambar:</label>
+          <input name="gambar" class="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" type="file" id="gambar" onChange={(e) => setGambar(e.target.files[0])} />
         </div>
-        <div>
-          <label htmlFor="gambar">Gambar:</label>
-          <input type="file" id="gambar" onChange={(e) => setGambar(e.target.files[0])} />
+        
+        <div class="mb-4">
+          <label htmlFor="kategori" class="block text-gray-700 font-bold mb-2">Kategori:</label>
+          <input class="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" type="text" id="kategori" value={kategori} onChange={(e) => setKategori(e.target.value)} />
         </div>
-        <div>
-          <label htmlFor="kategori">Kategori:</label>
-          <input type="text" id="kategori" value={kategori} onChange={(e) => setKategori(e.target.value)} />
+        <div class="flex justify-center">
+          <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Submit</button>
         </div>
-        <button type="submit">Submit</button>
+        
+        </div>
       </form>
+      </div>
+      
+      
       {isSuccess && (
         <div className="popup success">
           <p>Artikel berhasil dibuat!</p>
