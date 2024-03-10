@@ -46,10 +46,12 @@ const ArtikelList = () => {
                       <img src="https://via.placeholder.com/600x400" alt="Placeholder" className="w-full h-48 object-cover" />
                     )}
                     <Link href={`/artikel/${article.idArtikel}`} passHref>
-                      <h2>{article.judulArtikel}</h2>
+                      <h2 className='text-lg text-bold mb-4 mt-4'>{article.judulArtikel}</h2>
                     </Link>
                     <p className="text-gray-700">{article.isiArtikel.slice(0, 150)}...</p>
-                    <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">Baca Selengkapnya</button>
+                    <Link href={`/artikel/${article.idArtikel}`} passHref>
+                      <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">Baca Selengkapnya</button>
+                    </Link>
                   </div>
                 ))}
               </div>

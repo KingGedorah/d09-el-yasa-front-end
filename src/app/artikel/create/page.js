@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import Navbar from '../../components/navbar';
+import Footer from '../../components/footer';
 
 const CreateArticle = () => {
   const [judulArtikel, setJudulArtikel] = useState('');
@@ -45,6 +47,7 @@ const CreateArticle = () => {
 
   return (
     <div>
+      <Navbar />
       <h1>Create Article</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -77,6 +80,7 @@ const CreateArticle = () => {
           <button onClick={handleClosePopup}>Tutup</button>
         </div>
       )}
+      <Footer />
     </div>
   );
 };
