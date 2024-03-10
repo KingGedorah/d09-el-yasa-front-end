@@ -18,7 +18,6 @@ const BeritaList = () => {
     const fetchData = async () => {
       try {
         const beritasData = await getAllBeritas();
-        console.log('Beritas Data:', beritasData);
         setBeritas(beritasData.berita);
         setLoading(false);
       } catch (error) {
@@ -38,7 +37,7 @@ const BeritaList = () => {
           <div className="w-full lg:w-2/3">
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
-            {!loading && !error && beritas && beritas.length > 0 && (
+            {!loading && !error && beritas.length > 0 && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {beritas.map(berita => (
                   <div key={berita.idBerita} className="p-4">
@@ -51,7 +50,7 @@ const BeritaList = () => {
                       <h2 className='text-lg text-bold mb-4 mt-4'>{berita.judulBerita}</h2>
                     </Link>
                     <p className="text-gray-700">{berita.isiBerita.slice(0, 150)}...</p>
-                    <Link href={`/artikel/${berita.idBerita}`} passHref>
+                    <Link href={`/berita/${berita.idBerita}`} passHref>
                       <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">Baca Selengkapnya</button>
                     </Link>
                   </div>
