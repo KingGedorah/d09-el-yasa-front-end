@@ -1,6 +1,6 @@
-const BASE_URL = 'https://myjisc-berita-e694a34d5b58.herokuapp.com/api/artikel';
+const BASE_URL = 'https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita';
 
-export const getAllBerita = async () => {
+export const getAllBeritas = async () => {
   try {
     const response = await fetch(`${BASE_URL}/view-all`);
     if (!response.ok) {
@@ -38,7 +38,7 @@ export const fetchImageData = async (idBerita) => {
     }
 };
 
-export const getArticleById = async (idBerita) => {
+export const getBeritaById = async (idBerita) => {
   try {
     const response = await fetch(`${BASE_URL}/${idBerita}`);
     if (!response.ok) {
@@ -47,7 +47,7 @@ export const getArticleById = async (idBerita) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching article by ID:', error);
+    console.error('Error fetching berita by ID:', error);
     throw error;
   }
 };
