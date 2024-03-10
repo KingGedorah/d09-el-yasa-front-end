@@ -58,12 +58,12 @@ const CreateArticle = () => {
           <div>
             <div className="mb-4">
               <label htmlFor="judulArtikel" className="block text-gray-700 font-bold mb-2">Judul Berita</label>
-              <input type="text" id="judulArtikel" value={judulArtikel} onChange={(e) => setJudulArtikel(e.target.value)} name="judul" className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" />
+              <input type="text" id="judulArtikel" value={judulArtikel} onChange={(e) => setJudulArtikel(e.target.value)} name="judul" className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" required/>
             </div>
 
             <div className="mb-4">
               <label htmlFor="isiArtikel" className="block text-gray-700 font-bold mb-2">Isi Artikel:</label>
-              <textarea name="isi" rows="5" className="border border-gray-300 rounded-md py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiArtikel" value={isiArtikel} onChange={(e) => setIsiArtikel(e.target.value)} />
+              <textarea name="isi" rows="5" className="border border-gray-300 rounded-md py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiArtikel" value={isiArtikel} onChange={(e) => setIsiArtikel(e.target.value)} required />
             </div>
 
             <div className="mb-4">
