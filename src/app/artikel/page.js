@@ -7,6 +7,7 @@ import ArticleImage from '../artikelimage/page';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import Sidebar from '../components/sidebar';
+import Image from 'next/image';
 
 const ArtikelList = () => {
   const [articles, setArticles] = useState([]);
@@ -43,8 +44,8 @@ const ArtikelList = () => {
                     {article.imageArtikel ? (
                       <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
                       ) : (
-                      <img src="https://via.placeholder.com/600x400" alt="Placeholder" className="w-full h-48 object-cover" />
-                    )}
+                        <Image src="https://via.placeholder.com/600x400" width="600" height="400" objectFit="cover" alt="Placeholder" />
+                      )}
                     <Link href={`/artikel/${article.idArtikel}`} passHref>
                       <h2 className='text-lg text-bold mb-4 mt-4'>{article.judulArtikel}</h2>
                     </Link>
