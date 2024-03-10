@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { getArticleById } from '../../api/artikel';
