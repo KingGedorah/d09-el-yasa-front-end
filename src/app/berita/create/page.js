@@ -29,6 +29,7 @@ const CreateArticle = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
+
       console.log(response.data); // Tampilkan respons dari server
       setIsSuccess(true);
       // Reset semua nilai state setelah pengiriman berhasil
