@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 
 const CreateArticle = () => {
+  const router = useRouter()
   const [judulArtikel, setJudulArtikel] = useState('');
   const [isiArtikel, setIsiArtikel] = useState('');
   const [gambar, setGambar] = useState(null);
@@ -38,6 +40,8 @@ const CreateArticle = () => {
       console.error('Error creating article:', error);
       setIsError(true);
     }
+
+    router.push('/artikel');
   };
 
   const handleClosePopup = () => {
