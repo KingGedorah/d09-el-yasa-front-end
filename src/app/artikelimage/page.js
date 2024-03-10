@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchImageData } from '../api/artikel';
+import Image from 'next/image';
 
 const ArticleImage = ({ idArtikel }) => {
   const [imageData, setImageData] = useState(null);
@@ -31,7 +32,7 @@ const ArticleImage = ({ idArtikel }) => {
     return <div>Error: {error.message}</div>;
   }
 
-  return <img src={imageData} alt="Article" />;
+  return <Image src={imageData} alt="Article" width="600" height="400"/>;
 };
 
 export default ArticleImage;
