@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
+import ReactQuill from 'react-quill'; // Import ReactQuill
+import 'react-quill/dist/quill.snow.css'; // Import styles for ReactQuill
 
 const CreateBerita = () => {
   const router = useRouter()
@@ -73,9 +75,14 @@ const CreateBerita = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="isiBerita" className="block text-gray-700 font-bold mb-2">Isi Berita:</label>
-              <textarea name="isiBerita" rows="5" className="border border-gray-300 rounded-md py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiBerita" value={isiBerita} onChange={(e) => setIsiBerita(e.target.value)} required />
-            </div>
+            <label htmlFor="isiBerita" className="block text-gray-700 font-bold mb-2">Isi Berita:</label>
+            <ReactQuill
+              theme="snow"
+              value={isiBerita}
+              onChange={setIsiBerita}
+              required
+            />
+          </div>
 
             <div className="mb-4">
               <label htmlFor="gambar" className="block text-gray-700 font-bold mb-2">Gambar:</label>
