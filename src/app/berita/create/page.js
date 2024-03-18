@@ -6,12 +6,12 @@ import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 
-const CreateArticle = () => {
+const CreateBerita = () => {
   const router = useRouter()
   const [judulBerita, setJudulBerita] = useState('');
   const [isiBerita, setIsiBerita] = useState('');
   const [gambar, setGambar] = useState(null);
-  const [kategori, setKategori] = useState('');
+  const [kategori, setKategori] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -21,7 +21,9 @@ const CreateArticle = () => {
     formData.append('judulBerita', judulBerita);
     formData.append('isiBerita', isiBerita);
     formData.append('image', gambar);
-    formData.append('kategori', kategori);
+    kategori.forEach((kat) => {
+      formData.append('kategori[]', kat);
+    });
 
     try {
       const response = await axios.post('https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita/create', formData, {
@@ -36,7 +38,7 @@ const CreateArticle = () => {
       setJudulBerita('');
       setIsiBerita('');
       setGambar(null);
-      setKategori('');
+      setKategori([]);
     } catch (error) {
       console.error('Error creating article:', error);
       setIsError(true);
@@ -46,6 +48,16 @@ const CreateArticle = () => {
   const handleClosePopup = () => {
     setIsSuccess(false);
     setIsError(false);
+    router.push('/berita')
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { value } = e.target;
+    if (kategori.includes(value)) {
+      setKategori(kategori.filter((kat) => kat !== value));
+    } else {
+      setKategori([...kategori, value]);
+    }
   };
 
   return (
@@ -71,8 +83,13 @@ const CreateArticle = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="kategori" className="block text-gray-700 font-bold mb-2">Kategori:</label>
-              <input className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" type="text" id="kategori" value={kategori} onChange={(e) => setKategori(e.target.value)} />
+              <label className="block text-gray-700 font-bold mb-2">Kategori:</label>
+              <div className="flex flex-wrap">
+                <label className="mr-4 mb-2"><input type="checkbox" value="Pendidikan" checked={kategori.includes("Pendidikan")} onChange={handleCheckboxChange}/> Pendidikan</label>
+                <label className="mr-4 mb-2"><input type="checkbox" value="Teknologi" checked={kategori.includes("Teknologi")} onChange={handleCheckboxChange}/> Teknologi</label>
+                <label className="mr-4 mb-2"><input type="checkbox" value="Olahraga" checked={kategori.includes("Olahraga")} onChange={handleCheckboxChange}/> Olahraga</label>
+                <label className="mr-4 mb-2"><input type="checkbox" value="Prestasi" checked={kategori.includes("Prestasi")} onChange={handleCheckboxChange}/> Prestasi</label>
+              </div>
             </div>
             <div className="flex justify-center">
               <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Submit</button>
@@ -102,5 +119,4 @@ const CreateArticle = () => {
   );
 };
 
-export default CreateArticle;
-
+export default CreateBerita;

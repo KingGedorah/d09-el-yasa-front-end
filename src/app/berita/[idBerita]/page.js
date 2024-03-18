@@ -48,6 +48,13 @@ const BeritaDetail = ({ params }) => {
                 <div class="p-4">
                   <h2 class="text-xl font-semibold mb-2">{berita.judulBerita}</h2>
                   <p class="text-gray-700 mb-4">{berita.isiBerita}</p>
+                  {/* Menampilkan kategori artikel */}
+                  <div className="flex flex-wrap">
+                    <span className="font-semibold mr-2 mb-2">Tags:</span>
+                    {berita.kategori.map((kategori, index) => (
+                      <span key={index} className="bg-blue-500 text-white rounded-full px-2 py-1 mr-2 mb-2 text-sm">{kategori}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

@@ -41,13 +41,12 @@ const CreateArticle = () => {
       console.error('Error creating article:', error);
       setIsError(true);
     }
-
-    router.push('/artikel');
   };
 
   const handleClosePopup = () => {
     setIsSuccess(false);
     setIsError(false);
+    router.push('/artikel');
   };
 
   const handleCheckboxChange = (e) => {
