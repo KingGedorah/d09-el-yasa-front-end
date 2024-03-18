@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from 'react';
 import { getArticleById } from '../../api/artikel';
@@ -36,7 +36,7 @@ const ArtikelDetail = ({ params }) => {
           <div className="w-full lg:w-2/3">
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
-            {article && ( // Check if article is not null before rendering
+            {article && (
               <div class="bg-gray-200 rounded-lg overflow-hidden">
                 <div className="p-4">
                   {article.imageArtikel ? (
@@ -48,6 +48,13 @@ const ArtikelDetail = ({ params }) => {
                 <div class="p-4">
                   <h2 class="text-xl font-semibold mb-2">{article.judulArtikel}</h2>
                   <p class="text-gray-700 mb-4">{article.isiArtikel}</p>
+                  {/* Menampilkan kategori artikel */}
+                  <div className="flex flex-wrap">
+                    <span className="font-semibold mr-2 mb-2">Tags:</span>
+                    {article.kategori.map((kategori, index) => (
+                      <span key={index} className="bg-blue-500 text-white rounded-full px-2 py-1 mr-2 mb-2 text-sm">{kategori}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
