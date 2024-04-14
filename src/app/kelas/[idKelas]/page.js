@@ -33,27 +33,6 @@ const DetailKelas = ({ params }) => {
     fetchMapelInfo();
   }, [idKelas]);
 
-  const [guruInfo, setGuruInfo] = useState([]);
-
-  useEffect(() => {
-    const fetchGuruInfo = async () => {
-      try {
-        const guruPromises = mapelInfo.map(async (mapel) => {
-          const guruData = await KelasApi.getGuruByIdNuptk(mapel.nuptkGuruMengajar);
-          return guruData.data;
-        });
-        const guruData = await Promise.all(guruPromises);
-        setGuruInfo(guruData);
-      } catch (error) {
-        console.error('Error fetching guru info:', error);
-      }
-    };
-
-    if (mapelInfo.length > 0) {
-      fetchGuruInfo();
-    }
-  }, [mapelInfo]);
-
   return (
     <div>
       <Navbar />
@@ -80,5 +59,3 @@ const DetailKelas = ({ params }) => {
 };
 
 export default DetailKelas;
-
-
