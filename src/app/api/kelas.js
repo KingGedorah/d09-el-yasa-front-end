@@ -69,3 +69,17 @@ export const getMapelByIdMapel = async (idMapel) => {
       throw error;
     }
 };
+
+export const getMateriByIdMateri = async (idMateri) => {
+  try {
+    const response = await fetch(`${BASE_URL}/materi/${idMateri}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching Mapel by ID Mapel:', error);
+    throw error;
+  }
+}

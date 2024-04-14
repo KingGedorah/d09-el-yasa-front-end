@@ -6,7 +6,7 @@ import * as KelasApi from '../../../api/kelas';
 
 const DetailMapel = ({ params }) => {
   const { idMapel } = params;
-  const [mapelInfo, setMapelInfo] = useState({});
+  const [materiInfo, setMateriInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -14,14 +14,20 @@ const DetailMapel = ({ params }) => {
     const fetchMapelInfo = async () => {
       try {
         const mapelData = await KelasApi.getMapelByIdMapel(idMapel);
-        setMapelInfo(mapelData);
+        const materiPromises = mapelData.data.listKontenMapel.map(async (idMateri) => {
+          const materiData = await KelasApi.getMateriByIdMateri(idMateri);
+          return materiData.data;
+        })
+        const materiData = await Promise.all(materiPromises);
+        setMateriInfo(materiData);
         setLoading(false);
       } catch (error) {
         setError(error);
         setLoading(false);
       }
     };
-  
+    
+    console.log(materiInfo);
     fetchMapelInfo();
   }, [idMapel]);
 
@@ -32,19 +38,21 @@ const DetailMapel = ({ params }) => {
       {error && <p>Error: {error.message}</p>}
       {!loading && !error && (
         <div>
-          <p><strong>Nama Mapel:</strong> {mapelInfo.data.namaMapel}</p>
-          <p><strong>NUPTK Guru Mengajar:</strong> {mapelInfo.data.nuptkGuruMengajar}</p>
-          <p><strong>ID Kelas:</strong> {mapelInfo.data.idKelas}</p>
-          <p><strong>Konten Mapel:</strong></p>
-          {mapelInfo.data.listKontenMapel ? (
-            <ul>
-              {mapelInfo.data.listKontenMapel.map(kontenId => (
-                <li key={kontenId}>{kontenId}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>Tidak ada konten mapel. <button>Tambah Materi</button></p>
-          )}
+          {materiInfo.map((materi, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden mb-4">
+              <div className="p-4">
+                <h2 className="text-xl font-bold">{materi.judulKonten}</h2>
+                <h2 className="text-xl font-bold">{materi.isiKonten}</h2>
+                <h2 className="text-xl font-bold">{materi.nama_file}</h2>
+                <h2 className="text-xl font-bold">{materi.tipe_file}</h2>
+                <h2 className="text-xl font-bold">{materi.idKonten}</h2>
+
+                {/* TODO AFIQ : TOLONG DI HANDLE ini ngecek kalo nama file nya ga ada di disable aja buat nama_file, tipe_file, sama link download ini */}
+                <h2 className="text-xl font-bold">Link download : http://localhost:8083/api/kelas/{materi.fileKonten}</h2>
+                <h2 className="text-xl font-bold">{materi.materiPelajaran}</h2>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
