@@ -6,9 +6,6 @@ import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 
-// Import ReactQuill secara dinamis agar hanya dimuat saat berjalan di browser
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
 
 const CreateArticle = () => {
   const router = useRouter();

@@ -1,6 +1,35 @@
-import Head from 'next/head';
+// ./src/app/user/login/page.js
 
-export default function LoginPage() {
+"use client";
+
+import Head from 'next/head';
+import React, { useState } from 'react';
+import axios from 'axios';
+import Navbar from '../../components/navbar';
+import Footer from '../../components/footer';
+
+const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8080/api/v1/auth/authenticate', {
+        email,
+        password
+      });
+      const token = response.data.token;
+      sessionStorage.setItem('jwtToken', token);
+      console.log(token);
+      // Redirect to dashboard or some other page on successful login
+      window.location.href = '/dashboard';
+    } catch (error) {
+      setError('Invalid email or password');
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-950">
       <Head>
@@ -45,7 +74,7 @@ export default function LoginPage() {
                 Masukkan informasi akun Anda di bawah ini.
               </p>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-2">
                 <div className="space-y-1">
                   <label htmlFor="email" className="inline-block text-sm font-medium font-nunito-sans">
@@ -55,6 +84,9 @@ export default function LoginPage() {
                     className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
                     id="email"
                     placeholder="afiq.ilyasa@ui.ac.id"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    style={{ color: 'black' }}
                   />
                 </div>
 
@@ -66,6 +98,9 @@ export default function LoginPage() {
                     className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
                     id="password"
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    style={{ color: 'black' }}
                   />
                 </div>
               </div>
@@ -84,9 +119,11 @@ export default function LoginPage() {
         </div>
       </main>
       {/* Footer */}
-      <footer className="bg-gray-900 text-white text-center py-6">
+      <footer className="bg-gray-900 text-white text-center py-6 absolute bottom-0 w-full">
         <p>&copy; 2024 Jakarta Islamic School. All rights reserved.</p>
       </footer>
     </div>
   );
-}
+};
+
+export default LoginPage;
