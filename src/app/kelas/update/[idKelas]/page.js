@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import Footer from '../../../components/footer';
+import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
 
 const nuptkOptions = [
@@ -105,15 +107,24 @@ const UpdateKelasForm = ({ params }) => {
   );
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-950">
+      <Navbar />
+      <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
+      <div className="w-full max-w-sm space-y-4">
+      <div className="space-y-2">
+            <h1 className="text-3xl font-extrabold font-nunito-sans">Perbarui kelas</h1>
+            <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
+              Masukkan informasi kelas di sini.
+            </p>
+          </div>
       <form
         onSubmit={handleSubmit}
-        className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md"
+        className=""
       >
         <div className="mb-4">
           <label
             htmlFor="nama-kelas"
-            className="block text-sm font-medium text-gray-700"
+            className="inline-block text-sm font-medium"
           >
             Nama Kelas:
           </label>
@@ -123,13 +134,13 @@ const UpdateKelasForm = ({ params }) => {
             value={namaKelas}
             onChange={(e) => setNamaKelas(e.target.value)}
             required
-            className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
         <div className="mb-4">
           <label
             htmlFor="deskripsi-kelas"
-            className="block text-sm font-medium text-gray-700"
+            className="inline-block text-sm font-medium"
           >
             Deskripsi Kelas:
           </label>
@@ -138,13 +149,13 @@ const UpdateKelasForm = ({ params }) => {
             value={deskripsiKelas}
             onChange={(e) => setDeskripsiKelas(e.target.value)}
             required
-            className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           ></textarea>
         </div>
         <div className="mb-4">
           <label
             htmlFor="nuptk-wali-kelas"
-            className="block text-sm font-medium text-gray-700"
+            className="inline-block text-sm font-medium"
           >
             NUPTK Wali Kelas:
           </label>
@@ -158,7 +169,7 @@ const UpdateKelasForm = ({ params }) => {
         <div className="mb-4">
           <label
             htmlFor="nisn-siswa"
-            className="block text-sm font-medium text-gray-700"
+            className="inline-block text-sm font-medium"
           >
             Daftar Siswa:
           </label>
@@ -174,7 +185,7 @@ const UpdateKelasForm = ({ params }) => {
           type="submit"
           className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
         >
-          Update
+          Perbarui
         </button>
       </form>
       {errorPopup && (
@@ -190,6 +201,10 @@ const UpdateKelasForm = ({ params }) => {
           </div>
         </div>
       )}
+      </div>
+      
+      </div>
+     <Footer/>
     </div>
   );
 };
