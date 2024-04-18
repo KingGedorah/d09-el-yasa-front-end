@@ -1,22 +1,20 @@
 "use client";
 
 
-// pages/nilai/[userId].js
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const fetchUserScores = async (IdUser) => {
   try {
-    const response = await axios.get(`http://localhost:8080/scores/${IdUser}`);
+    const response = await axios.get(`http://localhost:8080/score/scores/${IdUser}`);
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch user scores');
   }
 };
 
-const UserIdPage = (params) => {
-const { IdUser } = params;
+const UserIdPage = ({ params }) => {
+  const { IdUser } = params;
   const [scores, setScores] = useState([]);
   const [error, setError] = useState(null);
 
@@ -36,22 +34,42 @@ const { IdUser } = params;
   }, [IdUser]);
 
   return (
-    <div>
-      <h1>User Scores</h1>
+     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <table style={{ borderCollapse: 'collapse', width: '80%', textAlign: 'center' }}>
+        <thead style={{ backgroundColor: '#f2f2f2' }}>
+          <tr>
+            <th style={{ padding: '10px', border: '1px solid #ddd', color: 'black' }}>Tipe</th>
+            <th style={{ padding: '10px', border: '1px solid #ddd', color: 'black' }}>Nilai</th>
+          </tr>
+        </thead>
+        <tbody>
+          {scores.map((score, index) => (
+            <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                <ul style={{ margin: '0', padding: '0', listStyleType: 'none', color: 'black' }}>
+                  {score.tipeNilai.map((tipe, index) => (
+                    <li key={index}>{tipe}</li>
+                  ))}
+                </ul>
+              </td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                <ul style={{ margin: '0', padding: '0', listStyleType: 'none', color: 'black' }}>
+                  {score.listNilai.map((nilai, index) => (
+                    <li key={index}>{nilai}</li>
+                  ))}
+                </ul>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       {error && <p>{error}</p>}
-      <ul>
-        {scores.map((score) => (
-          <li key={score.id}>
-            <p>Tipe: {score.tipeNilai}</p>
-            <p>Nilai: {score.listNilai}</p>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
 
 export default UserIdPage;
+
 
 // import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
