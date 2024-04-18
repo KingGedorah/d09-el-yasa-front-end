@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as KelasApi from '../../../api/kelas';
 import Layout from '@/app/components/layout';
+import { useRouter } from 'next/navigation';
 
 const CreateAbsensiForm = ({ params }) => {
     const { idKelas } = params;
@@ -11,8 +12,7 @@ const CreateAbsensiForm = ({ params }) => {
     const [tanggalAbsen, setTanggalAbsen] = useState('');
     const [keteranganAbsen, setKeteranganAbsen] = useState('');
     const [showSuccess, setShowSuccess] = useState(false);
-
-    console.log(selectedNisn);
+    const router = useRouter()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -150,6 +150,13 @@ const CreateAbsensiForm = ({ params }) => {
                                 className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg focus:outline-none"
                             >
                                 Tambahkan absensi
+                            </button>
+                            <button
+                                type='button'
+                                onClick={() => router.back()}
+                                className="w-full py-2 px-4 bg-white hover:bg-gray-100 text-red-500 border-red-500 border-[1px] rounded-lg focus:outline-none"
+                            >
+                                Batal
                             </button>
                             {showSuccess && (
                                 <p className="text-green-500 dark:text-green-400 text-center mt-2">Absensi berhasil ditambahkan!</p>

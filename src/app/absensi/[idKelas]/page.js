@@ -47,6 +47,11 @@ const AbsensiList = ({ params }) => {
             {!loading && !error && absensiList.length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className='font-semibold text-xl text-black text-center my-4'>Daftar Absensi Kelas</div>
+                <Link href={`/absensi/create/${idKelas}`} className='mx-auto'>
+                  <button className='px-14 py-3 rounded-xl text-xs border bg-[#6C80FF] text-white mx-auto'>
+                    Buat Absensi
+                  </button>
+                </Link>
                 {absensiList.map(absensi => (
                   <div key={absensi.idAbsen} className="p-4 w-full flex justify-between text-black border border-[#6C80FF] rounded-2xl">
                     <div className='flex flex-col'>
