@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import Link from 'next/link';
-import * as KelasApi from '../../../api/kelas';
-import Navbar from '../../../components/navbar';
-import Footer from '../../../components/footer';
-import Sidebar from '../../../components/sidebar';
+import Navbar from '@/app/components/navbar';
+import Footer from '@/app/components/footer';
 import Select from 'react-select';
 
 const FormCreateMapel = ({ params }) => {
@@ -16,6 +13,7 @@ const FormCreateMapel = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
 
   const nuptkOptions = [
     '6842059312456801',
@@ -24,8 +22,6 @@ const FormCreateMapel = ({ params }) => {
     '3289657140927640',
     '6152093478125036'
   ].map(option => ({ value: option, label: option }));
-
-  console.log(idKelas);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,10 +32,15 @@ const FormCreateMapel = ({ params }) => {
       });
       console.log('Response:', response);
       setShowSuccess(true);
+      setShowModal(true); // Menampilkan modal setelah sukses
     } catch (error) {
       console.error('Error:', error);
       window.alert('Periksa kembali inputan anda');
     }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -68,7 +69,7 @@ const FormCreateMapel = ({ params }) => {
           <div className="mb-4">
             <label className="inline-block text-sm font-medium" htmlFor="nuptkGuruMengajar">NUPTK Guru Mengajar:</label>
             <Select
-            className='text-sm'
+              className='text-sm'
               options={nuptkOptions}
               value={selectedNuptk}
               onChange={setSelectedNuptk}
@@ -76,14 +77,29 @@ const FormCreateMapel = ({ params }) => {
             />
           </div>
           <div className='grid place-items-center'>
-          <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 items-center">
-            Buat mata pelajaran
-          </button>
+            <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 items-center">
+              Buat mata pelajaran
+            </button>
           </div>
-          {error && <p className="text-danger mt-2">{error}</p>}
-          {showSuccess && <p className="text-success mt-2">Mapel berhasil dibuat!</p>}
         </form>
       </div>
+      {showModal && (
+        <div id="modal" className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+          <div className="bg-white max-w-xl w-full rounded-md">
+            <div className="p-3 flex items-center justify-between border-b border-b-gray-300"> 
+              <h3 className="font-semibold text-xl">
+                Berhasil :)
+              </h3>
+              <span className="modal-close cursor-pointer" onClick={closeModal}>×</span> 
+            </div>
+            <div className="p-3 border-b border-b-gray-300">
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
+                <p className="block sm:inline">Mapel berhasil dibuat! Kembali ke <a className="font-bold" href="#">halaman kelas</a>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
       <Footer />
     </div>
