@@ -6,12 +6,13 @@ import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 
+
 const CreateArticle = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [judulArtikel, setJudulArtikel] = useState('');
   const [isiArtikel, setIsiArtikel] = useState('');
   const [gambar, setGambar] = useState(null);
-  const [kategori, setKategori] = useState('');
+  const [selectedKategori, setSelectedKategori] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -21,7 +22,9 @@ const CreateArticle = () => {
     formData.append('judulArtikel', judulArtikel);
     formData.append('isiArtikel', isiArtikel);
     formData.append('image', gambar);
-    formData.append('kategori', kategori);
+    selectedKategori.forEach((kat) => {
+      formData.append('kategori[]', kat);
+    });
 
     try {
       const response = await axios.post('https://myjisc-artikel-29c0ad65b512.herokuapp.com/api/artikel/create', formData, {
@@ -29,24 +32,31 @@ const CreateArticle = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(response.data); // Tampilkan respons dari server
+      console.log(response.data);
       setIsSuccess(true);
-      // Reset semua nilai state setelah pengiriman berhasil
       setJudulArtikel('');
       setIsiArtikel('');
       setGambar(null);
-      setKategori('');
+      setSelectedKategori([]);
     } catch (error) {
       console.error('Error creating article:', error);
       setIsError(true);
     }
-
-    router.push('/artikel');
   };
 
   const handleClosePopup = () => {
     setIsSuccess(false);
     setIsError(false);
+    router.push('/artikel');
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { value } = e.target;
+    if (selectedKategori.includes(value)) {
+      setSelectedKategori(selectedKategori.filter((kategori) => kategori !== value));
+    } else {
+      setSelectedKategori([...selectedKategori, value]);
+    }
   };
 
   return (
@@ -63,8 +73,9 @@ const CreateArticle = () => {
 
             <div className="mb-4">
               <label htmlFor="isiArtikel" className="block text-gray-700 font-bold mb-2">Isi Artikel:</label>
-              <textarea name="isi" rows="5" className="border border-gray-300 rounded-md py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiArtikel" value={isiArtikel} onChange={(e) => setIsiArtikel(e.target.value)} required />
+              <textarea name="isiArtikel" rows="5" className="border border-gray-300 rounded-md py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiArtikel" value={isiArtikel} onChange={(e) => setIsiArtikel(e.target.value)} required />
             </div>
+
 
             <div className="mb-4">
               <label htmlFor="gambar" className="block text-gray-700 font-bold mb-2">Gambar:</label>
@@ -72,8 +83,13 @@ const CreateArticle = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="kategori" className="block text-gray-700 font-bold mb-2">Kategori:</label>
-              <input className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" type="text" id="kategori" value={kategori} onChange={(e) => setKategori(e.target.value)} />
+              <label className="block text-gray-700 font-bold mb-2">Kategori:</label>
+              <div className="flex flex-wrap">
+                <label className="mr-4 mb-2"><input type="checkbox" value="Pendidikan" checked={selectedKategori.includes("Pendidikan")} onChange={handleCheckboxChange}/> Pendidikan</label>
+                <label className="mr-4 mb-2"><input type="checkbox" value="Teknologi" checked={selectedKategori.includes("Teknologi")} onChange={handleCheckboxChange}/> Teknologi</label>
+                <label className="mr-4 mb-2"><input type="checkbox" value="Olahraga" checked={selectedKategori.includes("Olahraga")} onChange={handleCheckboxChange}/> Olahraga</label>
+                <label className="mr-4 mb-2"><input type="checkbox" value="Prestasi" checked={selectedKategori.includes("Prestasi")} onChange={handleCheckboxChange}/> Prestasi</label>
+              </div>
             </div>
             <div className="flex justify-center">
               <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Submit</button>
