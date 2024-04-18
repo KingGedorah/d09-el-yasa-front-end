@@ -5,14 +5,14 @@ import axios from 'axios';
 import * as KelasApi from '../../../api/kelas';
 import Layout from '@/app/components/layout';
 
-const CreateAbsensiForm = ({ params }) => {
+const UpdateAbsensiForm = ({ params }) => {
     const { idKelas } = params;
     const [selectedNisn, setSelectedNisn] = useState([]);
-    const [tanggalAbsen, setTanggalAbsen] = useState('');
+    const [tanggalAbsen, setTanggalAbsen] = useState('2024-01-02');
     const [keteranganAbsen, setKeteranganAbsen] = useState('');
     const [showSuccess, setShowSuccess] = useState(false);
 
-    console.log(selectedNisn);
+    console.log(idKelas);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,12 +46,13 @@ const CreateAbsensiForm = ({ params }) => {
                     status = 'Sakit';
                 }
 
-                return `${status}`;
+                return `${value}: ${status}`;
             })
+            .join('\n');
 
         try {
             const response = await axios.post(`http://localhost:8083/api/absensi/create/${idKelas}`, {
-                tanggalAbsen: new Date(tanggalAbsen),
+                tanggalAbsen,
                 keteranganAbsen: updatedKeteranganAbsen,
             });
             console.log('Response:', response);
@@ -70,11 +71,11 @@ const CreateAbsensiForm = ({ params }) => {
 
     const handleAttendanceChange = (index, type) => {
         const updatedNisnList = [...selectedNisn];
-        console.log(updatedNisnList);
         updatedNisnList[index].attendance = {
             hadir: type === 'hadir',
             izin: type === 'izin',
             sakit: type === 'sakit',
+            absen: type === 'absen',
         };
         setSelectedNisn(updatedNisnList);
     };
@@ -101,6 +102,16 @@ const CreateAbsensiForm = ({ params }) => {
                                 />
                             </div>
                             <div className="mb-4">
+                                <label htmlFor="keteranganAbsen" className="block text-sm font-medium">Keterangan Absen:</label>
+                                <textarea
+                                    id="keteranganAbsen"
+                                    name="keteranganAbsen"
+                                    value={keteranganAbsen}
+                                    onChange={(e) => setKeteranganAbsen(e.target.value)}
+                                    className="block w-full px-3 py-2 mt-1 text-sm md:text-base text-gray-700 border rounded-lg focus:outline-none"
+                                />
+                            </div>
+                            <div className="mb-4">
                                 <table className="w-full border-collapse border border-gray-300">
                                     <thead>
                                         <tr className="bg-gray-200">
@@ -112,7 +123,7 @@ const CreateAbsensiForm = ({ params }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {selectedNisn.sort((a, b) => a.value - b.value).map((siswa, index) => (
+                                        {selectedNisn.map((siswa, index) => (
                                             <tr key={siswa.value}>
                                                 <td className="p-2 border border-gray-300">{index + 1}</td>
                                                 <td className="p-2 border border-gray-300">{siswa.value}</td>
@@ -120,7 +131,7 @@ const CreateAbsensiForm = ({ params }) => {
                                                     <input
                                                         type="radio"
                                                         name={`attendance_${index}`}
-                                                        checked={siswa.attendance?.hadir === true}
+                                                        checked={siswa.attendance === 'hadir'}
                                                         onChange={() => handleAttendanceChange(index, 'hadir')}
                                                     />
                                                 </td>
@@ -128,7 +139,7 @@ const CreateAbsensiForm = ({ params }) => {
                                                     <input
                                                         type="radio"
                                                         name={`attendance_${index}`}
-                                                        checked={siswa.attendance?.izin === true}
+                                                        checked={siswa.attendance === 'izin'}
                                                         onChange={() => handleAttendanceChange(index, 'izin')}
                                                     />
                                                 </td>
@@ -136,7 +147,7 @@ const CreateAbsensiForm = ({ params }) => {
                                                     <input
                                                         type="radio"
                                                         name={`attendance_${index}`}
-                                                        checked={siswa.attendance?.sakit === true}
+                                                        checked={siswa.attendance === 'sakit'}
                                                         onChange={() => handleAttendanceChange(index, 'sakit')}
                                                     />
                                                 </td>
@@ -162,4 +173,4 @@ const CreateAbsensiForm = ({ params }) => {
     );
 };
 
-export default CreateAbsensiForm;
+export default UpdateAbsensiForm;
