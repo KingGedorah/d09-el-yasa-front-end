@@ -2,10 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Link from 'next/link';
-import * as KelasApi from '../../../../api/kelas';
-import Footer from '../../../../components/footer';
-import Navbar from '../../../../components/navbar';
+import Navbar from '@/app/components/navbar';
+import Footer from '@/app/components/footer';
 import Select from 'react-select';
 
 const UpdateMapelForm = ({ params }) => {
@@ -15,6 +13,7 @@ const UpdateMapelForm = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
 
   const nuptkOptions = [
     '6842059312456801',
@@ -51,10 +50,15 @@ const UpdateMapelForm = ({ params }) => {
       });
       console.log('Response:', response);
       setShowSuccess(true);
+      setShowModal(true); // Menampilkan modal setelah sukses
     } catch (error) {
       console.error('Error:', error);
       window.alert('Periksa kembali inputan anda');
     }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -103,7 +107,23 @@ const UpdateMapelForm = ({ params }) => {
           )}
         </form>
       </div>
-      
+      {showModal && (
+        <div id="modal" className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+          <div className="bg-white max-w-xl w-full rounded-md">
+            <div className="p-3 flex items-center justify-between border-b border-b-gray-300"> 
+              <h3 className="font-semibold text-xl">
+                Berhasil :)
+              </h3>
+              <span className="modal-close cursor-pointer" onClick={closeModal}>×</span> 
+            </div>
+            <div className="p-3 border-b border-b-gray-300">
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
+                <p className="block sm:inline">Mata pelajaran berhasil diperbarui!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
       <Footer/>
     </div>

@@ -14,7 +14,7 @@ const CreateKelasForm = () => {
   const [selectedNisn, setSelectedNisn] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const nuptkOptions = [
+  const nuptkOptions = [ 
     '6842059312456801',
     '7932145087561420',
     '5098361274539812',
@@ -40,12 +40,8 @@ const CreateKelasForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(selectedNisn);
-    if (!selectedNuptk || !selectedNuptk.value) {
-      window.alert('NUPTK is required');
-      return;
-    }
-    if (selectedNisn.length === 0) {
-      window.alert('At least one NISN is required');
+    if (!selectedNuptk || !selectedNuptk.value || selectedNisn.length === 0) {
+      // Hanya menampilkan pesan pada modal, tidak menggunakan window.alert lagi
       return;
     }
     try {
@@ -59,8 +55,19 @@ const CreateKelasForm = () => {
       setShowSuccess(true);
     } catch (error) {
       console.error('Error:', error.response.data);
-      window.alert('Periksa kembali inputan anda');
+      // Menampilkan pesan error pada modal
+      setShowSuccess(false);
     }
+  };
+
+  const handleOpenModal = () => {
+    const modal = document.getElementById('modal');
+    modal.style.display = "flex";
+  };
+
+  const handleCloseModal = () => {
+    const modal = document.getElementById('modal');
+    modal.style.display = "none";
   };
 
   return (
@@ -105,14 +112,26 @@ const CreateKelasForm = () => {
             </div>
             <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Tambah</button>
           </form>
-          {showSuccess && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
-              <strong className="font-bold">Berhasil!</strong>
-              <span className="block sm:inline"> Kelas berhasil ditambahkan.</span>
-              <p>Kembali ke <a href="/kelas/view-all">halaman <p class="font-extrabold"></p>semua kelas.</a></p>
-            </div>
-          )}
         </div>
+
+        {showSuccess && (
+          <div id="modal" className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+            <div className="bg-white max-w-xl w-full rounded-md">
+              <div className="p-3 flex items-center justify-between border-b border-b-gray-300"> 
+                <h3 className="font-semibold text-xl">
+                  Berhasil :)
+                </h3>
+                <span className="modal-close cursor-pointer" onClick={handleCloseModal}>×</span> 
+              </div>
+              <div className="p-3 border-b border-b-gray-300">
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
+                  <p className="block sm:inline">Berhasil menambahkan kelas! Kembali ke <a className="font-bold" href="/kelas/view-all">halaman semua kelas</a>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
       <Footer />
     </div>

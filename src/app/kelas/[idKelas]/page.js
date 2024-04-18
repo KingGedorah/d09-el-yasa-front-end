@@ -1,12 +1,15 @@
 "use client";
 
+import styles from '../../components/button-n-search.css';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import * as KelasApi from '../../api/kelas';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Sidebar from '../../components/sidebar';
-import styles from '../../components/button-n-search.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const DetailKelas = ({ params }) => {
   const { idKelas } = params;
@@ -14,7 +17,7 @@ const DetailKelas = ({ params }) => {
   const [mapelInfo, setMapelInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
 
   useEffect(() => {
     const fetchMapelInfo = async () => {
@@ -37,6 +40,27 @@ const DetailKelas = ({ params }) => {
     fetchMapelInfo();
   }, [idKelas]);
 
+  // Fungsi untuk menampilkan dropdown
+  const handleShowDropdown = (index) => {
+    setShowDropdown(index);
+  };
+
+  // Fungsi untuk menyembunyikan dropdown
+  const handleHideDropdown = () => {
+    setShowDropdown(null);
+  };
+
+  // Fungsi untuk menghapus mata pelajaran
+  const handleDeleteMapel = async (mapelId) => {
+    try {
+      await axios.delete(`http://localhost:8083/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
+      // Refresh halaman setelah penghapusan berhasil
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting mapel:', error);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-950">
       <Navbar />
@@ -54,12 +78,37 @@ const DetailKelas = ({ params }) => {
             {!loading && !error && (
               <>
                 {mapelInfo.map((mapel, index) => (
-                  <div key={index} className="bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-800 mb-2">
-                    <a href={`/kelas/mapel/${mapel.idMapel}`} className="block">
-                      <h2 className="text-2xl font-semibold mb-2">{mapel.namaMapel}</h2>
-                      <img src="https://epe.brightspotcdn.com/02/ac/a5498e524778b568fea054141968/math-102023-1281244731-01.jpg" alt="Article Image" className="w-full rounded-md mb-4"/>
-                      <p className="text-gray-600 mb-4">Guru Pengajar: {mapel.nuptkGuruMengajar}</p>
-                    </a>
+                  <div key={index} className="bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-800 mb-2 relative"
+                    onMouseEnter={() => handleShowDropdown(index)} // Menampilkan dropdown saat hover
+                    onMouseLeave={handleHideDropdown} // Menyembunyikan dropdown saat keluar dari area
+                  >
+                    <div className="flex justify-between items-center">
+                      <a href={`/kelas/mapel/${mapel.idMapel}`} className="block">
+                        <h2 className="text-2xl font-semibold mb-2">{mapel.namaMapel}</h2>
+                        <img src="https://epe.brightspotcdn.com/02/ac/a5498e524778b568fea054141968/math-102023-1281244731-01.jpg" alt="Article Image" className="w-full rounded-md mb-4"/>
+                        <p className="text-gray-600 mb-4">Guru Pengajar: {mapel.nuptkGuruMengajar}</p>
+                      </a>
+                      {/* Icon gerigi untuk dropdown */}
+                      {showDropdown === index && (
+                        <div className="absolute top-0 right-0 mt-12 mr-2">
+                        <div className="bg-white dark:bg-gray-800 rounded-md shadow-md">
+                          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                            <li>
+                                <a href={`/kelas/mapel/update/${mapel.idMapel}`} className="font-bold text-blue-500 block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-900">Update</a>
+                              </li>
+                              <li>
+                                <button className="font-bold text-red-500 block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={() => handleDeleteMapel(mapel.idMapel)}>Delete</button>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+                      {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih */}
+                      <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
+                        <p className="font-bold bg-white rounded-full p-1 opacity-50">Sunting</p>
+                        <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(index)} className="ml-1" />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </>

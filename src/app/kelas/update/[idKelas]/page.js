@@ -46,6 +46,7 @@ const UpdateKelasForm = ({ params }) => {
   const [selectedNuptk, setSelectedNuptk] = useState('');
   const [errorPopup, setErrorPopup] = useState(false);
   const [selectedNisn, setSelectedNisn] = useState([]);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -79,8 +80,6 @@ const UpdateKelasForm = ({ params }) => {
     const uniqueSelectedNisn = selectedNisn.filter((value, index, self) =>
         index === self.findIndex(v => String(v.value) === String(value.value)));
 
-    console.log(uniqueSelectedNisn)
-
     try {
       const response = await axios.put(
         `http://localhost:8083/api/kelas/update/${idKelas}`,
@@ -92,6 +91,7 @@ const UpdateKelasForm = ({ params }) => {
         }
       );
       console.log('Response:', response.data);
+      setShowSuccess(true);
     } catch (error) {
       console.error('Error:', error.response.data);
     }
@@ -101,7 +101,10 @@ const UpdateKelasForm = ({ params }) => {
     setErrorPopup(false);
   };
 
-  // Filter NISN options based on selected NISN
+  const handleCloseSuccessModal = () => {
+    setShowSuccess(false);
+  };
+
   const filteredNisnOptions = nisnOptions.filter(option =>
     !selectedNisn.some(selected => selected.value === option.value)
   );
@@ -197,6 +200,23 @@ const UpdateKelasForm = ({ params }) => {
               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
             >
               Selanjutnya
+            </button>
+          </div>
+        </div>
+      )}
+      {showSuccess && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-md shadow-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Success!</h2>
+              <span className="modal-close cursor-pointer text-gray-700" onClick={handleCloseSuccessModal}>×</span>
+            </div>
+            <p className="text-lg text-gray-800 mb-4">Kelas berhasil diperbarui.</p>
+            <button
+              onClick={handleCloseSuccessModal}
+              className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+            >
+              Tutup
             </button>
           </div>
         </div>
