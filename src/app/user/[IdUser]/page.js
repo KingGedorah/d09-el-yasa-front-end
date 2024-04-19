@@ -15,7 +15,7 @@ const UserDetail = ({ params }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/user/${IdUser}`);
+        const response = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/user/${IdUser}`);
         setUser(response.data);
       } catch (error) {
         setError('User not found');
