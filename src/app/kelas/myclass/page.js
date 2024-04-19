@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import * as KelasApi from '../../api/kelas';
 import styles from '../../components/button-n-search.css';
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { redirect } from 'next/navigation';
 
 import axios from 'axios'; // Import Axios library
 import Navbar from '../../components/navbar';
@@ -22,16 +24,19 @@ const KelasByUserId = () => {
       try {
         // TODO : Parse jwt token to determine role and change the fetch method
         // For siswa
-        const idSiswa = "1"
-        const idUser = idSiswa
-        const kelasData = await KelasApi.getKelasByIdSiswa(idUser);
+        const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+        if (decodedToken) {
+            if (decodedToken.role == 'GURU') {
+                const kelasData = await KelasApi.getAllKelasDiajarByIdGuru(decodedToken.id);
 
-        // For Guru
-        // const idGuru = "123456"  
-        // const kelasData = await KelasApi.getAllKelasDiajarByIdGuru(idUser);
-
-        setKelas(kelasData.data); // Access the 'data' property from the response
-        setLoading(false);
+                setKelas(kelasData.data); // Access the 'data' property from the response
+            } else if (decodedToken.role == 'MURID'){
+              const kelasData = await KelasApi.getKelasByIdSiswa(decodedToken.id);
+              setKelas(kelasData.data);
+            }
+        } else {
+            redirect(`/user/login`)
+        }
       } catch (error) {
         setError(error);
         setLoading(false);
