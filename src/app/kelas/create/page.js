@@ -6,7 +6,7 @@ import Select from 'react-select';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
 import { redirect } from 'next/navigation'; // Import redirect from next/navigation
-import { getAllGuru, getAllMurid } from '@/app/api/user';
+import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
 
 const CreateKelasForm = () => {
   const [namaKelas, setNamaKelas] = useState('');
@@ -20,33 +20,49 @@ const CreateKelasForm = () => {
   useEffect(() => {
     const fetchNuptkOptions = async () => {
       try {
-        const data = await getAllGuru(sessionStorage.getItem('jwtToken'));
-        console.log('data guru :', data)
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllGuru(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNuptkOptions(options);
       } catch (error) {
         console.log(error);
       }
-    }
-
+    };
+  
     fetchNuptkOptions();
-  })
+  }, []);
+  
+  
 
   useEffect(() => {
     const fetchNisnOptions = async () => {
       try {
-        const data = await getAllMurid(sessionStorage.getItem('jwtToken'));
-        console.log('data siswa :', data)
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllMurid(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNisnOptions(options);
       } catch (error) {
         console.log(error);
       }
-    }
-
+    };
+  
     fetchNisnOptions();
-  })
-
+  }, []);
+  
   useEffect(() => {
     if (showSuccess) {
       setTimeout(() => {
-        redirect('http://localhost:3000/kelas/view-all');
+        redirect('/kelas/view-all');
       }, 2000);
     }
   }, [showSuccess]);
@@ -59,7 +75,7 @@ const CreateKelasForm = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8083/api/kelas/create', {
+      const response = await axios.post('https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/create', {
         namaKelas,
         deskripsiKelas,
         nuptkWaliKelas: selectedNuptk.value,
