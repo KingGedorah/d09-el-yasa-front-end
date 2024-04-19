@@ -6,6 +6,7 @@ import * as KelasApi from '../../../api/kelas';
 import Layout from '@/app/components/layout';
 import { retrieveAbsensiKelas, retrieveDetailAbsensi, updateAbsensi } from '@/app/api/absensi';
 import { useRouter } from 'next/navigation';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const UpdateAbsensiForm = ({ params }) => {
     const { idAbsen } = params;
@@ -15,6 +16,8 @@ const UpdateAbsensiForm = ({ params }) => {
     const [showSuccess, setShowSuccess] = useState(false);
     const [dataAbsensi, setDataAbsensi] = useState(undefined);
     const router = useRouter();
+    const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+
 
     useEffect(() => {
         if (!dataAbsensi?.kelas) return;
@@ -22,9 +25,9 @@ const UpdateAbsensiForm = ({ params }) => {
             try {
                 const response = await KelasApi.getKelasByIdKelas(dataAbsensi.kelas);
                 const { data } = response;
-                setSelectedNisn(data.nisnSiswa.map((nisn, index) => ({ 
-                    value: nisn, 
-                    label: nisn, 
+                setSelectedNisn(data.nisnSiswa.map((nisn, index) => ({
+                    value: nisn,
+                    label: nisn,
                     attendance: dataAbsensi.keteranganAbsen[index].toLowerCase()
                 })));
             } catch (error) {
@@ -147,12 +150,14 @@ const UpdateAbsensiForm = ({ params }) => {
                                     </tbody>
                                 </table>
                             </div>
-                            <button
-                                type="submit"
-                                className="w-full py-2 px-4 bg-[#6C80FF] hover:bg-blue-600 text-white rounded-lg focus:outline-none"
-                            >
-                                Perbaharui absensi
-                            </button>
+                            {decodedToken && decodedToken.role === "GURU" && (
+                                <button
+                                    type="submit"
+                                    className="w-full py-2 px-4 bg-[#6C80FF] hover:bg-blue-600 text-white rounded-lg focus:outline-none"
+                                >
+                                    Perbaharui absensi
+                                </button>
+                            )}
                             <button
                                 type='button'
                                 onClick={() => router.back()}
