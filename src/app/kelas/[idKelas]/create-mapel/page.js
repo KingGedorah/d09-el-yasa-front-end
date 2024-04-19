@@ -7,6 +7,7 @@ import Footer from '@/app/components/footer';
 import Select from 'react-select';
 import { getAllGuru, getUsersById } from '@/app/api/user';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import { redirect } from 'next/navigation';
 
 const FormCreateMapel = ({ params }) => {
   const { idKelas } = params;

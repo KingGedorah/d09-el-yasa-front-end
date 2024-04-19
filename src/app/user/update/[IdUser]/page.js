@@ -14,7 +14,7 @@ const UpdateUserPage = ({ params }) => {
       try {
         const token = sessionStorage.getItem('jwtToken'); // Retrieve the JWT token from sessionStorage
         console.log(token);
-        const response = await axios.get(`http://localhost:8080/api/user/${IdUser}`, {
+        const response = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/user/${IdUser}`, {
         });
         const userData = response.data;
         setFirstname(userData.firstname);
@@ -30,7 +30,7 @@ const UpdateUserPage = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8080/api/user/update/${IdUser}`, {
+      await axios.put(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/user/update/${IdUser}`, {
         firstname,
         lastname,
       });

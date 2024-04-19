@@ -6,7 +6,9 @@ import Select from 'react-select';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
-
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { getUsersById } from '@/app/api/user';
+import { redirect } from 'next/navigation';
 
 const UpdateKelasForm = ({ params }) => {
   const { idKelas } = params;
@@ -18,18 +20,6 @@ const UpdateKelasForm = ({ params }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
-
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  if (decodedToken) {
-      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
-        console.log('You have authority')
-      } else {
-        console.log('You dont have authority')
-        redirect(`/kelas/myclass`)
-      }
-  } else {
-      redirect(`/user/login`)
-  }
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
@@ -72,6 +62,36 @@ const UpdateKelasForm = ({ params }) => {
   }, []);
 
   useEffect(() => {
+    const fetchNisnUsers = async () => {
+      try {
+        const nisnUsers = [];
+        for (const nisn of data.nisnSiswa) {
+          const user = await getUsersById(nisn);
+          nisnUsers.push({ value: nisn, label: `${user.firstname} ${user.lastname}` });
+        }
+        setSelectedNisn(nisnUsers);
+      } catch (error) {
+        console.error('Error fetching NISN users:', error);
+      }
+    };
+    
+    fetchNisnUsers();
+  }, [data.nisnSiswa]);
+  
+
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  if (decodedToken) {
+      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
+        console.log('You have authority')
+      } else {
+        console.log('You dont have authority')
+        redirect(`/kelas/myclass`)
+      }
+  } else {
+      redirect(`/user/login`)
+  }
+
+  useEffect(() => {
     async function fetchData() {
       try {
         const response = await KelasApi.getKelasByIdKelas(idKelas);
@@ -79,8 +99,8 @@ const UpdateKelasForm = ({ params }) => {
 
         setNamaKelas(data.namaKelas);
         setDeskripsiKelas(data.deskripsiKelas);
-        setSelectedNuptk({ value: data.nuptkWaliKelas, label: data.nuptkWaliKelas });
-        setSelectedNisn(data.nisnSiswa.map(nisn => ({ value: nisn, label: nisn })));
+        const dataNuptk = await getUsersById(data.nuptkWaliKelas)
+        setSelectedNuptk({ value: data.nuptkWaliKelas, label: `${dataNuptk.firstname} ${dataNuptk.lastname}` });
       } catch (error) {
         console.error('Error:', error.response.data);
       }
