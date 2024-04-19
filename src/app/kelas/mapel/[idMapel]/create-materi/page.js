@@ -104,7 +104,7 @@ const FormCreateMateri = ({ params }) => {
                         </div>
                         <div className="p-3 border-b border-b-gray-300">
                             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
-                                <p className="block sm:inline">Materi berhasil dibuat! Kembali ke <a className='font-bold' href="#">halaman mata pelajaran</a>.</p>
+                                <p className="block sm:inline">Materi berhasil dibuat! Kembali ke <a className='font-bold' href={`http://localhost:3000/kelas/mapel/${idMapel}`}>halaman mata pelajaran</a>.</p>
                             </div>
                         </div>
                     </div>
