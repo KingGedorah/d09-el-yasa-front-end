@@ -6,8 +6,10 @@ import * as KelasApi from '../../../api/kelas';
 import * as AbsensiApi from '../../../api/absensi';
 import Layout from '@/app/components/layout';
 import { useRouter } from 'next/navigation';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const CreateAbsensiForm = ({ params }) => {
+    const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
     const { idKelas, idAbsensi } = params;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -60,12 +62,14 @@ const CreateAbsensiForm = ({ params }) => {
                                     </tbody>
                                 </table>
                             </div>
-                            <button
-                                onClick={() => router.push(`/absensi/update/${detailAbsen.idAbsen}`)}
-                                className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg focus:outline-none"
-                            >
-                                Update
-                            </button>
+                            {decodedToken && decodedToken.role === "GURU" && (
+                                <button
+                                    onClick={() => router.push(`/absensi/update/${detailAbsen.idAbsen}`)}
+                                    className="w-full py-2 px-4 bg-[#6C80FF] hover:bg-blue-600 text-white rounded-lg focus:outline-none"
+                                >
+                                    Update
+                                </button>
+                            )}
                             <button
                                 onClick={() => router.push(`/absensi/${idKelas}`)}
                                 className="w-full py-2 px-4 border-blue-500 border text-white rounded-lg focus:outline-none"

@@ -9,6 +9,7 @@ import Sidebar from '../../components/sidebar';
 import Image from 'next/image';
 import * as AbsensiApi from '../../api/absensi';
 import { useRouter } from 'next/navigation';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const AbsensiList = ({ params }) => {
   const { idKelas } = params;
@@ -16,17 +17,18 @@ const AbsensiList = ({ params }) => {
   const [error, setError] = useState(null);
   const [absensiList, setAbsensiList] = useState(null);
   const router = useRouter();
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const response = await AbsensiApi.retrieveAbsensiKelas(idKelas);
-            setAbsensiList(response)
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-          setLoading(false);
-        }
+      try {
+        const response = await AbsensiApi.retrieveAbsensiKelas(idKelas);
+        setAbsensiList(response)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
@@ -49,11 +51,13 @@ const AbsensiList = ({ params }) => {
             {!loading && !error && absensiList?.length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className='font-semibold text-xl text-black text-center my-4'>Daftar Absensi Kelas</div>
-                <Link href={`/absensi/create/${idKelas}`} className='mx-auto'>
-                  <button className='px-14 py-3 rounded-xl text-xs border bg-[#6C80FF] text-white mx-auto'>
-                    Buat Absensi
-                  </button>
-                </Link>
+                {decodedToken && decodedToken.role === "GURU" && (
+                  <Link href={`/absensi/create/${idKelas}`} className='mx-auto'>
+                    <button className='px-14 py-3 rounded-xl text-xs border bg-[#6C80FF] text-white mx-auto'>
+                      Buat Absensi
+                    </button>
+                  </Link>
+                )}
                 {absensiList.map(absensi => (
                   <div key={absensi.idAbsen} className="p-4 w-full flex justify-between text-black border border-[#6C80FF] rounded-2xl">
                     <div className='flex flex-col'>
@@ -70,7 +74,9 @@ const AbsensiList = ({ params }) => {
                           Detail
                         </button>
                       </Link>
-                      <button className='px-14 py-3 rounded-xl text-xs bg-[#6C80FF] text-white' onClick={() => router.push(`/absensi/update/${absensi.idAbsen}`)}>Update</button>
+                      {decodedToken && decodedToken.role === "GURU" &&
+                        <button className='px-14 py-3 rounded-xl text-xs bg-[#6C80FF] text-white' onClick={() => router.push(`/absensi/update/${absensi.idAbsen}`)}>Update</button>
+                      }
                     </div>
                   </div>
                 ))}
