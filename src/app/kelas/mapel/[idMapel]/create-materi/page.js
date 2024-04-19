@@ -5,6 +5,8 @@ import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import { getMapelByIdMapel } from '@/app/api/kelas';
+import { redirect } from 'next/navigation';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const FormCreateMateri = ({ params }) => {
     const { idMapel } = params;
@@ -20,13 +22,13 @@ const FormCreateMateri = ({ params }) => {
         const checkAuthority = async () => {
           const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
           if (decodedToken) {
-            const mapelData = await KelasApi.getMapelByIdMapel(idMapel);
+            const mapelData = await getMapelByIdMapel(idMapel);
             console.log(mapelData.data.nuptkGuruMengajar);
-            if (decodedToken.role === 'GURU' && decodedToken.id === mapelData.data.nuptkGuruMengajar) {
+            if (decodedToken.role === 'GURU') {
               console.log('You have authority');
             } else {
               console.log('You dont have authority');
-              redirect(`/kelas/${idKelas}`);
+              redirect(`/kelas/mapel/${idKelas}`);
             }
           } else {
             redirect(`/user/login`);

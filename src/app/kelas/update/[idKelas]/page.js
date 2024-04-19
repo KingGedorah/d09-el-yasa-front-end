@@ -6,7 +6,8 @@ import Select from 'react-select';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
-
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { redirect } from 'next/navigation';
 
 const UpdateKelasForm = ({ params }) => {
   const { idKelas } = params;

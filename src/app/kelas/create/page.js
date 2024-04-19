@@ -5,7 +5,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
-import { redirect } from 'next/navigation'; // Import redirect from next/navigation
+import { redirect } from 'next/navigation';
 import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
 import { parseJwt } from '@/app/utils/jwtUtils';
 
