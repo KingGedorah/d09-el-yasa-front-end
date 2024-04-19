@@ -50,12 +50,13 @@ const CreateAbsensiForm = ({ params }) => {
             })
 
         try {
-            const response = await axios.post(`http://localhost:8083/api/absensi/create/${idKelas}`, {
+            const response = await axios.post(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/absensi/create/${idKelas}`, {
                 tanggalAbsen: new Date(tanggalAbsen),
                 keteranganAbsen: updatedKeteranganAbsen,
             });
             console.log('Response:', response);
             setShowSuccess(true);
+            router.push(`/absensi/${idKelas}`)
         } catch (error) {
             console.error('Error:', error);
             window.alert('Periksa kembali inputan anda');
@@ -147,14 +148,14 @@ const CreateAbsensiForm = ({ params }) => {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg focus:outline-none"
+                                className="w-full py-2 px-4 bg-[#6C80FF]  hover:bg-blue-600 text-white rounded-lg focus:outline-none"
                             >
                                 Tambahkan absensi
                             </button>
                             <button
                                 type='button'
                                 onClick={() => router.back()}
-                                className="w-full py-2 px-4 bg-white hover:bg-gray-100 text-red-500 border-red-500 border-[1px] rounded-lg focus:outline-none"
+                                className="w-full py-2 px-4 bg-white hover:bg-gray-200 text-red-500 border-red-500 border-[1px] rounded-lg focus:outline-none"
                             >
                                 Batal
                             </button>

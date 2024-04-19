@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8083/api/absensi'
+const BASE_URL = 'https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/absensi'
 
 export const retrieveAbsensiKelas = async (idKelas) => {
     try {
@@ -28,3 +28,23 @@ export const retrieveDetailAbsensi = async (idAbsen) => {
       throw error;
     }
   };
+
+export const updateAbsensi = async (idAbsen, dataAbsensi) => {
+  try {
+    const response = await fetch(`${BASE_URL}/update/${idAbsen}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "PUT",
+      body: dataAbsensi,
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating data absensi: ", error);
+    throw error;
+  }
+}

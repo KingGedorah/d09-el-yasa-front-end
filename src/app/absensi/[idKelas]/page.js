@@ -8,12 +8,14 @@ import Footer from '../../components/footer';
 import Sidebar from '../../components/sidebar';
 import Image from 'next/image';
 import * as AbsensiApi from '../../api/absensi';
+import { useRouter } from 'next/navigation';
 
 const AbsensiList = ({ params }) => {
   const { idKelas } = params;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [absensiList, setAbsensiList] = useState(null)
+  const [absensiList, setAbsensiList] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +46,7 @@ const AbsensiList = ({ params }) => {
           <div className="w-full lg:w-2/3">
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
-            {!loading && !error && absensiList.length > 0 && (
+            {!loading && !error && absensiList?.length > 0 && (
               <div className="flex flex-col gap-4">
                 <div className='font-semibold text-xl text-black text-center my-4'>Daftar Absensi Kelas</div>
                 <Link href={`/absensi/create/${idKelas}`} className='mx-auto'>
@@ -68,7 +70,7 @@ const AbsensiList = ({ params }) => {
                           Detail
                         </button>
                       </Link>
-                      <button className='px-14 py-3 rounded-xl text-xs bg-[#6C80FF] text-white'>Update</button>
+                      <button className='px-14 py-3 rounded-xl text-xs bg-[#6C80FF] text-white' onClick={() => router.push(`/absensi/update/${absensi.idAbsen}`)}>Update</button>
                     </div>
                   </div>
                 ))}
