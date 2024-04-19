@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8083/api/kelas'
+const BASE_URL = 'https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas'
 
 export const getAllKelas = async () => {
   try {
