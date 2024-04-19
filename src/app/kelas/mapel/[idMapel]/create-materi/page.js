@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
+import { getMapelByIdMapel } from '@/app/api/kelas';
 
 const FormCreateMateri = ({ params }) => {
     const { idMapel } = params;
@@ -13,6 +14,27 @@ const FormCreateMateri = ({ params }) => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+
+
+    useEffect(() => {
+        const checkAuthority = async () => {
+          const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+          if (decodedToken) {
+            const mapelData = await KelasApi.getMapelByIdMapel(idMapel);
+            console.log(mapelData.data.nuptkGuruMengajar);
+            if (decodedToken.role === 'GURU' && decodedToken.id === mapelData.data.nuptkGuruMengajar) {
+              console.log('You have authority');
+            } else {
+              console.log('You dont have authority');
+              redirect(`/kelas/${idKelas}`);
+            }
+          } else {
+            redirect(`/user/login`);
+          }
+        };
+      
+        checkAuthority();
+    }, []);      
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,7 +49,7 @@ const FormCreateMateri = ({ params }) => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post(`http://localhost:8083/api/kelas/${idMapel}/create-materi`, formData, {
+            const response = await axios.post(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/${idMapel}/create-materi`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

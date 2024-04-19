@@ -82,7 +82,7 @@ const UpdateKelasForm = ({ params }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8083/api/kelas/update/${idKelas}`,
+        `https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/update/${idKelas}`,
         {
           namaKelas,
           deskripsiKelas,

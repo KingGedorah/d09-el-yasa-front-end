@@ -17,18 +17,37 @@ const FormCreateMapel = ({ params }) => {
   const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
   const [nuptkOptions, setNuptkOptions] = useState(null);
 
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  if (decodedToken) {
+      if (decodedToken.role == 'GURU') {
+        console.log('You have authority')
+      } else {
+        console.log('You dont have authority')
+        redirect(`/kelas/${idKelas}`)
+      }
+  } else {
+      redirect(`/user/login`)
+  }
+
   useEffect(() => {
     const fetchNuptkOptions = async () => {
       try {
-        const data = await getAllGuru(sessionStorage.getItem('jwtToken'));
-        console.log(data);
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllGuru(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNuptkOptions(options);
       } catch (error) {
         console.log(error);
       }
-    }
-  })
-
+    };
   
+    fetchNuptkOptions();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

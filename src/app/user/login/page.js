@@ -24,7 +24,7 @@ const LoginPage = () => {
       sessionStorage.setItem('jwtToken', token);
       console.log(token);
       // Redirect to dashboard or some other page on successful login
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     } catch (error) {
       setError('Invalid email or password');
     }
