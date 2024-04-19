@@ -5,7 +5,9 @@ import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Select from 'react-select';
-import { getAllGuru } from '@/app/api/user';
+import { getAllGuru, getUsersById } from '@/app/api/user';
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { redirect } from 'next/navigation';
 
 const FormCreateMapel = ({ params }) => {
   const { idKelas } = params;
@@ -15,20 +17,39 @@ const FormCreateMapel = ({ params }) => {
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-  const [nuptkOptions, setNuptkOptions] = useState(null);
+  const [nuptkOptions, setNuptkOptions] = useState();
+
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  if (decodedToken) {
+      if (decodedToken.role == 'GURU') {
+        console.log('You have authority')
+      } else {
+        console.log('You dont have authority')
+        redirect(`/kelas/${idKelas}`)
+      }
+  } else {
+      redirect(`/user/login`)
+  }
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
       try {
-        const data = await getAllGuru(sessionStorage.getItem('jwtToken'));
-        console.log(data);
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllGuru(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNuptkOptions(options);
       } catch (error) {
         console.log(error);
       }
-    }
-  })
-
+    };
   
+    fetchNuptkOptions();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +122,7 @@ const FormCreateMapel = ({ params }) => {
             </div>
             <div className="p-3 border-b border-b-gray-300">
               <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
-                <p className="block sm:inline">Mapel berhasil dibuat! Kembali ke <a className="font-bold" href={`http://localhost:3000/kelas/${idKelas}`}>halaman kelas</a>.</p>
+                <p className="block sm:inline">Mapel berhasil dibuat! Kembali ke <a className="font-bold" href={`/kelas/${idKelas}`}>halaman kelas</a>.</p>
               </div>
             </div>
           </div>

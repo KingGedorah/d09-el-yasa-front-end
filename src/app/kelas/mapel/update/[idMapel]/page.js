@@ -5,6 +5,9 @@ import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Select from 'react-select';
+import { getMapelByIdMapel } from '@/app/api/kelas';
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { redirect } from 'next/navigation';
 
 const UpdateMapelForm = ({ params }) => {
   const { idMapel } = params;
@@ -14,16 +17,47 @@ const UpdateMapelForm = ({ params }) => {
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+  const [nuptkOptions, setNuptkOptions] = useState(null);
 
-  const nuptkOptions = [
-    '6842059312456801',
-    '7932145087561420',
-    '5098361274539812',
-    '3289657140927640',
-    '6152093478125036'
-  ].map(option => ({ value: option, label: option }));
+  useEffect(() => {
+    const checkAuthority = async () => {
+      const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+      if (decodedToken) {
+        const mapelData = await getMapelByIdMapel(idMapel);
+        if (decodedToken.role === 'GURU') {
+          console.log('You have authority');
+        } else {
+          console.log('You dont have authority');
+          redirect(`/kelas/mapel/${idMapel}`);
+        }
+      } else {
+        redirect(`/user/login`);
+      }
+    };
+  
+    checkAuthority();
+  }, []);
 
-  console.log(idMapel);
+  useEffect(() => {
+    const fetchNuptkOptions = async () => {
+      try {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllGuru(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNuptkOptions(options);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchNuptkOptions();
+  }, []);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -44,7 +78,7 @@ const UpdateMapelForm = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:8083/api/kelas/mapel/update/${idMapel}`, {
+      const response = await axios.put(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/mapel/update/${idMapel}`, {
         namaMapel,
         nuptkGuruMengajar: selectedNuptk.value,
       });

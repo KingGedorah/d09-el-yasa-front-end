@@ -10,14 +10,29 @@ import Sidebar from '../../components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { redirect } from 'next/navigation';
+
 
 const DetailKelas = ({ params }) => {
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  const username = decodedToken ? decodedToken.username : null;
+  const userRole = decodedToken ? decodedToken.role : null;
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
+
+  if (decodedToken) {
+    console.log('Decoded Token:', decodedToken);
+    console.log('ID:', decodedToken.id);
+    console.log('Role:', decodedToken.role);
+    console.log('Username:', decodedToken.username);
+  } else {
+      redirect('/user/login');
+  }
 
   useEffect(() => {
     const fetchMapelInfo = async () => {
@@ -88,12 +103,12 @@ const DetailKelas = ({ params }) => {
                         <img src="https://epe.brightspotcdn.com/02/ac/a5498e524778b568fea054141968/math-102023-1281244731-01.jpg" alt="Article Image" className="w-full rounded-md mb-4"/>
                         <p className="text-gray-600 mb-4">Guru Pengajar: {mapel.nuptkGuruMengajar}</p>
                       </a>
-                      {/* Icon gerigi untuk dropdown */}
-                      {showDropdown === index && (
+                      {/* Icon gerigi untuk dropdown, hanya ditampilkan untuk peran GURU */}
+                      {userRole === 'GURU' && showDropdown === index && (
                         <div className="absolute top-0 right-0 mt-12 mr-2">
-                        <div className="bg-white dark:bg-gray-800 rounded-md shadow-md">
-                          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                            <li>
+                          <div className="bg-white dark:bg-gray-800 rounded-md shadow-md">
+                            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                              <li>
                                 <a href={`/kelas/mapel/update/${mapel.idMapel}`} className="font-bold text-blue-500 block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-900">Update</a>
                               </li>
                               <li>
@@ -103,11 +118,13 @@ const DetailKelas = ({ params }) => {
                           </div>
                         </div>
                       )}
-                      {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih */}
-                      <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
-                        <p className="font-bold bg-white rounded-full p-1 opacity-50">Sunting</p>
-                        <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(index)} className="ml-1" />
-                      </div>
+                      {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih, hanya untuk peran GURU */}
+                      {userRole === 'GURU' && (
+                        <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
+                          <p className="font-bold bg-white rounded-full p-1 opacity-50">Sunting</p>
+                          <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(index)} className="ml-1" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}

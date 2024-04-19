@@ -33,7 +33,7 @@ const InputNilaiForm = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:8080/score/input/${IdUser}`, nilaiData);
+      await axios.post(`https://myjisc-user-e270dbbfd631.herokuapp.com/score/input/${IdUser}`, nilaiData);
       // Handle success (e.g., show success message, redirect user, etc.)
       console.log('Nilai submitted successfully');
     } catch (error) {

@@ -5,17 +5,32 @@ import Link from 'next/link';
 import axios from 'axios'; // Import Axios library
 import * as KelasApi from '../../api/kelas';
 import Navbar from '../../components/navbar';
+import { redirect } from 'next/navigation';
 import Footer from '../../components/footer';
 import Sidebar from '../../components/sidebar';
 import styles from '../../components/button-n-search.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { parseJwt } from '@/app/utils/jwtUtils';
+
 
 const ViewAllKelas = () => {
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  const username = decodedToken ? decodedToken.username : null;
+  const userRole = decodedToken ? decodedToken.role : null;
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
+
+  if (decodedToken) {
+    console.log('Decoded Token:', decodedToken);
+    console.log('ID:', decodedToken.id);
+    console.log('Role:', decodedToken.role);
+    console.log('Username:', decodedToken.username);
+  } else {
+      redirect('/user/login');
+  }
 
   useEffect(() => {
     const fetchKelasList = async () => {
@@ -73,29 +88,31 @@ const ViewAllKelas = () => {
             {!loading && !error && (
               <>
                 {kelasList.map((kelas) => (
-                  <div
-                    key={kelas.idKelas}
-                    className="bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-800 mb-2 relative"
-                    onMouseEnter={() => handleShowDropdown(kelas.idKelas)} // Menampilkan dropdown saat hover
-                    onMouseLeave={handleHideDropdown} // Menyembunyikan dropdown saat keluar dari area
-                  >
-                    <div className="flex justify-between items-center">
-                      <a href={`/kelas/${kelas.idKelas}`} className="block">
-                        <h2 className="text-2xl font-semibold mb-2">{kelas.namaKelas}</h2>
-                        <img
-                          src="https://epe.brightspotcdn.com/02/ac/a5498e524778b568fea054141968/math-102023-1281244731-01.jpg"
-                          alt="Article Image"
-                          className="w-full rounded-md mb-4"
-                        />
-                        <p className="text-gray-600 mb-4">{kelas.deskripsiKelas}</p>
-                      </a>
-                     {/* Icon gerigi untuk dropdown */}
-                    {showDropdown === kelas.idKelas && (
+                <div
+                  key={kelas.idKelas}
+                  className="bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-800 mb-2 relative"
+                  onMouseEnter={() => handleShowDropdown(kelas.idKelas)} // Menampilkan dropdown saat hover
+                  onMouseLeave={handleHideDropdown} // Menyembunyikan dropdown saat keluar dari area
+                >
+                  <div className="flex justify-between items-center">
+                    <a href={`/kelas/${kelas.idKelas}`} className="block">
+                      <h2 className="text-2xl font-semibold mb-2">{kelas.namaKelas}</h2>
+                      <img
+                        src="https://epe.brightspotcdn.com/02/ac/a5498e524778b568fea054141968/math-102023-1281244731-01.jpg"
+                        alt="Article Image"
+                        className="w-full rounded-md mb-4"
+                      />
+                      <p className="text-gray-600 mb-4">{kelas.deskripsiKelas}</p>
+                    </a>
+                    {/* Icon gerigi untuk dropdown, hanya ditampilkan untuk peran GURU */}
+                    {userRole === 'GURU' && showDropdown === kelas.idKelas && (
+                      
                       <div className="absolute top-0 right-0 mt-12 mr-2">
+                                
                         <div className="bg-white dark:bg-gray-800 rounded-md shadow-md">
                           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                             <li>
-                            <a href={`/kelas/update/${kelas.idKelas}`} className="font-bold text-blue-500 block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-900">Update</a>
+                              <a href={`/kelas/update/${kelas.idKelas}`} className="font-bold text-blue-500 block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-900">Update</a>
                             </li>
                             <li>
                               <a href="#" onClick={() => handleDeleteKelas(kelas.idKelas)} className="font-bold text-red-500 block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-900">Delete</a>
@@ -104,14 +121,17 @@ const ViewAllKelas = () => {
                         </div>
                       </div>
                     )}
-                    {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih */}
-                    <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
-                      <span className="bg-white rounded-full p-1 font-bold opacity-50">Sunting</span>
-                      <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(kelas.idKelas)} className="ml-1" />
-                    </div>
-                    </div>
+                    {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih, hanya untuk peran GURU */}
+                    {userRole === 'GURU' && (
+                      <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
+                        <span className="bg-white rounded-full p-1 font-bold opacity-50">Sunting</span>
+                        <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(kelas.idKelas)} className="ml-1" />
+                      </div>
+                    )}
                   </div>
-                ))}
+                </div>
+              ))}
+
               </>
             )}
           </div>

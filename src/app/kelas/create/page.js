@@ -5,8 +5,9 @@ import axios from 'axios';
 import Select from 'react-select';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
-import { redirect } from 'next/navigation'; // Import redirect from next/navigation
+import { redirect } from 'next/navigation';
 import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const CreateKelasForm = () => {
   const [namaKelas, setNamaKelas] = useState('');
@@ -16,6 +17,18 @@ const CreateKelasForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
+
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  if (decodedToken) {
+      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
+        console.log('You have authority')
+      } else {
+        console.log('You dont have authority')
+        redirect(`/kelas/myclass`)
+      }
+  } else {
+      redirect(`/user/login`)
+  }
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
@@ -36,8 +49,6 @@ const CreateKelasForm = () => {
   
     fetchNuptkOptions();
   }, []);
-  
-  
 
   useEffect(() => {
     const fetchNisnOptions = async () => {

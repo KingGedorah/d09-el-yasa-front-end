@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const fetchUserScores = async (IdUser) => {
   try {
-    const response = await axios.get(`http://localhost:8080/score/scores/${IdUser}`);
+    const response = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/score/scores/${IdUser}`);
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch user scores');

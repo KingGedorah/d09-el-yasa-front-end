@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
+import { getMapelByIdMapel } from '@/app/api/kelas';
+import { redirect } from 'next/navigation';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const FormCreateMateri = ({ params }) => {
     const { idMapel } = params;
@@ -13,6 +16,27 @@ const FormCreateMateri = ({ params }) => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+
+
+    useEffect(() => {
+        const checkAuthority = async () => {
+          const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+          if (decodedToken) {
+            const mapelData = await getMapelByIdMapel(idMapel);
+            console.log(mapelData.data.nuptkGuruMengajar);
+            if (decodedToken.role === 'GURU') {
+              console.log('You have authority');
+            } else {
+              console.log('You dont have authority');
+              redirect(`/kelas/mapel/${idKelas}`);
+            }
+          } else {
+            redirect(`/user/login`);
+          }
+        };
+      
+        checkAuthority();
+    }, []);      
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,7 +51,7 @@ const FormCreateMateri = ({ params }) => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post(`http://localhost:8083/api/kelas/${idMapel}/create-materi`, formData, {
+            const response = await axios.post(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/${idMapel}/create-materi`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -104,7 +128,7 @@ const FormCreateMateri = ({ params }) => {
                         </div>
                         <div className="p-3 border-b border-b-gray-300">
                             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
-                                <p className="block sm:inline">Materi berhasil dibuat! Kembali ke <a className='font-bold' href={`http://localhost:3000/kelas/mapel/${idMapel}`}>halaman mata pelajaran</a>.</p>
+                                <p className="block sm:inline">Materi berhasil dibuat! Kembali ke <a className='font-bold' href={`/kelas/mapel/${idMapel}`}>halaman mata pelajaran</a>.</p>
                             </div>
                         </div>
                     </div>

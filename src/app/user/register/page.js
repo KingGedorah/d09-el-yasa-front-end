@@ -19,7 +19,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/auth/Register', {
+      const response = await axios.post('https://myjisc-user-e270dbbfd631.herokuapp.com/api/v1/auth/Register', {
         username,
         firstname: firstName,
         lastname: lastName,

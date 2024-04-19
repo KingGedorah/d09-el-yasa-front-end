@@ -6,47 +6,90 @@ import Select from 'react-select';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
-
-const nuptkOptions = [
-  '6842059312456801',
-  '7932145087561420',
-  '5098361274539812',
-  '3289657140927640',
-  '6152093478125036',
-].map(option => ({ value: option, label: option }));
-
-const nisnOptions = [
-  '8912075463',
-  '4567891230',
-  '3210987654',
-  '9876543210',
-  '2345678901',
-  '1098765432',
-  '8765432109',
-  '5432109876',
-  '6789012345',
-  '9012345678',
-  '7654321098',
-  '5432109876',
-  '1234567890',
-  '8901234567',
-  '5678901234',
-  '4321098765',
-  '3456789012',
-  '8765432109',
-  '2109876543',
-  '7890123456',
-].map(option => ({ value: option, label: option }));
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { getUsersById } from '@/app/api/user';
+import { redirect } from 'next/navigation';
 
 const UpdateKelasForm = ({ params }) => {
   const { idKelas } = params;
-
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
   const [selectedNuptk, setSelectedNuptk] = useState('');
   const [errorPopup, setErrorPopup] = useState(false);
   const [selectedNisn, setSelectedNisn] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [nuptkOptions, setNuptkOptions] = useState(null);
+  const [nisnOptions, setNisnOptions] = useState(null);
+
+  useEffect(() => {
+    const fetchNuptkOptions = async () => {
+      try {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllGuru(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNuptkOptions(options);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchNuptkOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchNisnOptions = async () => {
+      try {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllMurid(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNisnOptions(options);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchNisnOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchNisnUsers = async () => {
+      try {
+        const nisnUsers = [];
+        for (const nisn of data.nisnSiswa) {
+          const user = await getUsersById(nisn);
+          nisnUsers.push({ value: nisn, label: `${user.firstname} ${user.lastname}` });
+        }
+        setSelectedNisn(nisnUsers);
+      } catch (error) {
+        console.error('Error fetching NISN users:', error);
+      }
+    };
+    
+    fetchNisnUsers();
+  }, [data.nisnSiswa]);
+  
+
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  if (decodedToken) {
+      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
+        console.log('You have authority')
+      } else {
+        console.log('You dont have authority')
+        redirect(`/kelas/myclass`)
+      }
+  } else {
+      redirect(`/user/login`)
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -56,8 +99,8 @@ const UpdateKelasForm = ({ params }) => {
 
         setNamaKelas(data.namaKelas);
         setDeskripsiKelas(data.deskripsiKelas);
-        setSelectedNuptk({ value: data.nuptkWaliKelas, label: data.nuptkWaliKelas });
-        setSelectedNisn(data.nisnSiswa.map(nisn => ({ value: nisn, label: nisn })));
+        const dataNuptk = await getUsersById(data.nuptkWaliKelas)
+        setSelectedNuptk({ value: data.nuptkWaliKelas, label: `${dataNuptk.firstname} ${dataNuptk.lastname}` });
       } catch (error) {
         console.error('Error:', error.response.data);
       }
@@ -82,7 +125,7 @@ const UpdateKelasForm = ({ params }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8083/api/kelas/update/${idKelas}`,
+        `https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/update/${idKelas}`,
         {
           namaKelas,
           deskripsiKelas,
