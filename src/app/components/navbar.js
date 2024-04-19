@@ -14,16 +14,13 @@ const Navbar = () => {
                         <a class="font-medium text-gray-900 dark:text-gray-100" href="/">
                             Halaman Depan
                         </a>
-                        <a class="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Berita
-                        </a>
                         <a class="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
                             Kelasku
                         </a>
                     </nav>
                     <div class="flex items-center gap-4 md:gap-6">
                         <button type="button" class="text-sm font-medium">
-                            Masuk
+                            <a href='/user/login'>Masuk</a>
                         </button>
                     </div>
                 </div>
