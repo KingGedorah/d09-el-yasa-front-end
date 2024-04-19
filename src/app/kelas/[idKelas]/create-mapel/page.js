@@ -6,6 +6,7 @@ import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Select from 'react-select';
 import { getAllGuru } from '@/app/api/user';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const FormCreateMapel = ({ params }) => {
   const { idKelas } = params;

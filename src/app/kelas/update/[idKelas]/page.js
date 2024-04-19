@@ -7,46 +7,69 @@ import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
 
-const nuptkOptions = [
-  '6842059312456801',
-  '7932145087561420',
-  '5098361274539812',
-  '3289657140927640',
-  '6152093478125036',
-].map(option => ({ value: option, label: option }));
-
-const nisnOptions = [
-  '8912075463',
-  '4567891230',
-  '3210987654',
-  '9876543210',
-  '2345678901',
-  '1098765432',
-  '8765432109',
-  '5432109876',
-  '6789012345',
-  '9012345678',
-  '7654321098',
-  '5432109876',
-  '1234567890',
-  '8901234567',
-  '5678901234',
-  '4321098765',
-  '3456789012',
-  '8765432109',
-  '2109876543',
-  '7890123456',
-].map(option => ({ value: option, label: option }));
 
 const UpdateKelasForm = ({ params }) => {
   const { idKelas } = params;
-
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
   const [selectedNuptk, setSelectedNuptk] = useState('');
   const [errorPopup, setErrorPopup] = useState(false);
   const [selectedNisn, setSelectedNisn] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [nuptkOptions, setNuptkOptions] = useState(null);
+  const [nisnOptions, setNisnOptions] = useState(null);
+
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  if (decodedToken) {
+      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
+        console.log('You have authority')
+      } else {
+        console.log('You dont have authority')
+        redirect(`/kelas/myclass`)
+      }
+  } else {
+      redirect(`/user/login`)
+  }
+
+  useEffect(() => {
+    const fetchNuptkOptions = async () => {
+      try {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllGuru(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNuptkOptions(options);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchNuptkOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchNisnOptions = async () => {
+      try {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllMurid(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNisnOptions(options);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchNisnOptions();
+  }, []);
 
   useEffect(() => {
     async function fetchData() {

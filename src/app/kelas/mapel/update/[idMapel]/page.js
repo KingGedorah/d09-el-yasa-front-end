@@ -34,7 +34,7 @@ const UpdateMapelForm = ({ params }) => {
     };
   
     checkAuthority();
-}, []);
+  }, []);
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
