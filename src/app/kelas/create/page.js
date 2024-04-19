@@ -6,6 +6,8 @@ import Select from 'react-select';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
 import { redirect } from 'next/navigation'; // Import redirect from next/navigation
+import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const CreateKelasForm = () => {
   const [namaKelas, setNamaKelas] = useState('');
@@ -13,26 +15,65 @@ const CreateKelasForm = () => {
   const [selectedNuptk, setSelectedNuptk] = useState('');
   const [selectedNisn, setSelectedNisn] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [nuptkOptions, setNuptkOptions] = useState(null);
+  const [nisnOptions, setNisnOptions] = useState(null);
 
-  const nuptkOptions = [ 
-    '6842059312456801',
-    '7932145087561420',
-    '5098361274539812',
-    '3289657140927640',
-    '6152093478125036'
-  ].map(option => ({ value: option, label: option }));
+  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  if (decodedToken) {
+      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
+        console.log('You have authority')
+      } else {
+        console.log('You dont have authority')
+        redirect(`/kelas/myclass`)
+      }
+  } else {
+      redirect(`/user/login`)
+  }
 
-  const nisnOptions = [
-    '8912075463', '4567891230', '3210987654', '9876543210', '2345678901',
-    '1098765432', '8765432109', '5432109876', '6789012345', '9012345678',
-    '7654321098', '5432109876', '1234567890', '8901234567', '5678901234',
-    '4321098765', '3456789012', '8765432109', '2109876543', '7890123456',
-  ].map(option => ({ value: option, label: option }));
+  useEffect(() => {
+    const fetchNuptkOptions = async () => {
+      try {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllGuru(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNuptkOptions(options);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchNuptkOptions();
+  }, []);
 
+  useEffect(() => {
+    const fetchNisnOptions = async () => {
+      try {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        const data = await getAllMurid(jwtToken);
+        const options = [];
+        for (const id of data) {
+          const user = await getUsersById(id);
+          console.log(user.id)
+          options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
+        }
+        setNisnOptions(options);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchNisnOptions();
+  }, []);
+  
   useEffect(() => {
     if (showSuccess) {
       setTimeout(() => {
-        redirect('http://localhost:3000/kelas/view-all');
+        redirect('/kelas/view-all');
       }, 2000);
     }
   }, [showSuccess]);
@@ -45,7 +86,7 @@ const CreateKelasForm = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8083/api/kelas/create', {
+      const response = await axios.post('https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/create', {
         namaKelas,
         deskripsiKelas,
         nuptkWaliKelas: selectedNuptk.value,
@@ -54,7 +95,7 @@ const CreateKelasForm = () => {
       console.log('Response:', response.data);
       setShowSuccess(true);
     } catch (error) {
-      console.error('Error:', error.response.data);
+      console.error('Error:', error.response);
       // Menampilkan pesan error pada modal
       setShowSuccess(false);
     }
