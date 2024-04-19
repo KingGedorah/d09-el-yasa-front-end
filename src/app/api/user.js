@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'https://myjisc-user-e270dbbfd631.herokuapp.coms/api';
 
 
 export const getUsersById = async (IdUser) => {
