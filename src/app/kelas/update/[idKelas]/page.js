@@ -7,7 +7,7 @@ import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
 import { parseJwt } from '@/app/utils/jwtUtils';
-import { getUsersById } from '@/app/api/user';
+import { getUsersById, getAllGuru, getAllMurid } from '@/app/api/user';
 import { redirect } from 'next/navigation';
 
 const UpdateKelasForm = ({ params }) => {
@@ -64,9 +64,12 @@ const UpdateKelasForm = ({ params }) => {
   useEffect(() => {
     const fetchNisnUsers = async () => {
       try {
+        const response = await KelasApi.getKelasByIdKelas(idKelas);
+        const { data } = response;
         const nisnUsers = [];
         for (const nisn of data.nisnSiswa) {
           const user = await getUsersById(nisn);
+          console.log(user.id)
           nisnUsers.push({ value: nisn, label: `${user.firstname} ${user.lastname}` });
         }
         setSelectedNisn(nisnUsers);
@@ -76,7 +79,7 @@ const UpdateKelasForm = ({ params }) => {
     };
     
     fetchNisnUsers();
-  }, [data.nisnSiswa]);
+  }, []);
   
 
   const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
@@ -148,9 +151,11 @@ const UpdateKelasForm = ({ params }) => {
     setShowSuccess(false);
   };
 
-  const filteredNisnOptions = nisnOptions.filter(option =>
+  const filteredNisnOptions = nisnOptions ? 
+  nisnOptions.filter(option =>
     !selectedNisn.some(selected => selected.value === option.value)
-  );
+  ) : [];
+
 
   return (
     <div className="bg-white dark:bg-gray-950">
