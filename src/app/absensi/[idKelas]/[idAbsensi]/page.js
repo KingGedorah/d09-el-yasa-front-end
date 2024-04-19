@@ -61,8 +61,14 @@ const CreateAbsensiForm = ({ params }) => {
                                 </table>
                             </div>
                             <button
-                                onClick={() => router.back()}
+                                onClick={() => router.push(`/absensi/update/${detailAbsen.idAbsen}`)}
                                 className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg focus:outline-none"
+                            >
+                                Update
+                            </button>
+                            <button
+                                onClick={() => router.push(`/absensi/${idKelas}`)}
+                                className="w-full py-2 px-4 border-blue-500 border text-white rounded-lg focus:outline-none"
                             >
                                 Kembali
                             </button>
