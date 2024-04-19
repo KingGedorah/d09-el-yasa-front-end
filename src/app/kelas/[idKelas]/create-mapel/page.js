@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Select from 'react-select';
+import { getAllGuru } from '@/app/api/user';
 
 const FormCreateMapel = ({ params }) => {
   const { idKelas } = params;
@@ -14,19 +15,25 @@ const FormCreateMapel = ({ params }) => {
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+  const [nuptkOptions, setNuptkOptions] = useState(null);
 
-  const nuptkOptions = [
-    '6842059312456801',
-    '7932145087561420',
-    '5098361274539812',
-    '3289657140927640',
-    '6152093478125036'
-  ].map(option => ({ value: option, label: option }));
+  useEffect(() => {
+    const fetchNuptkOptions = async () => {
+      try {
+        const data = await getAllGuru(sessionStorage.getItem('jwtToken'));
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  })
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8083/api/kelas/${idKelas}/create-mapel`, {
+      const response = await axios.post(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/${idKelas}/create-mapel`, {
         namaMapel,
         nuptkGuruMengajar: selectedNuptk.value,
       });
