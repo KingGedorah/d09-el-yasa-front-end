@@ -108,7 +108,7 @@ const ViewAllKelas = () => {
                     {userRole === 'GURU' && showDropdown === kelas.idKelas && (
                       
                       <div className="absolute top-0 right-0 mt-12 mr-2">
-                                <p>Halo, {username}. Role Anda di sini adalah sebagai {userRole}</p>
+                                
                         <div className="bg-white dark:bg-gray-800 rounded-md shadow-md">
                           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                             <li>
