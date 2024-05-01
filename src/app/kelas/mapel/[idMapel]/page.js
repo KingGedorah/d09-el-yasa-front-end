@@ -10,11 +10,28 @@ import * as KelasApi from '../../../api/kelas';
 import axios from 'axios';
 
 const DetailMapel = ({ params }) => {
+  const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [materiInfo, setMateriInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (decodedToken) {
+      console.log("Access granted");
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const checkAuthority = async () => {
@@ -27,7 +44,7 @@ const DetailMapel = ({ params }) => {
     };
     checkAuthority();
   }, []);
-  
+
   useEffect(() => {
     const fetchMapelInfo = async () => {
       try {
@@ -45,7 +62,7 @@ const DetailMapel = ({ params }) => {
         setLoading(false);
       }
     };
-    
+
     fetchMapelInfo();
   }, [idMapel]);
 
