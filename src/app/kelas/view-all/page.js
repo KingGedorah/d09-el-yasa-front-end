@@ -15,22 +15,31 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 
 
 const ViewAllKelas = () => {
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  const username = decodedToken ? decodedToken.username : null;
-  const userRole = decodedToken ? decodedToken.role : null;
+  const userRole = null;
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
 
-  if (decodedToken) {
-    console.log('Decoded Token:', decodedToken);
-    console.log('ID:', decodedToken.id);
-    console.log('Role:', decodedToken.role);
-    console.log('Username:', decodedToken.username);
-  } else {
-      redirect('/user/login');
-  }
+
+  useEffect(() => {
+    const checkAuthority = async () => {
+      const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+      if (decodedToken) {
+        if (decodedToken.role === 'GURU' || decodedToken.role === 'ADMIN') {
+          userRole = decodedToken.role;
+          console.log('You have authority');
+        } else {
+          console.log('You dont have authority');
+          redirect(`/kelas/myclass`);
+        }
+      } else {
+        redirect(`/user/login`);
+      }
+    };
+  
+    checkAuthority();
+  }, []);
 
   useEffect(() => {
     const fetchKelasList = async () => {

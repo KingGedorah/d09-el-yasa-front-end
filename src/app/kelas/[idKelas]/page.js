@@ -15,9 +15,8 @@ import { redirect } from 'next/navigation';
 
 
 const DetailKelas = ({ params }) => {
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  const username = decodedToken ? decodedToken.username : null;
-  const userRole = decodedToken ? decodedToken.role : null;
+  const decodedToken = null;
+  const userRole = null;
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
@@ -25,14 +24,17 @@ const DetailKelas = ({ params }) => {
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
 
-  if (decodedToken) {
-    console.log('Decoded Token:', decodedToken);
-    console.log('ID:', decodedToken.id);
-    console.log('Role:', decodedToken.role);
-    console.log('Username:', decodedToken.username);
-  } else {
-      redirect('/user/login');
-  }
+  useEffect(() => {
+    const checkAuthority = async () => {
+      decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+      if (decodedToken) {
+        userRole = decodedToken.role;
+      } else {
+        redirect(`/user/login`)
+      }
+    };
+    checkAuthority();
+  }, []);
 
   useEffect(() => {
     const fetchMapelInfo = async () => {

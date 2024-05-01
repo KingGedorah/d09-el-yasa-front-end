@@ -21,7 +21,23 @@ const UpdateKelasForm = ({ params }) => {
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
 
+  useEffect(() => {
+    const checkAuthority = async () => {
+      const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+      if (decodedToken) {
+        if (decodedToken.role === 'GURU' || decodedToken.role === 'ADMIN') {
+          console.log('You have authority');
+        } else {
+          console.log('You dont have authority');
+          redirect(`/kelas/${idKelas}`);
+        }
+      } else {
+        redirect(`/user/login`);
+      }
+    };
   
+    checkAuthority();
+  }, []);
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
