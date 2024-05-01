@@ -17,6 +17,18 @@ const DetailMapel = ({ params }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const checkAuthority = async () => {
+      decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+      if (decodedToken) {
+        console.log('You are a', decodedToken.role)
+      } else {
+        redirect(`/user/login`)
+      }
+    };
+    checkAuthority();
+  }, []);
+  
+  useEffect(() => {
     const fetchMapelInfo = async () => {
       try {
         const mapelData = await KelasApi.getMapelByIdMapel(idMapel);

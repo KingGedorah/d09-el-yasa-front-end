@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
@@ -16,7 +16,6 @@ const FormCreateMateri = ({ params }) => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
     const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
-
 
     useEffect(() => {
         const checkAuthority = async () => {
