@@ -1,20 +1,41 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 
 
 const CreateArticle = () => {
-  const router = useRouter();
+  const [decodedToken, setDecodedToken] = useState('');
   const [judulArtikel, setJudulArtikel] = useState('');
   const [isiArtikel, setIsiArtikel] = useState('');
   const [gambar, setGambar] = useState(null);
   const [selectedKategori, setSelectedKategori] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect('/berita');
+      }
+    }
+  }, [decodedToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,10 +65,13 @@ const CreateArticle = () => {
     }
   };
 
-  const handleClosePopup = () => {
+  const handleSuccessPopup = () => {
     setIsSuccess(false);
+    redirect('/artikel')
+  };
+
+  const handleErrorPopup = () => {
     setIsError(false);
-    router.push('/artikel');
   };
 
   const handleCheckboxChange = (e) => {
@@ -102,7 +126,7 @@ const CreateArticle = () => {
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-green-600 font-semibold">Artikel berhasil dibuat!</p>
-            <button onClick={handleClosePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
           </div>
         </div>
       )}
@@ -110,7 +134,7 @@ const CreateArticle = () => {
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-red-600 font-semibold">Gagal membuat artikel!</p>
-            <button onClick={handleClosePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
           </div>
         </div>
       )}
