@@ -15,7 +15,7 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 
 
 const ViewAllKelas = () => {
-  const userRole = null;
+  let userRole = null;
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

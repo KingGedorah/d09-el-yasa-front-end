@@ -15,8 +15,8 @@ import { redirect } from 'next/navigation';
 
 
 const DetailKelas = ({ params }) => {
-  const decodedToken = null;
-  const userRole = null;
+  let decodedToken = null;
+  let userRole = null;
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
