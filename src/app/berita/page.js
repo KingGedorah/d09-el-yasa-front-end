@@ -18,7 +18,7 @@ const BeritaList = () => {
     const fetchData = async () => {
       try {
         const beritasData = await getAllBeritas();
-        setBeritas(beritasData.berita);
+        setBeritas(beritasData);
         setLoading(false);
       } catch (error) {
         setError(error);
