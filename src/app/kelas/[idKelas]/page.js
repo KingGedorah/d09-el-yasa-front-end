@@ -73,7 +73,7 @@ const DetailKelas = ({ params }) => {
   // Fungsi untuk menghapus mata pelajaran
   const handleDeleteMapel = async (mapelId) => {
     try {
-      await axios.delete(`http://localhost:8083/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
       // Refresh halaman setelah penghapusan berhasil
       window.location.reload();
     } catch (error) {
