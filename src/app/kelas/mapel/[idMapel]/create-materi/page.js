@@ -9,33 +9,35 @@ import { redirect } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
 
 const FormCreateMateri = ({ params }) => {
+    const [decodedToken, setDecodedToken] = useState('');
     const { idMapel } = params;
     const [judulKonten, setJudulKonten] = useState('');
     const [isiKonten, setIsiKonten] = useState('');
     const [file, setFile] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
-    const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        const checkAuthority = async () => {
-          const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-          if (decodedToken) {
-            const mapelData = await getMapelByIdMapel(idMapel);
-            console.log(mapelData.data.nuptkGuruMengajar);
-            if (decodedToken.role === 'GURU') {
-              console.log('You have authority');
+        const token = sessionStorage.getItem('jwtToken');
+        if (token) {
+            setDecodedToken(parseJwt(token));
+        } else {
+            console.log("Need to login");
+            redirect('/user/login');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (decodedToken) {
+            if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
+                console.log("Access granted");
             } else {
-              console.log('You dont have authority');
-              redirect(`/kelas/mapel/${idKelas}`);
+                console.log("Not authorized");
+                redirect(`/kelas/mapel/${idKelas}`);
             }
-          } else {
-            redirect(`/user/login`);
-          }
-        };
-      
-        checkAuthority();
-    }, []);      
+        }
+    }, [decodedToken]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -80,7 +82,7 @@ const FormCreateMateri = ({ params }) => {
 
     return (
         <div className="bg-white dark:bg-gray-950">
-            <Navbar/>
+            <Navbar />
             <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
                 <div className="w-full max-w-sm space-y-4">
                     <div className="space-y-2">
@@ -119,11 +121,11 @@ const FormCreateMateri = ({ params }) => {
             {showModal && (
                 <div id="modal" className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
                     <div className="bg-white max-w-xl w-full rounded-md">
-                        <div className="p-3 flex items-center justify-between border-b border-b-gray-300"> 
+                        <div className="p-3 flex items-center justify-between border-b border-b-gray-300">
                             <h3 className="font-semibold text-xl">
                                 Berhasil :)
                             </h3>
-                            <span className="modal-close cursor-pointer" onClick={closeModal}>×</span> 
+                            <span className="modal-close cursor-pointer" onClick={closeModal}>×</span>
                         </div>
                         <div className="p-3 border-b border-b-gray-300">
                             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
@@ -133,7 +135,7 @@ const FormCreateMateri = ({ params }) => {
                     </div>
                 </div>
             )}
-            <Footer/>
+            <Footer />
         </div>
     );
 };

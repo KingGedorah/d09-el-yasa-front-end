@@ -15,8 +15,7 @@ import { redirect } from 'next/navigation';
 
 
 const DetailKelas = ({ params }) => {
-  let decodedToken = null;
-  let userRole = null;
+  const [decodedToken, setDecodedToken] = useState('');
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
@@ -25,16 +24,20 @@ const DetailKelas = ({ params }) => {
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
 
   useEffect(() => {
-    const checkAuthority = async () => {
-      decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-      if (decodedToken) {
-        userRole = decodedToken.role;
-      } else {
-        redirect(`/user/login`)
-      }
-    };
-    checkAuthority();
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
   }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      console.log("Access granted");
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchMapelInfo = async () => {
