@@ -16,7 +16,7 @@ const Sidebar = () => {
     const todayDateISO = currentDate.toISOString().split('T')[0];
 
     // Mendapatkan data jadwal sholat dari API
-    fetch('https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master/adzan/jakartatimur/2024/03.json')
+    fetch('https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master/adzan/jakartatimur/2024/04.json')
       .then(response => response.json())
       .then(data => {
         // Cari data jadwal sholat untuk hari ini
@@ -27,62 +27,63 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="w-full lg:w-1/3">
-      <div className="bg-gray-200 rounded-lg p-4">
-        <h2 className="text-lg font-semibold mb-2 underline">Jadwal Sholat Hari Ini</h2>
-        <h3 className="text-base font-normal mb-2 text-center">{todayDate && todayDate}</h3>
-        {todaySchedule && (
-          <div className="mb-4">
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <th className="border border-gray-300 px-4 py-2">Waktu</th>
-                  <th className="border border-gray-300 px-4 py-2">Sholat</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.imsyak}</td>
-                  <td className="border border-gray-300 px-4 py-2">Imsyak</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.shubuh}</td>
-                  <td className="border border-gray-300 px-4 py-2">Subuh</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.terbit}</td>
-                  <td className="border border-gray-300 px-4 py-2">Terbit</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.dhuha}</td>
-                  <td className="border border-gray-300 px-4 py-2">Dhuha</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.dzuhur}</td>
-                  <td className="border border-gray-300 px-4 py-2">Dzuhur</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.ashr}</td>
-                  <td className="border border-gray-300 px-4 py-2">Ashar</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.magrib}</td>
-                  <td className="border border-gray-300 px-4 py-2">Maghrib</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.isya}</td>
-                  <td className="border border-gray-300 px-4 py-2">Isya</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-        <div>
-          <h2 className="text-lg font-semibold mb-2 underline">Ayat Hari Ini</h2>
-          <AyatQuran />
-        </div>
-      </div>
-    </div>
+          <aside class="w-1/5 md:w-1/4 lg:w-1/3 p-4">
+              <div class="bg-white dark:bg-gray-700 p-4">
+                <h3 class="text-lg font-semibold mb-2">Jadwal Sholat Hari Ini</h3>
+                <h3 className="text-base font-normal mb-2 text-center">{todayDate && todayDate}</h3>
+                {todaySchedule && (
+                  <div className="mb-4">
+                  <table className="w-full">
+                    <thead>
+                    <tr>
+                      <th className="border border-gray-300 px-4 py-2">Waktu</th>
+                      <th className="border border-gray-300 px-4 py-2">Sholat</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.imsyak}</td>
+                      <td className="border border-gray-300 px-4 py-2">Imsyak</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.shubuh}</td>
+                      <td className="border border-gray-300 px-4 py-2">Subuh</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.terbit}</td>
+                      <td className="border border-gray-300 px-4 py-2">Terbit</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.dhuha}</td>
+                      <td className="border border-gray-300 px-4 py-2">Dhuha</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.dzuhur}</td>
+                      <td className="border border-gray-300 px-4 py-2">Dzuhur</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.ashr}</td>
+                      <td className="border border-gray-300 px-4 py-2">Ashar</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.magrib}</td>
+                      <td className="border border-gray-300 px-4 py-2">Maghrib</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.isya}</td>
+                      <td className="border border-gray-300 px-4 py-2">Isya</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  </div>
+                )}
+              </div>
+              <div class="bg-white dark:bg-gray-700 p-4">
+                <h3 class="text-lg font-semibold mb-2">Ayat hari ini</h3>
+                <AyatQuran />
+                <p class="text-gray-600 dark:text-gray-300"></p>
+              </div>
+          </aside>
   );
 };
 
