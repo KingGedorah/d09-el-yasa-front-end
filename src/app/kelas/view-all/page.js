@@ -73,7 +73,7 @@ const ViewAllKelas = () => {
   // Fungsi untuk menghapus kelas
   const handleDeleteKelas = async (idKelas) => {
     try {
-      await axios.delete(`http://localhost:8083/api/kelas/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
       // Refresh halaman setelah penghapusan berhasil
       window.location.reload();
     } catch (error) {
