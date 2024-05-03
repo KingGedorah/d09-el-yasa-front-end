@@ -31,14 +31,15 @@ const ArtikelDetail = ({ params }) => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
+      <div className="mt-8 p-12">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
             {article && (
-              <div class="bg-gray-200 rounded-lg overflow-hidden">
-                <div className="p-4">
+              <div class="border-[1px] border-[#8D6B94] rounded-lg overflow-hidden">
+                <h2 class="text-xl font-semibold mt-4 text-center">{article.judulArtikel}</h2>
+                <div className="p-4 w-full">
                   {article.imageArtikel ? (
                     <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
                   ) : (
@@ -46,13 +47,12 @@ const ArtikelDetail = ({ params }) => {
                   )}
                 </div>
                 <div class="p-4">
-                  <h2 class="text-xl font-semibold mb-2">{article.judulArtikel}</h2>
                   <p class="text-gray-700 mb-4">{article.isiArtikel}</p>
                   {/* Menampilkan kategori artikel */}
                   <div className="flex flex-wrap">
                     <span className="font-semibold mr-2 mb-2">Tags:</span>
-                    {article.kategori.map((kategori, index) => (
-                      <span key={index} className="bg-blue-500 text-white rounded-full px-2 py-1 mr-2 mb-2 text-sm">{kategori}</span>
+                    {article.kategori?.map((kategori, index) => (
+                      <span key={index} className="bg-[#6C80FF] text-white rounded-full px-2 py-1 mr-2 mb-2 text-sm">{kategori}</span>
                     ))}
                   </div>
                 </div>

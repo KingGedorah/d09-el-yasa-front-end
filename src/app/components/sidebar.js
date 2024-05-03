@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AyatQuran from './ayatquran'; 
+import AyatQuran from './ayatquran';
 
 const Sidebar = () => {
   const [todaySchedule, setTodaySchedule] = useState(null);
@@ -20,71 +20,174 @@ const Sidebar = () => {
       .then(response => response.json())
       .then(data => {
         // Cari data jadwal sholat untuk hari ini
-        const todayData = data.find(schedule => schedule.tanggal === todayDateISO);
+       
+        data.find(schedule => schedule.tanggal === todayDateISO)
         setTodaySchedule(todayData);
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
 
   return (
-          <aside class="w-1/5 md:w-1/4 lg:w-1/3 p-4">
-              <div class="bg-white dark:bg-gray-700 p-4">
-                <h3 class="text-lg font-semibold mb-2">Jadwal Sholat Hari Ini</h3>
-                <h3 className="text-base font-normal mb-2 text-center">{todayDate && todayDate}</h3>
-                {todaySchedule && (
-                  <div className="mb-4">
-                  <table className="w-full">
-                    <thead>
-                    <tr>
-                      <th className="border border-gray-300 px-4 py-2">Waktu</th>
-                      <th className="border border-gray-300 px-4 py-2">Sholat</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.imsyak}</td>
-                      <td className="border border-gray-300 px-4 py-2">Imsyak</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.shubuh}</td>
-                      <td className="border border-gray-300 px-4 py-2">Subuh</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.terbit}</td>
-                      <td className="border border-gray-300 px-4 py-2">Terbit</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.dhuha}</td>
-                      <td className="border border-gray-300 px-4 py-2">Dhuha</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.dzuhur}</td>
-                      <td className="border border-gray-300 px-4 py-2">Dzuhur</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.ashr}</td>
-                      <td className="border border-gray-300 px-4 py-2">Ashar</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.magrib}</td>
-                      <td className="border border-gray-300 px-4 py-2">Maghrib</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">{todaySchedule.isya}</td>
-                      <td className="border border-gray-300 px-4 py-2">Isya</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                  </div>
-                )}
+    <aside class="w-[300px] p-4 border-[#8D6B94] rounded-xl border-[1px]">
+      <h3 class="text-lg font-semibold mb-2">Daily Prayer Time</h3>
+      <h3 className="text-base font-normal mb-2">{todayDate && todayDate}</h3>
+      {todaySchedule && (
+        <div className="mb-4 flex flex-col gap-1">
+          <div className='w-full flex justify-between'>
+            <div className='flex gap-2'>
+              <div className='w-5 h-5 flex justify-center items-center'>
+                <svg width="20" height="17" viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 0C10.5523 0 11 0.447715 11 1V2C11 2.55228 10.5523 3 10 3C9.44771 3 9 2.55228 9 2V1C9 0.447715 9.44771 0 10 0Z" fill="black" />
+                  <path d="M20 10C20 10.5523 19.5523 11 19 11H18C17.4477 11 17 10.5523 17 10C17 9.44771 17.4477 9 18 9H19C19.5523 9 20 9.44771 20 10Z" fill="black" />
+                  <path d="M2 11C2.55228 11 3 10.5523 3 10C3 9.44771 2.55228 9 2 9H1C0.447715 9 0 9.44771 0 10C0 10.5523 0.447715 11 1 11H2Z" fill="black" />
+                  <path d="M5.05025 5.05025C4.65973 5.44078 4.02656 5.44078 3.63604 5.05025L2.92893 4.34315C2.53841 3.95262 2.53841 3.31946 2.92893 2.92893C3.31946 2.53841 3.95262 2.53841 4.34315 2.92893L5.05025 3.63604C5.44078 4.02656 5.44078 4.65973 5.05025 5.05025Z" fill="black" />
+                  <path d="M15.6569 2.92893L14.9497 3.63604C14.5592 4.02656 14.5592 4.65973 14.9497 5.05025C15.3403 5.44078 15.9734 5.44078 16.364 5.05025L17.0711 4.34315C17.4616 3.95262 17.4616 3.31946 17.0711 2.92893C16.6805 2.53841 16.0474 2.53841 15.6569 2.92893Z" fill="black" />
+                  <path d="M18 16C18 16.5523 17.5523 17 17 17H3C2.44771 17 2 16.5523 2 16C2 15.4477 2.44771 15 3 15H17C17.5523 15 18 15.4477 18 16Z" fill="black" />
+                  <path d="M6.88853 11.6054C6.20788 10.2872 6.42186 8.6284 7.52513 7.52513C8.89196 6.15829 11.108 6.15829 12.4749 7.52513C13.5781 8.6284 13.7921 10.2872 13.1115 11.6054C12.8581 12.0961 13.0505 12.6993 13.5412 12.9527C14.0319 13.2061 14.6352 13.0137 14.8885 12.523C15.9569 10.4539 15.6256 7.84739 13.8891 6.11091C11.7412 3.96303 8.2588 3.96303 6.11091 6.11091C4.37444 7.84739 4.04306 10.4539 5.11145 12.523C5.36484 13.0137 5.96807 13.2061 6.4588 12.9527C6.94952 12.6993 7.14192 12.0961 6.88853 11.6054Z" fill="black" />
+                </svg>
               </div>
-              <div class="bg-white dark:bg-gray-700 p-4">
-                <h3 class="text-lg font-semibold mb-2">Ayat hari ini</h3>
-                <AyatQuran />
-                <p class="text-gray-600 dark:text-gray-300"></p>
+              <div>
+                Fajr
               </div>
-          </aside>
+            </div>
+            <div>{todaySchedule.shubuh}</div>
+          </div>
+          <div className='w-full flex justify-between'>
+            <div className='flex gap-2'>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 1C11 0.447715 10.5523 0 10 0C9.44771 0 9 0.447715 9 1V2C9 2.55228 9.44771 3 10 3C10.5523 3 11 2.55228 11 2V1Z" fill="black" />
+                <path d="M11 19C11 19.5523 10.5523 20 10 20C9.44771 20 9 19.5523 9 19V16.4142L8.70711 16.7071C8.31658 17.0976 7.68342 17.0976 7.29289 16.7071C6.90237 16.3166 6.90237 15.6834 7.29289 15.2929L9.29289 13.2929C9.68342 12.9024 10.3166 12.9024 10.7071 13.2929L12.7071 15.2929C13.0976 15.6834 13.0976 16.3166 12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L11 16.4142V19Z" fill="black" />
+                <path d="M19 11C19.5523 11 20 10.5523 20 10C20 9.44771 19.5523 9 19 9H18C17.4477 9 17 9.44771 17 10C17 10.5523 17.4477 11 18 11H19Z" fill="black" />
+                <path d="M3 10C3 10.5523 2.55228 11 2 11H1C0.447715 11 0 10.5523 0 10C0 9.44771 0.447715 9 1 9H2C2.55228 9 3 9.44771 3 10Z" fill="black" />
+                <path d="M15.6568 17.0711C16.0474 17.4616 16.6805 17.4616 17.0711 17.0711C17.4616 16.6805 17.4616 16.0474 17.0711 15.6569L16.364 14.9497C15.9734 14.5592 15.3403 14.5592 14.9497 14.9497C14.5592 15.3403 14.5592 15.9734 14.9497 16.364L15.6568 17.0711Z" fill="black" />
+                <path d="M5.05026 5.05025C4.65973 5.44078 4.02657 5.44078 3.63604 5.05025L2.92894 4.34315C2.53841 3.95262 2.53841 3.31946 2.92894 2.92893C3.31946 2.53841 3.95262 2.53841 4.34315 2.92893L5.05026 3.63604C5.44078 4.02656 5.44078 4.65973 5.05026 5.05025Z" fill="black" />
+                <path d="M2.92893 15.6569C2.53841 16.0474 2.53841 16.6805 2.92893 17.0711C3.31946 17.4616 3.95262 17.4616 4.34315 17.0711L5.05025 16.364C5.44078 15.9734 5.44078 15.3403 5.05025 14.9497C4.65973 14.5592 4.02656 14.5592 3.63604 14.9497L2.92893 15.6569Z" fill="black" />
+                <path d="M14.9498 5.05025C14.5592 4.65973 14.5592 4.02656 14.9498 3.63604L15.6569 2.92893C16.0474 2.53841 16.6805 2.53841 17.0711 2.92893C17.4616 3.31946 17.4616 3.95262 17.0711 4.34315L16.364 5.05025C15.9734 5.44078 15.3403 5.44078 14.9498 5.05025Z" fill="black" />
+                <path d="M6.88852 11.6054C6.20788 10.2872 6.42185 8.6284 7.52512 7.52513C8.89195 6.15829 11.108 6.15829 12.4749 7.52513C13.5781 8.6284 13.7921 10.2872 13.1115 11.6054C12.8581 12.0961 13.0505 12.6993 13.5412 12.9527C14.0319 13.2061 14.6351 13.0137 14.8885 12.523C15.9569 10.4539 15.6256 7.84739 13.8891 6.11091C11.7412 3.96303 8.25879 3.96303 6.1109 6.11091C4.37443 7.84739 4.04305 10.4539 5.11144 12.523C5.36483 13.0137 5.96806 13.2061 6.45879 12.9527C6.94951 12.6993 7.14191 12.0961 6.88852 11.6054Z" fill="black" />
+              </svg>
+              <div>
+                Dhuha
+              </div>
+            </div>
+            <div>{todaySchedule.dhuha}</div>
+          </div>
+          <div className='w-full flex justify-between'>
+            <div className='flex gap-2'>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 0C10.5523 0 11 0.447715 11 1V2C11 2.55228 10.5523 3 10 3C9.44771 3 9 2.55228 9 2V1C9 0.447715 9.44771 0 10 0Z" fill="black" />
+                <path d="M10 17C10.5523 17 11 17.4477 11 18V19C11 19.5523 10.5523 20 10 20C9.44771 20 9 19.5523 9 19V18C9 17.4477 9.44771 17 10 17Z" fill="black" />
+                <path d="M19 11C19.5523 11 20 10.5523 20 10C20 9.44771 19.5523 9 19 9H18C17.4477 9 17 9.44771 17 10C17 10.5523 17.4477 11 18 11H19Z" fill="black" />
+                <path d="M3 10C3 10.5523 2.55228 11 2 11H1C0.447715 11 0 10.5523 0 10C0 9.44771 0.447715 9 1 9H2C2.55228 9 3 9.44771 3 10Z" fill="black" />
+                <path d="M14.9497 16.364L15.6569 17.0711C16.0474 17.4616 16.6805 17.4616 17.0711 17.0711C17.4616 16.6805 17.4616 16.0474 17.0711 15.6569L16.364 14.9497C15.9734 14.5592 15.3403 14.5592 14.9497 14.9497C14.5592 15.3403 14.5592 15.9734 14.9497 16.364Z" fill="black" />
+                <path d="M5.05025 5.05025C4.65973 5.44078 4.02656 5.44078 3.63604 5.05025L2.92893 4.34315C2.53841 3.95262 2.53841 3.31946 2.92893 2.92893C3.31946 2.53841 3.95262 2.53841 4.34315 2.92893L5.05025 3.63604C5.44078 4.02656 5.44078 4.65973 5.05025 5.05025Z" fill="black" />
+                <path d="M2.92893 15.6569C2.53841 16.0474 2.53841 16.6805 2.92893 17.0711C3.31946 17.4616 3.95262 17.4616 4.34315 17.0711L5.05025 16.364C5.44078 15.9734 5.44078 15.3403 5.05025 14.9497C4.65973 14.5592 4.02656 14.5592 3.63604 14.9497L2.92893 15.6569Z" fill="black" />
+                <path d="M14.9497 5.05025C14.5592 4.65973 14.5592 4.02656 14.9497 3.63604L15.6569 2.92893C16.0474 2.53841 16.6805 2.53841 17.0711 2.92893C17.4616 3.31946 17.4616 3.95262 17.0711 4.34315L16.364 5.05025C15.9734 5.44078 15.3403 5.44078 14.9497 5.05025Z" fill="black" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 4.5C6.96243 4.5 4.5 6.96243 4.5 10C4.5 13.0376 6.96243 15.5 10 15.5C13.0376 15.5 15.5 13.0376 15.5 10C15.5 6.96243 13.0376 4.5 10 4.5ZM6.5 10C6.5 8.067 8.067 6.5 10 6.5C11.933 6.5 13.5 8.067 13.5 10C13.5 11.933 11.933 13.5 10 13.5C8.067 13.5 6.5 11.933 6.5 10Z" fill="black" />
+              </svg>
+              <div>
+                Dhuhr
+              </div>
+            </div>
+            <div>{todaySchedule.dzuhur}</div>
+          </div>
+          <div className='w-full flex justify-between'>
+            <div className='flex gap-2'>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 1C11 0.447715 10.5523 0 10 0C9.44771 0 9 0.447715 9 1V2C9 2.55228 9.44771 3 10 3C10.5523 3 11 2.55228 11 2V1Z" fill="black" />
+                <path d="M11 14C11 13.4477 10.5523 13 10 13C9.44771 13 9 13.4477 9 14V16.5858L8.70711 16.2929C8.31658 15.9024 7.68342 15.9024 7.29289 16.2929C6.90237 16.6834 6.90237 17.3166 7.29289 17.7071L9.29289 19.7071C9.68342 20.0976 10.3166 20.0976 10.7071 19.7071L12.7071 17.7071C13.0976 17.3166 13.0976 16.6834 12.7071 16.2929C12.3166 15.9024 11.6834 15.9024 11.2929 16.2929L11 16.5858V14Z" fill="black" />
+                <path d="M19 11C19.5523 11 20 10.5523 20 10C20 9.44771 19.5523 9 19 9H18C17.4477 9 17 9.44771 17 10C17 10.5523 17.4477 11 18 11H19Z" fill="black" />
+                <path d="M3 10C3 10.5523 2.55228 11 2 11H1C0.447715 11 0 10.5523 0 10C0 9.44771 0.447715 9 1 9H2C2.55228 9 3 9.44771 3 10Z" fill="black" />
+                <path d="M17.0711 15.6569L16.364 14.9497C15.9734 14.5592 15.3403 14.5592 14.9497 14.9497C14.5592 15.3403 14.5592 15.9734 14.9497 16.364L15.6569 17.0711C16.0474 17.4616 16.6805 17.4616 17.0711 17.0711C17.4616 16.6805 17.4616 16.0474 17.0711 15.6569Z" fill="black" />
+                <path d="M5.05025 5.05025C4.65973 5.44078 4.02656 5.44078 3.63604 5.05025L2.92893 4.34315C2.53841 3.95262 2.53841 3.31946 2.92893 2.92893C3.31946 2.53841 3.95262 2.53841 4.34314 2.92893L5.05025 3.63604C5.44078 4.02656 5.44078 4.65973 5.05025 5.05025Z" fill="black" />
+                <path d="M2.92893 15.6569C2.53841 16.0474 2.53841 16.6805 2.92893 17.0711C3.31946 17.4616 3.95262 17.4616 4.34315 17.0711L5.05025 16.364C5.44078 15.9734 5.44078 15.3403 5.05025 14.9497C4.65973 14.5592 4.02656 14.5592 3.63604 14.9497L2.92893 15.6569Z" fill="black" />
+                <path d="M14.9497 5.05025C14.5592 4.65973 14.5592 4.02656 14.9497 3.63604L15.6569 2.92893C16.0474 2.53841 16.6805 2.53841 17.0711 2.92893C17.4616 3.31946 17.4616 3.95262 17.0711 4.34315L16.364 5.05025C15.9734 5.44078 15.3403 5.44078 14.9497 5.05025Z" fill="black" />
+                <path d="M6.88853 11.6054C6.20788 10.2872 6.42185 8.6284 7.52512 7.52513C8.89196 6.15829 11.108 6.15829 12.4749 7.52513C13.5781 8.6284 13.7921 10.2872 13.1115 11.6054C12.8581 12.0961 13.0505 12.6993 13.5412 12.9527C14.0319 13.2061 14.6351 13.0137 14.8885 12.523C15.9569 10.4539 15.6256 7.84739 13.8891 6.11091C11.7412 3.96303 8.25879 3.96303 6.11091 6.11091C4.37443 7.84739 4.04305 10.4539 5.11145 12.523C5.36484 13.0137 5.96806 13.2061 6.45879 12.9527C6.94952 12.6993 7.14191 12.0961 6.88853 11.6054Z" fill="black" />
+              </svg>
+              <div>
+                Ashar
+              </div>
+            </div>
+            <div>{todaySchedule.ashr}</div>
+          </div>
+          <div className='w-full flex justify-between'>
+            <div className='flex gap-2'>
+              <div className='w-5 h-5 flex justify-center items-center'>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.76888 1.48178C7.95479 1.14368 7.92959 0.728785 7.70414 0.415662C7.47868 0.102539 7.0932 -0.0529455 6.71359 0.0161252C3.39947 0.619136 0.886688 3.51868 0.886688 7.00721C0.886688 8.78301 1.53936 10.4089 2.61659 11.6542C2.9779 12.0719 3.60942 12.1176 4.02711 11.7563C4.44481 11.395 4.49051 10.7634 4.1292 10.3458C3.35438 9.45004 2.88669 8.2845 2.88669 7.00721C2.88669 5.17333 3.854 3.56427 5.30633 2.66386C5.26798 2.94327 5.24818 3.22844 5.24818 3.51802C5.24818 6.96084 8.03914 9.7518 11.482 9.7518C11.7715 9.7518 12.0566 9.732 12.336 9.69367C12.1933 9.92372 12.0328 10.1417 11.8563 10.3458C11.495 10.7634 11.5407 11.395 11.9584 11.7563C12.3761 12.1176 13.0076 12.0719 13.369 11.6542C14.1808 10.7157 14.752 9.56075 14.9839 8.28638C15.0529 7.90677 14.8974 7.52129 14.5843 7.29584C14.2712 7.07039 13.8563 7.04519 13.5182 7.2311C12.915 7.56276 12.2221 7.7518 11.482 7.7518C9.14371 7.7518 7.24818 5.85627 7.24818 3.51802C7.24818 2.77792 7.43722 2.08498 7.76888 1.48178Z" fill="black" />
+                  <path d="M15 16C15.5523 16 16 15.5523 16 15C16 14.4477 15.5523 14 15 14H1C0.447715 14 0 14.4477 0 15C0 15.5523 0.447715 16 1 16L15 16Z" fill="black" />
+                </svg>
+              </div>
+              <div>
+                Maghrib
+              </div>
+            </div>
+            <div>{todaySchedule.magrib}</div>
+          </div>
+          <div className='w-full flex justify-between'>
+            <div className='flex gap-2'>
+              <div className='w-5 h-5 flex justify-center items-center'>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5503 0.529004C7.77576 0.842127 7.80095 1.25702 7.61505 1.59512C7.22325 2.30769 7 3.12627 7 3.99999C7 6.76142 9.23858 9 12 9C12.8737 9 13.6923 8.77674 14.4049 8.38495C14.743 8.19904 15.1579 8.22424 15.471 8.44969C15.7841 8.67514 15.9396 9.06063 15.8705 9.44023C15.1917 13.1712 11.9272 16 8 16C3.58172 16 0 12.4183 0 8C0 4.07276 2.82882 0.80832 6.55976 0.129468C6.93937 0.0603968 7.32485 0.215881 7.5503 0.529004ZM5.11357 2.73833C3.25774 3.75873 2 5.7331 2 8C2 11.3137 4.68629 14 8 14C10.2669 14 12.2413 12.7423 13.2617 10.8864C12.8521 10.961 12.4304 11 12 11C8.13401 11 5 7.86599 5 3.99999C5 3.56956 5.03896 3.14785 5.11357 2.73833Z" fill="black" />
+                </svg>
+              </div>
+              <div>
+                Isya
+              </div>
+            </div>
+            <div>{todaySchedule.isya}</div>
+          </div>
+          <table className="w-full">
+          </table>
+        </div>
+      )}
+      <h3 class="text-lg font-semibold mb-2">Ayat of the day</h3>
+      <AyatQuran />
+      <p class="text-gray-600 dark:text-gray-300"></p>
+    </aside>
   );
 };
 
 export default Sidebar;
+/**
+ * 
+              <thead>
+                <tr>
+                  <th className="border border-gray-300 px-4 py-2">Waktu</th>
+                  <th className="border border-gray-300 px-4 py-2">Sholat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.imsyak}</td>
+                  <td className="border border-gray-300 px-4 py-2">Imsyak</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.shubuh}</td>
+                  <td className="border border-gray-300 px-4 py-2">Subuh</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.terbit}</td>
+                  <td className="border border-gray-300 px-4 py-2">Terbit</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.dhuha}</td>
+                  <td className="border border-gray-300 px-4 py-2">Dhuha</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.dzuhur}</td>
+                  <td className="border border-gray-300 px-4 py-2">Dzuhur</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.ashr}</td>
+                  <td className="border border-gray-300 px-4 py-2">Ashar</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.magrib}</td>
+                  <td className="border border-gray-300 px-4 py-2">Maghrib</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">{todaySchedule.isya}</td>
+                  <td className="border border-gray-300 px-4 py-2">Isya</td>
+                </tr>
+              </tbody>
+ */
