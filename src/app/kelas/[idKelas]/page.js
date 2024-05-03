@@ -15,8 +15,7 @@ import { redirect } from 'next/navigation';
 
 
 const DetailKelas = ({ params }) => {
-  let decodedToken = null;
-  let userRole = null;
+  const [decodedToken, setDecodedToken] = useState('');
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
@@ -25,16 +24,20 @@ const DetailKelas = ({ params }) => {
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
 
   useEffect(() => {
-    const checkAuthority = async () => {
-      decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-      if (decodedToken) {
-        userRole = decodedToken.role;
-      } else {
-        redirect(`/user/login`)
-      }
-    };
-    checkAuthority();
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
   }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      console.log("Access granted");
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchMapelInfo = async () => {
@@ -70,7 +73,7 @@ const DetailKelas = ({ params }) => {
   // Fungsi untuk menghapus mata pelajaran
   const handleDeleteMapel = async (mapelId) => {
     try {
-      await axios.delete(`http://localhost:8083/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
       // Refresh halaman setelah penghapusan berhasil
       window.location.reload();
     } catch (error) {

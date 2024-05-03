@@ -10,6 +10,7 @@ import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
 import { parseJwt } from '@/app/utils/jwtUtils';
 
 const CreateKelasForm = () => {
+  const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
   const [selectedNuptk, setSelectedNuptk] = useState('');
@@ -19,21 +20,25 @@ const CreateKelasForm = () => {
   const [nisnOptions, setNisnOptions] = useState(null);
 
   useEffect(() => {
-    const checkAuthority = async () => {
-      const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-      if (decodedToken) {
-        if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
-          console.log('You have authority')
-        } else {
-          console.log('You dont have authority')
-          redirect(`/kelas/myclass`)
-        }
-      } else {
-        redirect(`/user/login`)
-      }
-    };
-    checkAuthority();
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
   }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect(`/kelas/myclass`);
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {

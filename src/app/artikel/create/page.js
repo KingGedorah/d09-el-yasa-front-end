@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';

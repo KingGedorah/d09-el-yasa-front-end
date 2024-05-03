@@ -10,6 +10,7 @@ import * as KelasApi from '../../../api/kelas';
 import axios from 'axios';
 
 const DetailMapel = ({ params }) => {
+  const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [materiInfo, setMateriInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState({});
@@ -17,17 +18,21 @@ const DetailMapel = ({ params }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const checkAuthority = async () => {
-      decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-      if (decodedToken) {
-        console.log('You are a', decodedToken.role)
-      } else {
-        redirect(`/user/login`)
-      }
-    };
-    checkAuthority();
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
   }, []);
-  
+
+  useEffect(() => {
+    if (decodedToken) {
+      console.log("Access granted");
+    }
+  }, [decodedToken]);
+
   useEffect(() => {
     const fetchMapelInfo = async () => {
       try {
@@ -45,14 +50,14 @@ const DetailMapel = ({ params }) => {
         setLoading(false);
       }
     };
-    
+
     fetchMapelInfo();
   }, [idMapel]);
 
   // Fungsi untuk menghapus materi
   const handleDeleteMateri = async (materiId) => {
     try {
-      await axios.delete(`http://localhost:8083/api/kelas/delete/materi/${materiId}`);
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/materi/${materiId}`);
       // Setelah penghapusan berhasil, refresh halaman
       window.location.reload();
     } catch (error) {
@@ -86,7 +91,7 @@ const DetailMapel = ({ params }) => {
                         <line x1="12" y1="11" x2="12" y2="17" />
                         <polyline points="9 14 12 17 15 14" />
                       </svg>{' '}
-                      <a className="font-bold text-green-800" href={`http://localhost:8083/api/kelas/get/materi/${materi.idKonten}`} target="_blank" rel="noopener noreferrer">
+                      <a className="font-bold text-green-800" href={`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/get/materi/${materi.idKonten}`} target="_blank" rel="noopener noreferrer">
                         {materi.nama_file}
                       </a>
                     </h2>

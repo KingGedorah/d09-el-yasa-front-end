@@ -16,6 +16,7 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 
 const ViewAllKelas = () => {
   let userRole = null;
+  const [decodedToken, setDecodedToken] = useState('');
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,23 +24,26 @@ const ViewAllKelas = () => {
 
 
   useEffect(() => {
-    const checkAuthority = async () => {
-      const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-      if (decodedToken) {
-        if (decodedToken.role === 'GURU' || decodedToken.role === 'ADMIN') {
-          userRole = decodedToken.role;
-          console.log('You have authority');
-        } else {
-          console.log('You dont have authority');
-          redirect(`/kelas/myclass`);
-        }
-      } else {
-        redirect(`/user/login`);
-      }
-    };
-  
-    checkAuthority();
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
   }, []);
+
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
+        userRole = decodedToken.role;
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect(`/kelas/myclass`);
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchKelasList = async () => {
@@ -69,7 +73,7 @@ const ViewAllKelas = () => {
   // Fungsi untuk menghapus kelas
   const handleDeleteKelas = async (idKelas) => {
     try {
-      await axios.delete(`http://localhost:8083/api/kelas/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
       // Refresh halaman setelah penghapusan berhasil
       window.location.reload();
     } catch (error) {

@@ -12,29 +12,34 @@ import { redirect } from 'next/navigation';
 const FormCreateMapel = ({ params }) => {
   const { idKelas } = params;
   const [namaMapel, setNamaMapel] = useState('');
+  const [decodedToken, setDecodedToken] = useState('');
   const [selectedNuptk, setSelectedNuptk] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State untuk menampilkan modal
+  const [showModal, setShowModal] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState();
 
   useEffect(() => {
-    const checkAuthority = async () => {
-      const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-      if (decodedToken) {
-        if (decodedToken.role == 'GURU' || decodedToken.role == 'ADMIN') {
-          console.log('You have authority')
-        } else {
-          console.log('You dont have authority')
-          redirect(`/kelas/${idKelas}`)
-        }
-      } else {
-        redirect(`/user/login`)
-      }
-    };
-    checkAuthority();
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
   }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'GURU') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect(`/kelas/${idKelas}`);
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
