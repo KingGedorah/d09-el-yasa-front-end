@@ -20,11 +20,8 @@ const Sidebar = () => {
       .then(response => response.json())
       .then(data => {
         // Cari data jadwal sholat untuk hari ini
-        /**
-         * TODO: Revert to this
-         * data.find(schedule => schedule.tanggal === todayDateISO)
-         */
-        const todayData = data.at(0);
+       
+        data.find(schedule => schedule.tanggal === todayDateISO)
         setTodaySchedule(todayData);
       })
       .catch(error => console.error('Error fetching data:', error));

@@ -18,27 +18,27 @@ const CreateArticle = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  // TODO: Uncomment this later
-  // useEffect(() => {
-  //   const token = sessionStorage.getItem('jwtToken');
-  //   if (token) {
-  //     setDecodedToken(parseJwt(token));
-  //   } else {
-  //     console.log("Need to login");
-  //     redirect('/user/login');
-  //   }
-  // }, []);
+  
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   if (decodedToken) {
-  //     if (decodedToken.role === 'ADMIN') {
-  //       console.log("Access granted");
-  //     } else {
-  //       console.log("Not authorized");
-  //       redirect('/berita');
-  //     }
-  //   }
-  // }, [decodedToken]);
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect('/berita');
+      }
+    }
+  }, [decodedToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
