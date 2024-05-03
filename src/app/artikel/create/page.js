@@ -7,9 +7,9 @@ import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Link from 'next/link';
 import Image from 'next/image';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const CreateArticle = () => {
-  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const [judulArtikel, setJudulArtikel] = useState('');
   const [isiArtikel, setIsiArtikel] = useState('');
