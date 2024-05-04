@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
@@ -10,6 +11,8 @@ import Image from 'next/image';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const CreateArticle = () => {
   const [decodedToken, setDecodedToken] = useState('');
