@@ -9,6 +9,9 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 import Sidebar from '../../../components/sidebar';
 import axios from 'axios';
 import { redirect } from 'next/navigation';
+import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const BeritaDetail = ({ params }) => {
   const { idBerita } = params;
@@ -136,7 +139,12 @@ const BeritaDetail = ({ params }) => {
 
             <div className="mb-4">
               <label htmlFor="isiBerita" className="block text-gray-700 font-bold mb-2">Isi Berita:</label>
-              <textarea name="isiBerita" rows="5" className="border border-gray-300 rounded-md py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiBerita" value={isiBerita} onChange={(e) => setIsiBerita(e.target.value)} required />
+              <ReactQuill
+                theme="snow"
+                value={isiBerita}
+                onChange={setIsiBerita}
+                required
+              />
             </div>
 
             <div className="mb-4">
