@@ -9,7 +9,6 @@ import Footer from '../../components/footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { parseJwt } from '@/app/utils/jwtUtils';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
