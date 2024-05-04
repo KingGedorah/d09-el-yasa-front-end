@@ -34,6 +34,33 @@ const UserIdPage = ({ params }) => {
   }, [IdUser]);
 
   return (
+    <div>
+
+<div className="border-b border-gray-200 dark:border-gray-850">
+        <div className="px-4 py-6 md:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <a className="flex gap-4 items-center font-nunito-sans" href="#">
+              <span className="font-semibold text-base sm:text-xl">MyJISc</span>
+            </a>
+            <nav className="hidden md:flex gap-4 text-sm font-nunito-sans">
+              <a className="font-medium text-gray-900 dark:text-gray-100" href="#">
+                Halaman Depan
+              </a>
+              <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                Kelas
+              </a>
+              <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                Materi
+              </a>
+            </nav>
+            <div className="flex items-center gap-4 md:gap-6">
+              {/* <button type="button" className="text-sm font-medium font-nunito-sans">
+                Logout
+              </button> */}
+            </div>
+          </div>
+        </div>
+      </div>
      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       <table style={{ borderCollapse: 'collapse', width: '80%', textAlign: 'center' }}>
         <thead style={{ backgroundColor: '#f2f2f2' }}>
@@ -64,6 +91,11 @@ const UserIdPage = ({ params }) => {
         </tbody>
       </table>
       {error && <p>{error}</p>}
+    </div>
+    <footer className="bg-gray-900 text-white text-center py-6 absolute bottom-0 w-full">
+        <p>&copy; 2024 Jakarta Islamic School. All rights reserved.</p>
+      </footer>
+
     </div>
   );
 };
