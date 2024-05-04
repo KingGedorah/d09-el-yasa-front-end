@@ -8,6 +8,8 @@ import Footer from '../../components/footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const CreateArticle = () => {
   const [decodedToken, setDecodedToken] = useState('');
@@ -18,7 +20,7 @@ const CreateArticle = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  
+
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
@@ -101,7 +103,12 @@ const CreateArticle = () => {
 
             <div className="mb-4">
               <label htmlFor="isiArtikel" className="block text-gray-700 font-bold mb-2">Isi Artikel</label>
-              <textarea name="isiArtikel" rows="5" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full resize-none focus:outline-none focus:border-blue-500" id="isiArtikel" value={isiArtikel} onChange={(e) => setIsiArtikel(e.target.value)} required />
+              <ReactQuill
+                theme="snow"
+                value={isiArtikel}
+                onChange={setIsiArtikel}
+                required
+              />
             </div>
 
             <div className='block text-gray-700 font-bold mb-2'>Upload gambar</div>
