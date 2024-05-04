@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { getBeritaById } from '../../../api/berita';
 import Navbar from '../../../components/navbar';
 import Footer from '../../../components/footer';
