@@ -1,90 +1,232 @@
 "use client";
 
 
-import React from 'react';
+import React, { useState } from 'react';
 
 const Page = () => {
+  const [activeSection, setActiveSection] = useState('pending'); // 'pending' or 'submitted'
+
   // Data contoh untuk card
   const data = [
     {
       id: 1,
       namaPeminjaman: "Peminjaman 1",
       tanggalPeminjaman: "1 Januari 2024",
-      namaPeminjam: "John Doe"
+      namaPeminjam: "John Doe",
+      status: 'pending'
     },
     {
       id: 2,
       namaPeminjaman: "Peminjaman 2",
       tanggalPeminjaman: "5 Februari 2024",
-      namaPeminjam: "Jane Doe"
+      namaPeminjam: "Jane Doe",
+      status: 'pending'
+    },
+    {
+      id: 3,
+      namaPeminjaman: "Peminjaman 3",
+      tanggalPeminjaman: "10 Maret 2024",
+      namaPeminjam: "Jack Smith",
+      status: 'submitted'
+    },
+    {
+      id: 4,
+      namaPeminjaman: "Peminjaman 4",
+      tanggalPeminjaman: "15 April 2024",
+      namaPeminjam: "Jill Smith",
+      status: 'submitted'
     }
   ];
 
+  const handleSectionChange = (section) => {
+    setActiveSection(section);
+  };
+
   return (
-<div className="border-b border-gray-200 dark:border-gray-850">
-<div className="px-4 py-6 md:px-6 lg:px-8">
-    <div className="flex items-center justify-between">
-      <a className="flex gap-4 items-center font-nunito-sans" href="#">
-        <span className="font-semibold text-base sm:text-xl">MyJISc</span>
-      </a>
-      <nav className="hidden md:flex gap-4 text-sm font-nunito-sans">
-        <a className="font-medium text-gray-900 dark:text-gray-100" href="#">
-          Beranda
-        </a>
-        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-          Akademik
-        </a>
-        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-          Peminjaman Fasilitas
-        </a>
-        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-          Nilai
-        </a>
-        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-          Tentang Kami
-        </a>
-      </nav>
-      <div className="flex items-center gap-4 md:gap-6">
-        {/* <button type="button" className="text-sm font-medium font-nunito-sans">
-          Logout
-        </button> */}
-      </div>
-    </div>
-  </div>
-  <div className="flex justify-center">
-  <div className="flex flex-col gap-4">
-    {data.map(item => (
-      <div key={item.id} style={{ width: '400px', backgroundColor: '#FFFFFF', borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', border: '2px solid #8B5CF6' }}>
-        <div>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>{item.namaPeminjaman}</h3>
-          <p style={{ fontSize: '0.875rem' }}>{item.tanggalPeminjaman}</p>
-          <p style={{ fontSize: '0.875rem' }}>{item.namaPeminjam}</p>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
-        <button style={{ backgroundColor: '#FFFFFF', color: '#8B5CF6', borderColor: '#8B5CF6', borderWidth: '2px', borderStyle: 'solid', fontWeight: 'bold', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
-        Detail
-        </button>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button style={{ backgroundColor: '#8B5CF6', color: '#FFFFFF', fontWeight: 'bold', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
-              Setujui
-            </button>
-            <button style={{ backgroundColor: '#FFFFFF', color: '#EF4444', fontWeight: 'bold', padding: '0.5rem 1rem', borderColor: '#EF4444', borderWidth: '2px', borderStyle: 'solid', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
-              Tolak
-            </button>
+    <div className="border-b border-gray-200 dark:border-gray-850">
+      <div className="px-4 py-6 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between">
+          <a className="flex gap-4 items-center font-nunito-sans" href="#">
+            <span className="font-semibold text-base sm:text-xl">MyJISc</span>
+          </a>
+          <nav className="hidden md:flex gap-4 text-sm font-nunito-sans">
+            <a className="font-medium text-gray-900 dark:text-gray-100" href="#">
+              Beranda
+            </a>
+            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+              Akademik
+            </a>
+            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+              Peminjaman Fasilitas
+            </a>
+            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+              Nilai
+            </a>
+            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+              Tentang Kami
+            </a>
+          </nav>
+          <div className="flex items-center gap-4 md:gap-6">
+            {/* <button type="button" className="text-sm font-medium font-nunito-sans">
+              Logout
+            </button> */}
           </div>
         </div>
       </div>
-    ))}
-  </div>
-</div>
-
-
-
+      <div>
+        <div className="flex justify-center mt-8">
+          <button
+            className={`mx-2 py-2 px-4 rounded ${
+              activeSection === 'pending' ? 'bg-purple-600 text-white' : 'bg-gray-300 text-gray-800'
+            }`}
+            onClick={() => handleSectionChange('pending')}
+          >
+            Pending
+          </button>
+          <button
+            className={`mx-2 py-2 px-4 rounded ${
+              activeSection === 'submitted' ? 'bg-purple-600 text-white' : 'bg-gray-300 text-gray-800'
+            }`}
+            onClick={() => handleSectionChange('submitted')}
+          >
+            Submitted
+          </button>
+        </div>
+        <div className="flex flex-col items-center mt-8">
+          {data
+            .filter(card => card.status === activeSection)
+            .map(card => (
+              <div key={card.id} style={{ width: '400px', backgroundColor: '#FFFFFF', borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', border: '2px solid #8B5CF6', marginBottom: '16px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>{card.namaPeminjaman}</h3>
+                  <p style={{ fontSize: '0.875rem' }}>{card.tanggalPeminjaman}</p>
+                  <p style={{ fontSize: '0.875rem' }}>{card.namaPeminjam}</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+                  {activeSection === 'submitted' && (
+                    <button style={{ backgroundColor: '#FFFFFF', color: '#8B5CF6', borderColor: '#8B5CF6', borderWidth: '2px', borderStyle: 'solid', fontWeight: 'bold', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+                      Dikembalikan
+                    </button>
+                  )}
+                  {activeSection === 'pending' && (
+                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+                      <button style={{ backgroundColor: '#FFFFFF', color: '#8B5CF6', borderColor: '#8B5CF6', borderWidth: '2px', borderStyle: 'solid', fontWeight: 'bold', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+                      Detail
+                      </button>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button style={{ backgroundColor: '#8B5CF6', color: '#FFFFFF', fontWeight: 'bold', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+                            Setujui
+                          </button>
+                          <button style={{ backgroundColor: '#FFFFFF', color: '#EF4444', fontWeight: 'bold', padding: '0.5rem 1rem', borderColor: '#EF4444', borderWidth: '2px', borderStyle: 'solid', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+                            Tolak
+                          </button>
+                        </div>
+                      </div>
+                  )}
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+      <footer className="bg-gray-900 text-white text-center py-6 w-full fixed bottom-0">
+        <p>&copy; 2024 Jakarta Islamic School. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
 
 export default Page;
+
+
+// "use client";
+
+
+// import React from 'react';
+// import React, { useState } from 'react';
+
+// const Page = () => {
+//   // Data contoh untuk card
+//   const data = [
+//     {
+//       id: 1,
+//       namaPeminjaman: "Peminjaman 1",
+//       tanggalPeminjaman: "1 Januari 2024",
+//       namaPeminjam: "John Doe"
+//     },
+//     {
+//       id: 2,
+//       namaPeminjaman: "Peminjaman 2",
+//       tanggalPeminjaman: "5 Februari 2024",
+//       namaPeminjam: "Jane Doe"
+//     }
+//   ];
+
+//   return (
+// <div className="border-b border-gray-200 dark:border-gray-850">
+// <div className="px-4 py-6 md:px-6 lg:px-8">
+//     <div className="flex items-center justify-between">
+//       <a className="flex gap-4 items-center font-nunito-sans" href="#">
+//         <span className="font-semibold text-base sm:text-xl">MyJISc</span>
+//       </a>
+//       <nav className="hidden md:flex gap-4 text-sm font-nunito-sans">
+//         <a className="font-medium text-gray-900 dark:text-gray-100" href="#">
+//           Beranda
+//         </a>
+//         <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+//           Akademik
+//         </a>
+//         <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+//           Peminjaman Fasilitas
+//         </a>
+//         <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+//           Nilai
+//         </a>
+//         <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+//           Tentang Kami
+//         </a>
+//       </nav>
+//       <div className="flex items-center gap-4 md:gap-6">
+//         {/* <button type="button" className="text-sm font-medium font-nunito-sans">
+//           Logout
+//         </button> */}
+//       </div>
+//     </div>
+//   </div>
+//   <div className="flex justify-center">
+//   <div className="flex flex-col gap-4">
+//     {data.map(item => (
+//       <div key={item.id} style={{ width: '400px', backgroundColor: '#FFFFFF', borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', border: '2px solid #8B5CF6' }}>
+//         <div>
+//           <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>{item.namaPeminjaman}</h3>
+//           <p style={{ fontSize: '0.875rem' }}>{item.tanggalPeminjaman}</p>
+//           <p style={{ fontSize: '0.875rem' }}>{item.namaPeminjam}</p>
+//         </div>
+//         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+//         <button style={{ backgroundColor: '#FFFFFF', color: '#8B5CF6', borderColor: '#8B5CF6', borderWidth: '2px', borderStyle: 'solid', fontWeight: 'bold', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+//         Detail
+//         </button>
+//           <div style={{ display: 'flex', gap: '8px' }}>
+//             <button style={{ backgroundColor: '#8B5CF6', color: '#FFFFFF', fontWeight: 'bold', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+//               Setujui
+//             </button>
+//             <button style={{ backgroundColor: '#FFFFFF', color: '#EF4444', fontWeight: 'bold', padding: '0.5rem 1rem', borderColor: '#EF4444', borderWidth: '2px', borderStyle: 'solid', borderRadius: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+//               Tolak
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     ))}
+//   </div>
+// </div>
+
+
+
+//     </div>
+//   );
+// };
+
+// export default Page;
+
 
 
 // import { useState, useEffect } from 'react';
