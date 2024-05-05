@@ -6,12 +6,15 @@ import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import { parseJwt } from '@/app/utils/jwtUtils';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import 'react-quill/dist/quill.snow.css';
-
+import { redirect } from 'next/navigation';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import Link from 'next/link';
+import Image from 'next/image';
 
 const CreateBerita = () => {
+  const router = useRouter()
   const [decodedToken, setDecodedToken] = useState('');
   const [judulBerita, setJudulBerita] = useState('');
   const [isiBerita, setIsiBerita] = useState('');
@@ -64,14 +67,14 @@ const CreateBerita = () => {
       setGambar(null);
       setKategori([]);
     } catch (error) {
-      console.error('Error creating article:', error);
+      console.error('Error creating news:', error);
       setIsError(true);
     }
   };
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
-    redirect('/berita')
+    window.location.href = '/berita';
   };
 
   const handleErrorPopup = () => {
@@ -91,12 +94,12 @@ const CreateBerita = () => {
     <div>
       <Navbar />
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
-        <h1 className="text-2xl font-semibold mb-4">Buat Berita</h1>
+        <h1 className="text-2xl font-semibold mb-4 text-center">Buat Berita</h1>
         <form onSubmit={handleSubmit}>
           <div>
             <div className="mb-4">
               <label htmlFor="judulBerita" className="block text-gray-700 font-bold mb-2">Judul Berita</label>
-              <input type="text" id="judulBerita" value={judulBerita} onChange={(e) => setJudulBerita(e.target.value)} name="judulBerita" className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
+              <input type="text" id="judulBerita" value={judulBerita} onChange={(e) => setJudulBerita(e.target.value)} name="judulBerita" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
@@ -123,8 +126,10 @@ const CreateBerita = () => {
                 <label className="mr-4 mb-2"><input type="checkbox" value="Prestasi" checked={kategori.includes("Prestasi")} onChange={handleCheckboxChange} /> Prestasi</label>
               </div>
             </div>
-            <div className="flex justify-center">
-              <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Submit</button>
+
+            <div className="flex gap-4 justify-end">
+              <Link href="/berita" className="bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Cancel</Link>
+              <button type="submit" className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Post</button>
             </div>
           </div>
         </form>

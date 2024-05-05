@@ -15,6 +15,7 @@ import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const BeritaDetail = ({ params }) => {
+  const router = useRouter()
   const { idBerita } = params;
   const [decodedToken, setDecodedToken] = useState('');
   const [judulBerita, setJudulBerita] = useState('');
@@ -93,7 +94,6 @@ const BeritaDetail = ({ params }) => {
       setIsiBerita('');
       setGambar(null);
       setKategori([]);
-      redirect('/berita')
     } catch (error) {
       console.error('Error updating berita:', error);
     }
@@ -105,7 +105,7 @@ const BeritaDetail = ({ params }) => {
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
-    redirect('/berita')
+    window.location.href = '/berita';
   }
 
   const handleRemoveImage = () => {
