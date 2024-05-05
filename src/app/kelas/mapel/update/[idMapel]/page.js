@@ -5,7 +5,8 @@ import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Select from 'react-select';
-import { getMapelByIdMapel } from '@/app/api/kelas';
+import { getUsersById, getAllGuru } from '@/app/api/user';
+import { getMapelByIdMapel} from '@/app/api/kelas';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
 
@@ -13,7 +14,7 @@ const UpdateMapelForm = ({ params }) => {
   const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [namaMapel, setNamaMapel] = useState('');
-  const [selectedNuptk, setSelectedNuptk] = useState(null);
+  const [selectedNuptk, setSelectedNuptk] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -49,7 +50,6 @@ const UpdateMapelForm = ({ params }) => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
@@ -57,19 +57,21 @@ const UpdateMapelForm = ({ params }) => {
         console.log(error);
       }
     };
-
+  
     fetchNuptkOptions();
   }, []);
+  
 
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await KelasApi.getMapelByIdMapel(idMapel);
+        const response = await getMapelByIdMapel(idMapel);
         const { data } = response;
 
         setNamaMapel(data.namaMapel);
-        setSelectedNuptk({ value: data.nuptkGuruMengajar, label: data.nuptkGuruMengajar });
+        const dataNuptk = await getUsersById(data.nuptkGuruMengajar)
+        setSelectedNuptk({ value: data.nuptkGuruMengajar, label: `${dataNuptk.firstname} ${dataNuptk.lastname}` });
       } catch (error) {
         console.error('Error', error.response);
       }
@@ -80,6 +82,10 @@ const UpdateMapelForm = ({ params }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!selectedNuptk) {
+      console.error('NUPTK is required and must be valid');
+      return;
+    }
     try {
       const response = await axios.put(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/mapel/update/${idMapel}`, {
         namaMapel,

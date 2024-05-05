@@ -105,7 +105,7 @@ const BeritaDetail = ({ params }) => {
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
-    router.push('/berita')
+    window.location.href = '/berita';
   }
 
   const handleRemoveImage = () => {

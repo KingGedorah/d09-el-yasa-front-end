@@ -109,7 +109,7 @@ const DetailKelas = ({ params }) => {
                         <p className="text-gray-600 mb-4">Guru Pengajar: {mapel.nuptkGuruMengajar}</p>
                       </a>
                       {/* Icon gerigi untuk dropdown, hanya ditampilkan untuk peran GURU */}
-                      {userRole === 'GURU' && showDropdown === index && (
+                      {decodedToken.role === 'GURU' && showDropdown === index && (
                         <div className="absolute top-0 right-0 mt-12 mr-2">
                           <div className="bg-white dark:bg-gray-800 rounded-md shadow-md">
                             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -124,7 +124,7 @@ const DetailKelas = ({ params }) => {
                         </div>
                       )}
                       {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih, hanya untuk peran GURU */}
-                      {userRole === 'GURU' && (
+                      {decodedToken.role  === 'GURU' && (
                         <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
                           <p className="font-bold bg-white rounded-full p-1 opacity-50">Sunting</p>
                           <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(index)} className="ml-1" />
