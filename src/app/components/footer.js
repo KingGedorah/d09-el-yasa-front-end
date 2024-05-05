@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-        <footer class="bg-gray-900 text-white text-center py-6">
+        <footer class="bg-gray-900 text-white text-center py-6 w-full fixed bottom-0">
             <p>&copy; 2024 Jakarta Islamic School. All rights reserved.</p>
         </footer>
   );

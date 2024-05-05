@@ -28,9 +28,16 @@ const ArtikelDetail = ({ params }) => {
     fetchArticle();
   }, []);
 
+  const handleLogout = () => {
+    // Clear session storage or remove the token
+    sessionStorage.removeItem('jwtToken');
+    // Redirect to login page or home page
+    window.location.href = '/user/login';
+  };
+
   return (
     <div>
-      <Navbar />
+      <Navbar handleLogout={handleLogout} />
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">
