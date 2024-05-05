@@ -14,7 +14,7 @@ const ViewAllInventory = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const inventoryData = await InventoryApi.getAllInventory();
+        const inventoryData = await InventaryApi.getAllInventory();
         setInventoryList(inventoryData);
         setLoading(false);
       } catch (error) {
