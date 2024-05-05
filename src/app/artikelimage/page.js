@@ -29,7 +29,7 @@ const ArticleImage = ({ idArtikel }) => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return null
   }
 
   return <Image src={imageData} alt="Article" width="600" height="400"/>;

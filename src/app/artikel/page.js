@@ -8,6 +8,7 @@ import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import Sidebar from '../components/sidebar';
 import Image from 'next/image';
+import DOMPurify from 'dompurify';
 
 const ArtikelList = () => {
   const [articles, setArticles] = useState([]);
@@ -19,6 +20,9 @@ const ArtikelList = () => {
     const fetchData = async () => {
       try {
         const articlesData = await getAllArticles();
+        articlesData.forEach(article => {
+          article.isiArtikel = DOMPurify.sanitize(article.isiArtikel);
+        });
         setArticles(articlesData);
         setLoading(false);
       } catch (error) {
@@ -66,7 +70,7 @@ const ArtikelList = () => {
                     <Link href={`/artikel/${article.idArtikel}`} passHref>
                       <h2 className='text-lg text-bold mb-4 mt-4'>{article.judulArtikel}</h2>
                     </Link>
-                    <p className="text-gray-700">{article.isiArtikel.slice(0, 150)}...</p>
+                    <div dangerouslySetInnerHTML={{ __html: article.isiArtikel.slice(0, 150) }} />
                     <Link href={`/artikel/${article.idArtikel}`} passHref>
                       <button className="mt-2 bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] px-4 py-2 rounded-md cursor-pointer">Baca Selengkapnya</button>
                     </Link>
