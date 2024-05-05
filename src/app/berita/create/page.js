@@ -8,7 +8,7 @@ import Footer from '../../components/footer';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { useRouter } from 'next/navigation';
 import 'react-quill/dist/quill.snow.css';
-
+import { redirect } from 'next/navigation';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import Link from 'next/link';
 import Image from 'next/image';
