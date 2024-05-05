@@ -13,14 +13,17 @@ import Link from 'next/link';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
+import { getAllPeminjaman } from '@/app/api/peminjaman';
+import { getInventoryById } from '@/app/api/peminjaman';
+import { confirmPeminjaman } from '@/app/api/peminjaman';
+import { declinePeminjaman } from '@/app/api/peminjaman';
 
-const CreateArticle = () => {
+const DetailPeminjaman = (params) => {
   const router = useRouter()
   const [decodedToken, setDecodedToken] = useState('');
 
   const [idPeminjam, setIdPeminjam] = useState('');
   const [namaPeminjam, setNamaPeminjam] = useState('');
-  const [kelasDipinjam, setKelasDipinjam] = useState('');
   const [keperluanPeminjaman, setKeperluanPeminjaman] = useState('');
   const [tanggalPengembalian, setTanggalPengembalian] = useState('');
   const [itemQuantities, setItemQuantities] = useState([]);
@@ -28,9 +31,54 @@ const CreateArticle = () => {
   const [inventories, setInventories] = useState([])
   const [kelas, setKelas] = useState([])
 
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [isSuccessConfirm, setIsSuccessConfirm] = useState(false);
+  const [isErrorConfirm, setIsErrorConfirm] = useState(false);
+  const [isSuccessDecline, setIsSuccessDecline] = useState(false);
+  const [isErrorDecline, setIsErrorDecline] = useState(false);
 
+  const [peminjaman, setPeminjaman] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    }
+  }, []);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allPeminjaman = await getAllPeminjaman();
+        let peminjamanData = allPeminjaman.find(data => data.idRequest === params.params.id); 
+    
+        if (!peminjamanData) {
+          console.log("No matching peminjaman data found");
+          setLoading(false);
+          return; 
+        }
+    
+        const user = await getUsersById(peminjamanData.idPeminjam);
+    
+        peminjamanData.nama = user.firstname + " " + user.lastname;
+
+        const inventories = await Promise.all(peminjamanData.listIdItem.map(itemId => getInventoryById(itemId)));
+    
+        peminjamanData.listItems = inventories.map(inventory => inventory.namaItem);
+    
+        console.log(peminjamanData)
+        setPeminjaman(peminjamanData);
+        setLoading(false);
+      } catch (error) {
+        console.log(error)
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,10 +86,6 @@ const CreateArticle = () => {
       if (token) {
         try {
           const decodedToken = parseJwt(token);
-          const user = await getUsersById(decodedToken.id);
-          console.log(user)
-          setIdPeminjam(decodedToken.id);
-          setNamaPeminjam(user.firstname + " " + user.lastname)
           setDecodedToken(decodedToken);
         } catch (error) {
           console.error('Failed to fetch user:', error);
@@ -108,59 +152,56 @@ const CreateArticle = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const listIdItem = []
-    const listQuantityItem = []
-
-    for (const itemQuantity of itemQuantities) {
-        listIdItem.push(itemQuantity["idItem"])
-        listQuantityItem.push(itemQuantity["quantity"])
-    }
-
-    const formData = {
-        idPeminjam,
-        keperluanPeminjaman,
-        returnDate: tanggalPengembalian,
-        listIdItem,
-        listQuantityItem
-      };
-  
-      const jsonString = JSON.stringify(formData, null, 2);
-
+  const handleConfirm = async (e) => {
+    e.preventDefault()
     try {
-      const response = await axios.post('https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/borrow', jsonString, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      setIsSuccess(true);
+      const data = await confirmPeminjaman(params.params.id)
+      setIsSuccessConfirm(true);
     } catch (error) {
-      console.error('Error updating:', error);
-      setIsError(true);
+      console.error('Error confirm peminjaman:', error);
+      setIsErrorConfirm(true);
     }
   };
 
-  const handleSuccessPopup = () => {
-    setIsSuccess(false);
+  const handleDecline = async (e) => {
+    e.preventDefault()
+    try {
+      const data = await declinePeminjaman(params.params.id)
+      setIsSuccessDecline(true);
+    } catch (error) {
+      console.error('Error decline peminjaman:', error);
+      setIsErrorDecline(true);
+    }
+  };
+
+  const handleSuccessConfirmPopup = () => {
+    setIsSuccessConfirm(false);
     router.push('/peminjaman')
   };
 
-  const handleErrorPopup = () => {
-    setIsError(false);
+  const handleErrorConfirmPopup = () => {
+    setIsErrorConfirm(false);
+  };
+
+  const handleSuccessDeclinePopup = () => {
+    setIsSuccessDecline(false);
+    router.push('/peminjaman')
+  };
+
+  const handleErrorDeclinePopup = () => {
+    setIsErrorDecline(false);
   };
 
   return (
     <div>
       <Navbar />
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
-        <h1 className="text-2xl font-semibold mb-4 text-center">Buat Peminjaman</h1>
-        <form onSubmit={handleSubmit}>
+        <h1 className="text-2xl font-semibold mb-4 text-center">Detail Peminjaman</h1>
+        <form>
           <div>
             <div className="mb-4">
               <label htmlFor="namaPeminjam" className="block text-gray-700 font-bold mb-2">Nama Peminjam</label>
-              <input disabled type="text" id="namaPeminjam" value={namaPeminjam} onChange={(e) => setNamaPeminjam(e.target.value)} name="namaPeminjam" className="border disabled cursor-not-allowed border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
+              <input disabled type="text" id="namaPeminjam" value={peminjaman?.nama} onChange={(e) => setNamaPeminjam(e.target.value)} name="namaPeminjam" className="border disabled cursor-not-allowed border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             {/* <div className="mb-4">
@@ -184,12 +225,12 @@ const CreateArticle = () => {
 
             <div className="mb-4">
               <label htmlFor="keperluanPeminjaman" className="block text-gray-700 font-bold mb-2">Keperluan Peminjaman</label>
-              <input type="text" id="keperluanPeminjaman" value={keperluanPeminjaman} onChange={(e) => setKeperluanPeminjaman(e.target.value)} name="keperluanPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
+              <input disabled type="text" id="keperluanPeminjaman" value={peminjaman?.keperluanPeminjaman} onChange={(e) => setKeperluanPeminjaman(e.target.value)} name="keperluanPeminjaman" className="border border-[#6C80FF] cursor-not-allowed rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
               <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Tanggal Pengembalian</label>
-              <input type="date" id="tanggalPengembalian" value={tanggalPengembalian} onChange={(e) => setTanggalPengembalian(e.target.value)} name="tanggalPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
+              <input disabled type="date" id="tanggalPengembalian" value={peminjaman?.returnDate?.split('T')[0]} onChange={(e) => setTanggalPengembalian(e.target.value)} name="tanggalPeminjaman" className="border border-[#6C80FF] cursor-not-allowed rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
@@ -206,10 +247,11 @@ const CreateArticle = () => {
                             type="number"
                             id={inventory.idItem}
                             min={0}
-                            value={itemQuantities.find(item => item.idItem === inventory.idItem)?.quantity || 0}
+                            value={peminjaman?.listQuantityItem?.[peminjaman?.listIdItem?.indexOf(inventory.idItem) ?? -1] ?? 0}
                             onChange={(e) => handleQuantityChange(inventory.idItem, parseInt(e.target.value, 10) || 0)}
                             name="keperluanPeminjaman"
-                            className="border border-[#6C80FF] rounded-xl mx-auto py-2 px-4 w-24 h-10 focus:outline-none focus:border-blue-500"
+                            disabled
+                            className="border cursor-not-allowed border-[#6C80FF] rounded-xl mx-auto py-2 px-4 w-24 h-10 focus:outline-none focus:border-blue-500"
                             required
                         />
                         </div>
@@ -222,26 +264,42 @@ const CreateArticle = () => {
                 </div>
 
             <div className="flex gap-4 justify-end">
-              <Link href="/peminjaman" className="bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Cancel</Link>
-              <button type="submit" className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Post</button>
+              <button type='button' onClick={handleDecline} className="bg-white border-[1px] border-[#E16B6B] text-[#E16B6B] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Tolak</button>
+              <button type='button' onClick={handleConfirm} className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Setujui</button>
             </div>
           </div>
         </form>
       </div>
 
-      {isSuccess && (
+      {isSuccessConfirm && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-green-600 font-semibold">Peminjaman berhasil dibuat!</p>
-            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-green-600 font-semibold">Peminjaman berhasil disetujui!</p>
+            <button onClick={handleSuccessConfirmPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
           </div>
         </div>
       )}
-      {isError && (
+      {isErrorConfirm && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-red-600 font-semibold">Gagal membuat peminjaman!</p>
-            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-red-600 font-semibold">Peminjaman gagal disetujui!</p>
+            <button onClick={handleErrorConfirmPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+          </div>
+        </div>
+      )}
+      {isSuccessDecline && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute">
+            <p className="text-green-600 font-semibold">Peminjaman berhasil ditolak!</p>
+            <button onClick={handleSuccessDeclinePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+          </div>
+        </div>
+      )}
+      {isErrorDecline && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute">
+            <p className="text-red-600 font-semibold">Peminjaman gagal ditolak!</p>
+            <button onClick={handleErrorDeclinePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
           </div>
         </div>
       )}
@@ -250,4 +308,4 @@ const CreateArticle = () => {
   );
 };
 
-export default CreateArticle;
+export default DetailPeminjaman;

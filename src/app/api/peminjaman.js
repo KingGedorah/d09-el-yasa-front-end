@@ -41,3 +41,41 @@ export const getInventoryById = async (id) => {
     throw error; // Re-throw the error for handling in the component
   }
 };
+
+export const confirmPeminjaman = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/borrow/confirm/${id}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching peminjaman:', error);
+    throw error; // Re-throw the error for handling in the component
+  }
+};
+
+export const declinePeminjaman = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/borrow/decline/${id}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching peminjaman:', error);
+    throw error; // Re-throw the error for handling in the component
+  }
+};

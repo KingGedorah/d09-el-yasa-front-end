@@ -75,12 +75,23 @@ const PeminjamanList = () => {
             {!loading && !error && peminjaman.length > 0 && (
               <div className="flex flex-col gap-4 w-full">
                 {peminjaman.map(p => (
-                  <div key={p.idPeminjaman} className="relative flex flex-col gap-2 p-4 border-[1px] border-[#6C80FF] w-full rounded-xl">
+                  <div key={p.idRequest} className="relative flex flex-col gap-2 p-4 border-[1px] border-[#6C80FF] w-full rounded-xl">
                     <strong className='text-lg'>Peminjaman {p.nama}</strong>
                     <p>Tanggal Pengembalian: {new Date(p.returnDate).toLocaleDateString()}</p>
                     <p>Keperluan Peminjaman: {p.keperluanPeminjaman}</p>
                     <p>Barang yang Dipinjam: {p.listItems.join(", ")}</p>
-                    <strong className='text-[#6C80FF] absolute bottom-4 right-8'>{p.statusPeminjaman}</strong>
+                    <Link href={`/peminjaman/${p.idRequest}`} passHref className='absolute top-4 right-4'>
+                      <button className="mt-2 bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] px-4 py-2 rounded-md cursor-pointer">Detail</button>
+                    </Link>
+                    {
+                      p.status === "PENDING" && <strong className='text-[#6C80FF] absolute bottom-4 right-8'>{p.status}</strong>
+                    }
+                    {
+                      p.status === "CONFIRMED" && <strong className='text-[#1BC590] absolute bottom-4 right-8'>{p.status}</strong>
+                    }
+                    {
+                      p.status === "DECLINED" && <strong className='text-[#E16B6B] absolute bottom-4 right-8'>{p.status}</strong>
+                    }
                   </div>
                 ))}
               </div>
