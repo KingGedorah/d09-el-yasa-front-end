@@ -143,7 +143,7 @@ const UpdateInventoryForm = ({ params }) => {
                 id="quantity-borrowed"
                 value={quantityBorrowed}
                 onChange={(e) => setQuantityBorrowed(e.target.value)}
-                required
+                readOnly // Menggunakan readOnly untuk mencegah pengeditan
                 className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
