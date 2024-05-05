@@ -5,9 +5,9 @@ import axios from 'axios';
 import Select from 'react-select';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
-import * as InventoryApi from '../../api/inventaris';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
+import * as InventoryApi from '../../../api/inventaris';
 
 const UpdateInventoryForm = ({ params }) => {
   const { idItem } = params;
