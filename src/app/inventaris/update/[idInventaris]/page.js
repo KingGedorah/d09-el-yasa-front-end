@@ -5,7 +5,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
-import * as InventaryApi from '../../api/inventaris';
+import * as InventoryApi from '../../api/inventaris';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
 
@@ -30,15 +30,14 @@ const UpdateInventoryForm = ({ params }) => {
 
   useEffect(() => {
     if (decodedToken) {
-      // Lakukan pengecekan otorisasi di sini
-      // Sesuaikan dengan logika otorisasi Anda
+      // TODO otorisasi??
     }
   }, [decodedToken]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await InventoryApi.getInventoryById(idItem); // Sesuaikan dengan API untuk mendapatkan data inventaris berdasarkan ID
+        const response = await InventoryApi.getInventoryById(idItem);
         const { data } = response;
 
         setNamaItem(data.namaItem);
@@ -57,7 +56,7 @@ const UpdateInventoryForm = ({ params }) => {
 
     try {
       const response = await axios.put(
-        `https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/update/${idItem}`, // Sesuaikan dengan URL API Anda
+        `https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/update/${idItem}`,
         {
           namaItem,
           quantityItem,

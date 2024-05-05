@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Sidebar from '@/app/components/sidebar';
-import * as InventaryApi from '../../api/inventaris';
+import * as InventoryApi from '../../api/inventaris';
 
 const ViewAllInventory = () => {
   const [inventoryList, setInventoryList] = useState([]);
@@ -14,7 +14,7 @@ const ViewAllInventory = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const inventoryData = await InventaryApi.getAllInventory();
+        const inventoryData = await InventoryApi.getAllInventory();
         setInventoryList(inventoryData);
         setLoading(false);
       } catch (error) {
