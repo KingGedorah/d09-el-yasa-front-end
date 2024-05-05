@@ -5,34 +5,34 @@ import axios from 'axios';
 import Select from 'react-select';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
-import { parseJwt } from '@/app/utils/jwtUtils';
+// import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
 import * as InventoryApi from '../../../api/inventaris';
 
 const UpdateInventoryForm = ({ params }) => {
   const { idItem } = params;
-  const [decodedToken, setDecodedToken] = useState('');
+  // const [decodedToken, setDecodedToken] = useState('');
   const [namaItem, setNamaItem] = useState('');
   const [quantityItem, setQuantityItem] = useState(0);
   const [quantityBorrowed, setQuantityBorrowed] = useState(0);
   const [errorPopup, setErrorPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  useEffect(() => {
-    const token = sessionStorage.getItem('jwtToken');
-    if (token) {
-      setDecodedToken(parseJwt(token));
-    } else {
-      console.log("Need to login");
-      redirect('/user/login');
-    }
-  }, []);
+  // useEffect(() => {
+  //   const token = sessionStorage.getItem('jwtToken');
+  //   if (token) {
+  //     setDecodedToken(parseJwt(token));
+  //   } else {
+  //     console.log("Need to login");
+  //     redirect('/user/login');
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (decodedToken) {
-      // TODO otorisasi??
-    }
-  }, [decodedToken]);
+  // useEffect(() => {
+  //   if (decodedToken) {
+  //     // TODO otorisasi??
+  //   }
+  // }, [decodedToken]);
 
   useEffect(() => {
     async function fetchData() {
