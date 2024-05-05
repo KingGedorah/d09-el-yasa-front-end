@@ -11,12 +11,19 @@ import Image from 'next/image';
 import { parseJwt } from '../utils/jwtUtils';
 
 const BeritaList = () => {
+  const [decodedToken, setDecodedToken] = useState('');
   const [beritas, setBeritas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
   const [query, setQuery] = useState("")
 
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    }
+  }, []);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
