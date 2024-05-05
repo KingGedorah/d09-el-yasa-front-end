@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'https://myjisc-user-e270dbbfd631.herokuapp.com/api';
 
 
 export const getUsersById = async (IdUser) => {
@@ -46,3 +46,40 @@ export const createUser = async (userData, token) => {
       return null;
     }
   };
+
+  export const getAllGuru = async (token) => {
+    try {
+      const response = await fetch(`${BASE_URL}/user/get-all-guru`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      console.error('Error fetching guru', error);
+      throw error;
+    }
+  }
+  
+  
+  export const getAllMurid = async (token) => {
+    try {
+      const response = await fetch(`${BASE_URL}/user/get-all-murid`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json();
+      return data.data;
+    }  catch (error) {
+      console.error('Error fetching murid', error);
+      throw error;
+    }
+  } 

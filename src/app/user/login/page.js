@@ -19,7 +19,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/auth/authenticate', {
+      const response = await axios.post('https://myjisc-user-e270dbbfd631.herokuapp.com/api/v1/auth/authenticate', {
         email,
         password
       });
@@ -27,7 +27,7 @@ const LoginPage = () => {
       sessionStorage.setItem('jwtToken', token);
       console.log(token);
       // Redirect to dashboard or some other page on successful login
-      router.push('/dashboard');
+      window.location.href = '/';
     } catch (error) {
       setError('Invalid email or password');
     }
