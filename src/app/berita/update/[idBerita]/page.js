@@ -15,6 +15,7 @@ import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const BeritaDetail = ({ params }) => {
+  const router = useRouter()
   const { idBerita } = params;
   const [decodedToken, setDecodedToken] = useState('');
   const [judulBerita, setJudulBerita] = useState('');

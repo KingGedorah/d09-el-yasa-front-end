@@ -6,6 +6,7 @@ import BeritaImage from '@/app/beritaimage/page';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Sidebar from '../../components/sidebar';
+import DOMPurify from 'dompurify';
 
 const BeritaDetail = ({ params }) => {
   const { idBerita } = params;
@@ -17,7 +18,11 @@ const BeritaDetail = ({ params }) => {
     const fetchBerita = async () => {
       try {
         const beritaData = await getBeritaById(idBerita);
-        setBerita(beritaData.data); // Access the 'data' property from the response
+        const cleanedBerita = {
+          ...beritaData.data,
+          isiBerita: DOMPurify.sanitize(beritaData.data.isiBerita)
+        };
+        setBerita(cleanedBerita);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -36,8 +41,8 @@ const BeritaDetail = ({ params }) => {
           <div className="w-full lg:w-2/3">
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
-            {berita && ( // Check if berita is not null before rendering
-              <div class="bg-gray-200 rounded-lg overflow-hidden">
+            {berita && ( 
+              <div className="bg-gray-200 rounded-lg overflow-hidden">
                 <div className="p-4">
                   {berita.imageBerita ? (
                     <BeritaImage idBerita={berita.idBerita} className="w-full h-48 object-cover" />
@@ -45,10 +50,9 @@ const BeritaDetail = ({ params }) => {
                     <img src="https://via.placeholder.com/600x400" alt="Placeholder" className="w-full h-48 object-cover" />
                   )}
                 </div>
-                <div class="p-4">
-                  <h2 class="text-xl font-semibold mb-2">{berita.judulBerita}</h2>
-                  <p class="text-gray-700 mb-4">{berita.isiBerita}</p>
-                  {/* Menampilkan kategori artikel */}
+                <div className="p-4">
+                  <h2 className="text-xl font-semibold mb-2">{berita.judulBerita}</h2>
+                  <div dangerouslySetInnerHTML={{ __html: berita.isiBerita }} />
                   <div className="flex flex-wrap">
                     <span className="font-semibold mr-2 mb-2">Tags:</span>
                     {berita.kategori.map((kategori, index) => (

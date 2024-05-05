@@ -39,7 +39,7 @@ const CreateArticle = () => {
         console.log("Access granted");
       } else {
         console.log("Not authorized");
-        redirect('/berita');
+        redirect('/artikel');
       }
     }
   }, [decodedToken]);
@@ -60,7 +60,7 @@ const CreateArticle = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(response.data);
+      
       setIsSuccess(true);
       setJudulArtikel('');
       setIsiArtikel('');

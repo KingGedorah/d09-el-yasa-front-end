@@ -13,6 +13,7 @@ const ArtikelList = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [query, setQuery] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,17 +30,30 @@ const ArtikelList = () => {
     fetchData();
   }, []);
 
+  const handleChangeSearchBar = (e) => {
+    setQuery(e.target.value)
+  }
+
+
   return (
     <div>
       <Navbar />
       <div className="mx-auto mt-8 px-12 rounded-lg">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">
+          <div className='relative'>
+            <input onChange={handleChangeSearchBar} type='text' className="border border-[#6C80FF] mb-4 rounded-xl py-3 bg-transparent px-4 w-full focus:outline-none focus:border-blue-500" />
+            <div className='absolute top-[14px] right-4'>
+              <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 0C13.968 0 18 4.032 18 9C18 13.968 13.968 18 9 18C4.032 18 0 13.968 0 9C0 4.032 4.032 0 9 0ZM9 16C12.867 16 16 12.867 16 9C16 5.132 12.867 2 9 2C5.132 2 2 5.132 2 9C2 12.867 5.132 16 9 16ZM17.485 16.071L20.314 18.899L18.899 20.314L16.071 17.485L17.485 16.071Z" fill="#6C80FF"/>
+              </svg>
+            </div>
+            </div>
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
             {!loading && !error && articles && articles.length > 0 && (
               <div className="flex flex-col gap-4 w-full">
-                {articles.map(article => (
+                {articles.filter(article => article.judulArtikel.toLowerCase().includes(query.toLowerCase())).map(article => (
                   <div key={article.idArtikel} className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl">
                     <div className='flex justify-center'>
 
