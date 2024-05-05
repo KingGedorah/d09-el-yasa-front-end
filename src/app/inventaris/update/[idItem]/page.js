@@ -15,6 +15,7 @@ const UpdateInventoryForm = ({ params }) => {
   const [namaItem, setNamaItem] = useState('');
   const [quantityItem, setQuantityItem] = useState(0);
   const [quantityBorrowed, setQuantityBorrowed] = useState(0);
+  const [imageFile, setImageFile] = useState(null); // Tambah state untuk file gambar
   const [errorPopup, setErrorPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -40,11 +41,17 @@ const UpdateInventoryForm = ({ params }) => {
         const response = await InventoryApi.getInventoryById(idItem);
         const { data } = response;
 
-        setNamaItem(data.namaItem);
-        setQuantityItem(data.quantityItem);
-        setQuantityBorrowed(data.quantityBorrowed);
+        setNamaItem(response.namaItem);
+        setQuantityItem(response.quantityItem);
+        setQuantityBorrowed(response.quantityBorrowed);
+
+        console.log(response)
       } catch (error) {
-        console.error('Error:', error.response.data);
+        if (error.response) {
+          console.error('Error:', error.response.data);
+        } else {
+          console.error('Error:', error.message);
+        }
       }
     }
 
@@ -55,18 +62,29 @@ const UpdateInventoryForm = ({ params }) => {
     e.preventDefault();
 
     try {
+      const formData = new FormData();
+      formData.append('namaItem', namaItem);
+      formData.append('quantityItem', quantityItem);
+      formData.append('quantityBorrowed', quantityBorrowed);
+      
+      // Tambahkan gambar baru ke FormData jika ada
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
       const response = await axios.put(
         `https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/update/${idItem}`,
+        formData,
         {
-          namaItem,
-          quantityItem,
-          quantityBorrowed,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         }
       );
       console.log('Response:', response.data);
       setShowSuccess(true);
     } catch (error) {
-      console.error('Error:', error.response.data);
+      console.error('Error:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -126,6 +144,17 @@ const UpdateInventoryForm = ({ params }) => {
                 value={quantityBorrowed}
                 onChange={(e) => setQuantityBorrowed(e.target.value)}
                 required
+                className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="image" className="inline-block text-sm font-medium">
+                Gambar:
+              </label>
+              <input
+                type="file"
+                id="image"
+                onChange={(e) => setImageFile(e.target.files[0])}
                 className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
