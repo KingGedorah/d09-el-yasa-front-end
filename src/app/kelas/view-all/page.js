@@ -15,7 +15,6 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 
 
 const ViewAllKelas = () => {
-  let userRole = null;
   const [decodedToken, setDecodedToken] = useState('');
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,8 +34,7 @@ const ViewAllKelas = () => {
 
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
-        userRole = decodedToken.role;
+      if (decodedToken.role === 'ADMIN') {
         console.log("Access granted");
       } else {
         console.log("Not authorized");
@@ -118,7 +116,7 @@ const ViewAllKelas = () => {
                       <p className="text-gray-600 mb-4">{kelas.deskripsiKelas}</p>
                     </a>
                     {/* Icon gerigi untuk dropdown, hanya ditampilkan untuk peran GURU */}
-                    {userRole === 'GURU' && showDropdown === kelas.idKelas && (
+                    {decodedToken.role === 'ADMIN' && showDropdown === kelas.idKelas && (
                       
                       <div className="absolute top-0 right-0 mt-12 mr-2">
                                 
@@ -135,7 +133,7 @@ const ViewAllKelas = () => {
                       </div>
                     )}
                     {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih, hanya untuk peran GURU */}
-                    {userRole === 'GURU' && (
+                    {decodedToken.role === 'ADMIN' && (
                       <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
                         <span className="bg-white rounded-full p-1 font-bold opacity-50">Sunting</span>
                         <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(kelas.idKelas)} className="ml-1" />
