@@ -93,7 +93,6 @@ const BeritaDetail = ({ params }) => {
       setIsiBerita('');
       setGambar(null);
       setKategori([]);
-      redirect('/berita')
     } catch (error) {
       console.error('Error updating berita:', error);
     }
@@ -105,7 +104,7 @@ const BeritaDetail = ({ params }) => {
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
-    redirect('/berita')
+    window.location.href = '/berita';
   }
 
   const handleRemoveImage = () => {

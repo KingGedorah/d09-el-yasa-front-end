@@ -71,7 +71,7 @@ const CreateBerita = () => {
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
-    redirect('/berita')
+    window.location.href = '/berita';
   };
 
   const handleErrorPopup = () => {
