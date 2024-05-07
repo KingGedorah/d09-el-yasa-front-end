@@ -83,35 +83,35 @@ const DetailPeminjaman = (params) => {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const token = sessionStorage.getItem('jwtToken');
-  //     if (token) {
-  //       try {
-  //         const decodedToken = parseJwt(token);
-  //         setDecodedToken(decodedToken);
-  //       } catch (error) {
-  //         console.error('Failed to fetch user:', error);
-  //       }
-  //     } else {
-  //       console.log("Need to login");
-  //       router.push('/user/login')
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = sessionStorage.getItem('jwtToken');
+      if (token) {
+        try {
+          const decodedToken = parseJwt(token);
+          setDecodedToken(decodedToken);
+        } catch (error) {
+          console.error('Failed to fetch user:', error);
+        }
+      } else {
+        console.log("Need to login");
+        router.push('/user/login')
+      }
+    };
 
-  //   fetchData();
-  // }, []); 
+    fetchData();
+  }, []); 
 
-  // useEffect(() => {
-  //   if (decodedToken) {
-  //     if (decodedToken.role === 'ADMIN') {
-  //       console.log("Access granted");
-  //     } else {
-  //       console.log("Not authorized");
-  //       redirect('/artikel');
-  //     }
-  //   }
-  // }, [decodedToken]);
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect('/artikel');
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -298,7 +298,7 @@ const DetailPeminjaman = (params) => {
                 )
               }
               {
-                (peminjaman?.status === "DECLINED" || peminjaman?.status === 'PENDING') && (
+                (peminjaman?.status === 'PENDING') && (
                   <button type='button' onClick={handleConfirm} className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Setujui</button>
                 )
               }

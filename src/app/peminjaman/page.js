@@ -11,29 +11,6 @@ import { getUsersById } from '@/app/api/user';
 import { getInventoryById } from '../api/peminjaman';
 import { getNotifMessageByIdPeminjam } from '../api/peminjaman';
 
-const addIdRequestToDataB = (dataA, dataB) => {
-  const confirmedRequests = dataA.filter(item => item.status === 'CONFIRMED');
-  const declinedRequests = dataA.filter(item => item.status === 'DECLINED');
-
-  // console.log("HAHAH", confirmedRequests, declinedRequests)
-  // console.log("DATAB", dataB)
-
-  let confirmedIndex = 0;
-  let declinedIndex = 0;
-
-  dataB.forEach(notif => {
-    if (notif.message.includes("disetujui")) {
-      notif.idRequest = confirmedRequests[confirmedIndex].idRequest;
-      confirmedIndex++;
-    } else if (notif.message.includes("ditolak")) {
-      notif.idRequest = declinedRequests[declinedIndex].idRequest;
-      declinedIndex++;
-    }
-  });
-
-  // console.log("DATAB2", dataB)
-};
-
 const PeminjamanList = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [peminjaman, setPeminjaman] = useState(null);
@@ -91,21 +68,16 @@ const PeminjamanList = () => {
     const fetchNotifMessage = async (id) => {
       try {
         const msg = await getNotifMessageByIdPeminjam(id);
-        console.log("HEHEHE", msg)
-
-        addIdRequestToDataB(peminjaman, msg);
-
-        console.log(JSON.stringify(msg, null, 2));
         setMsg(msg);
       } catch (error) {
         console.error('Error fetching notification message:', error);
       }
     };
   
-    if (decodedToken && peminjaman) {
+    if (decodedToken) {
       fetchNotifMessage(decodedToken.id)
     }
-  }, [decodedToken, peminjaman]);
+  }, [decodedToken]);
   
 
   return (

@@ -48,7 +48,7 @@ const CreateArticle = () => {
         }
       } else {
         console.log("Need to login");
-        redirect('/user/login');
+        router.push('/user/login');
       }
     };
 
@@ -189,7 +189,7 @@ const CreateArticle = () => {
 
             <div className="mb-4">
               <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Tanggal Pengembalian</label>
-              <input type="date" id="tanggalPengembalian" value={tanggalPengembalian} onChange={(e) => setTanggalPengembalian(e.target.value)} name="tanggalPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
+              <input type="date" min={new Date().toISOString().split('T')[0]} id="tanggalPengembalian" value={tanggalPengembalian} onChange={(e) => setTanggalPengembalian(e.target.value)} name="tanggalPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
