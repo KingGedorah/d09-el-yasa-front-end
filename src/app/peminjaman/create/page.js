@@ -55,16 +55,16 @@ const CreateArticle = () => {
     fetchData();
   }, []); 
 
-  // useEffect(() => {
-  //   if (decodedToken) {
-  //     if (decodedToken.role === 'ADMIN') {
-  //       console.log("Access granted");
-  //     } else {
-  //       console.log("Not authorized");
-  //       redirect('/artikel');
-  //     }
-  //   }
-  // }, [decodedToken]);
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect('/artikel');
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchData = async () => {

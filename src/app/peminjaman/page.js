@@ -36,7 +36,6 @@ const PeminjamanList = () => {
           nama: users[index].firstname + " " + users[index].lastname
         }));
 
-        console.log("pem", peminjamanWithUser)
 
         const inventoryPromises = peminjamanWithUser.map(p =>
           Promise.all(p.listIdItem.map(itemId => getInventoryById(itemId)))
