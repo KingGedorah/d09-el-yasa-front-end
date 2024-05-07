@@ -17,6 +17,7 @@ import { getAllPeminjaman } from '@/app/api/peminjaman';
 import { getInventoryById } from '@/app/api/peminjaman';
 import { confirmPeminjaman } from '@/app/api/peminjaman';
 import { declinePeminjaman } from '@/app/api/peminjaman';
+import { deletePeminjaman } from '@/app/api/peminjaman';
 
 const DetailPeminjaman = (params) => {
   const router = useRouter()
@@ -35,6 +36,8 @@ const DetailPeminjaman = (params) => {
   const [isErrorConfirm, setIsErrorConfirm] = useState(false);
   const [isSuccessDecline, setIsSuccessDecline] = useState(false);
   const [isErrorDecline, setIsErrorDecline] = useState(false);
+  const [isSuccessDelete, setIsSuccessDelete] = useState(false);
+  const [isErrorDelete, setIsErrorDelete] = useState(false);
 
   const [peminjaman, setPeminjaman] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +70,7 @@ const DetailPeminjaman = (params) => {
     
         peminjamanData.listItems = inventories.map(inventory => inventory.namaItem);
     
-        console.log(peminjamanData)
+        console.log("GAGA",peminjamanData)
         setPeminjaman(peminjamanData);
         setLoading(false);
       } catch (error) {
@@ -80,24 +83,24 @@ const DetailPeminjaman = (params) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = sessionStorage.getItem('jwtToken');
-      if (token) {
-        try {
-          const decodedToken = parseJwt(token);
-          setDecodedToken(decodedToken);
-        } catch (error) {
-          console.error('Failed to fetch user:', error);
-        }
-      } else {
-        console.log("Need to login");
-        redirect('/user/login');
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const token = sessionStorage.getItem('jwtToken');
+  //     if (token) {
+  //       try {
+  //         const decodedToken = parseJwt(token);
+  //         setDecodedToken(decodedToken);
+  //       } catch (error) {
+  //         console.error('Failed to fetch user:', error);
+  //       }
+  //     } else {
+  //       console.log("Need to login");
+  //       router.push('/user/login')
+  //     }
+  //   };
 
-    fetchData();
-  }, []); 
+  //   fetchData();
+  // }, []); 
 
   // useEffect(() => {
   //   if (decodedToken) {
@@ -174,6 +177,17 @@ const DetailPeminjaman = (params) => {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault()
+    try {
+      const data = await deletePeminjaman(params.params.id)
+      setIsSuccessDelete(true);
+    } catch (error) {
+      console.error('Error decline peminjaman:', error);
+      setIsErrorDelete(true);
+    }
+  };
+
   const handleSuccessConfirmPopup = () => {
     setIsSuccessConfirm(false);
     router.push('/peminjaman')
@@ -190,6 +204,15 @@ const DetailPeminjaman = (params) => {
 
   const handleErrorDeclinePopup = () => {
     setIsErrorDecline(false);
+  };
+
+  const handleSuccessDeletePopup = () => {
+    setIsSuccessDelete(false);
+    router.push('/peminjaman')
+  };
+
+  const handleErrorDeletePopup = () => {
+    setIsErrorDelete(false);
   };
 
   return (
@@ -264,13 +287,42 @@ const DetailPeminjaman = (params) => {
                 </div>
 
             <div className="flex gap-4 justify-end">
-              <button type='button' onClick={handleDecline} className="bg-white border-[1px] border-[#E16B6B] text-[#E16B6B] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Tolak</button>
-              <button type='button' onClick={handleConfirm} className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Setujui</button>
+              {
+                peminjaman?.status === 'CONFIRMED' && (
+                  <button type='button' onClick={handleDelete} className="bg-[#E16B6B] border-[1px] border-[#E16B6B] text-white py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Selesaikan</button>
+                )
+              }
+              {
+                peminjaman?.status === 'PENDING' && (
+                  <button type='button' onClick={handleDecline} className="bg-white border-[1px] border-[#E16B6B] text-[#E16B6B] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Tolak</button>
+                )
+              }
+              {
+                (peminjaman?.status === "DECLINED" || peminjaman?.status === 'PENDING') && (
+                  <button type='button' onClick={handleConfirm} className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Setujui</button>
+                )
+              }
             </div>
           </div>
         </form>
       </div>
 
+      {isSuccessDelete && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute">
+            <p className="text-green-600 font-semibold">Peminjaman berhasil diselesaikan!</p>
+            <button onClick={handleSuccessDeletePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Selesaikan</button>
+          </div>
+        </div>
+      )}
+      {isErrorDelete && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute">
+            <p className="text-red-600 font-semibold">Peminjaman gagal diselesaikan!</p>
+            <button onClick={handleErrorDeletePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Selesaikan</button>
+          </div>
+        </div>
+      )}
       {isSuccessConfirm && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">

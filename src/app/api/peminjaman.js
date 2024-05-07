@@ -42,6 +42,20 @@ export const getInventoryById = async (id) => {
   }
 };
 
+export const getNotifMessageByIdPeminjam = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/notif-message/${id}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching notif message:', error);
+    throw error; // Re-throw the error for handling in the component
+  }
+};
+
 export const confirmPeminjaman = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}/borrow/confirm/${id}`, {
@@ -68,6 +82,25 @@ export const declinePeminjaman = async (id) => {
         "Content-Type": "application/json"
       },
       method: "POST"
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching peminjaman:', error);
+    throw error; // Re-throw the error for handling in the component
+  }
+};
+
+export const deletePeminjaman = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/borrow/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "DELETE"
     });
     if (!response.ok) {
       throw new Error('Network response was not ok');
