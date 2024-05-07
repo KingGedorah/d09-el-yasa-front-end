@@ -7,8 +7,10 @@ import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Sidebar from '../../components/sidebar';
 import DOMPurify from 'dompurify';
+import { useRouter } from 'next/navigation';
 
 const BeritaDetail = ({ params }) => {
+  const router = useRouter()
   const { idBerita } = params;
   const [berita, setBerita] = useState(null);
   const [loading, setLoading] = useState(true);
