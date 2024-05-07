@@ -66,7 +66,6 @@ const CreateArticle = () => {
       setIsiArtikel('');
       setGambar(null);
       setSelectedKategori([]);
-      router.push("/artikel");
     } catch (error) {
       console.error('Error creating article:', error);
       setIsError(true);
@@ -75,7 +74,7 @@ const CreateArticle = () => {
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
-    redirect('/artikel')
+    window.location.href = '/artikel';
   };
 
   const handleErrorPopup = () => {
