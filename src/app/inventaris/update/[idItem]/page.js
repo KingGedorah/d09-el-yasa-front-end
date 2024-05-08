@@ -15,7 +15,6 @@ const UpdateInventoryForm = ({ params }) => {
   const [decodedToken, setDecodedToken] = useState('');
   const [namaItem, setNamaItem] = useState('');
   const [quantityItem, setQuantityItem] = useState(0);
-  const [quantityBorrowed, setQuantityBorrowed] = useState(0);
   const [imageFile, setImageFile] = useState(null); // Tambah state untuk file gambar
   const [errorPopup, setErrorPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -49,7 +48,6 @@ const UpdateInventoryForm = ({ params }) => {
 
         setNamaItem(response.namaItem);
         setQuantityItem(response.quantityItem);
-        setQuantityBorrowed(response.quantityBorrowed);
 
         console.log(response)
       } catch (error) {
@@ -71,7 +69,6 @@ const UpdateInventoryForm = ({ params }) => {
       const formData = new FormData();
       formData.append('namaItem', namaItem);
       formData.append('quantityItem', quantityItem);
-      formData.append('quantityBorrowed', quantityBorrowed);
       
       // Tambahkan gambar baru ke FormData jika ada
       if (imageFile) {
@@ -137,19 +134,6 @@ const UpdateInventoryForm = ({ params }) => {
                 value={quantityItem}
                 onChange={(e) => setQuantityItem(e.target.value)}
                 required
-                className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="quantity-borrowed" className="inline-block text-sm font-medium">
-                Quantity Borrowed:
-              </label>
-              <input
-                type="number"
-                id="quantity-borrowed"
-                value={quantityBorrowed}
-                onChange={(e) => setQuantityBorrowed(e.target.value)}
-                readOnly // Menggunakan readOnly untuk mencegah pengeditan
                 className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>

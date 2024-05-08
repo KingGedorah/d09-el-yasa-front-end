@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/app/components/navbar';
+import Link from 'next/link';
 import Footer from '@/app/components/footer';
 import Sidebar from '@/app/components/sidebar';
 import * as InventoryApi from '../../api/inventaris';
 import { redirect } from 'next/navigation';
+import InventoryImage from '../../inventarisimage/page';
 
 const ViewAllInventory = () => {
   const [inventoryList, setInventoryList] = useState([]);
@@ -48,11 +50,21 @@ const ViewAllInventory = () => {
             inventoryList.map((item, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden mb-4 flex justify-between items-center">
                 <div className="p-4">
-                  <h2 className="text-xl font-bold">ID: {item.idItem}</h2>
+                <h2 className="text-base">ID: {item.idItem}</h2>
+                <InventoryImage idInventaris={item.idItem} className="w-24 h-24 object-cover"/>
+
                   <h2 className="text-base">Nama Item: {item.namaItem}</h2>
                   <h2 className="text-base">Quantity: {item.quantityItem}</h2>
                   <h2 className="text-base">Quantity Borrowed: {item.quantityBorrowed}</h2>
-                  <img src={item.imageItem} alt={`Image of ${item.namaItem}`} className="w-24 h-24" />
+                </div>
+                <div className="p-4">
+                  <Link href={`/inventaris/update/${item.idItem}`} passHref>
+                    <button 
+                      className="bg-gray-500 text-white px-4 py-2 rounded-md cursor-pointer" 
+                    >
+                      Update
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))
@@ -60,7 +72,7 @@ const ViewAllInventory = () => {
             <p>Tidak ada inventaris yang tersedia.</p>
           )}
         </main>
-        <Sidebar />
+        {/* <Sidebar /> */}
       </div>
       <Footer />
     </div>
