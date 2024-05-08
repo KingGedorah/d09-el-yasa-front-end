@@ -5,11 +5,22 @@ import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Sidebar from '@/app/components/sidebar';
 import * as InventoryApi from '../../api/inventaris';
+import { redirect } from 'next/navigation';
 
 const ViewAllInventory = () => {
   const [inventoryList, setInventoryList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      console.log("Access granted");
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
 
   useEffect(() => {
     const fetchInventory = async () => {

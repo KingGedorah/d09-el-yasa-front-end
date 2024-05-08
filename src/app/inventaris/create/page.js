@@ -1,17 +1,41 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
+import { parseJwt } from '@/app/utils/jwtUtils';
+import { redirect } from 'next/navigation';
 
 const CreateInventoryForm = () => {
+  const [decodedToken, setDecodedToken] = useState('');
   const [namaItem, setNamaItem] = useState('');
   const [quantityItem, setQuantityItem] = useState(0);
   const [quantityBorrowed, setQuantityBorrowed] = useState(0);
   const [image, setImage] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'STAFF') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect('/inventaris/view-all');
+      }
+    }
+  }, [decodedToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

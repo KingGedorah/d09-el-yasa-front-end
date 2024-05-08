@@ -7,11 +7,12 @@ import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 // import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
+import { parseJwt } from '@/app/utils/jwtUtils';
 import * as InventoryApi from '../../../api/inventaris';
 
 const UpdateInventoryForm = ({ params }) => {
   const { idItem } = params;
-  // const [decodedToken, setDecodedToken] = useState('');
+  const [decodedToken, setDecodedToken] = useState('');
   const [namaItem, setNamaItem] = useState('');
   const [quantityItem, setQuantityItem] = useState(0);
   const [quantityBorrowed, setQuantityBorrowed] = useState(0);
@@ -19,21 +20,26 @@ const UpdateInventoryForm = ({ params }) => {
   const [errorPopup, setErrorPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // useEffect(() => {
-  //   const token = sessionStorage.getItem('jwtToken');
-  //   if (token) {
-  //     setDecodedToken(parseJwt(token));
-  //   } else {
-  //     console.log("Need to login");
-  //     redirect('/user/login');
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (decodedToken) {
-  //     // TODO otorisasi??
-  //   }
-  // }, [decodedToken]);
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'STAFF') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect('/inventaris/view-all');
+      }
+    }
+  }, [decodedToken]); 
 
   useEffect(() => {
     async function fetchData() {
