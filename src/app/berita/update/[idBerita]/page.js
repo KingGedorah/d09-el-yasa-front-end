@@ -34,17 +34,15 @@ const BeritaDetail = ({ params }) => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
   
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'ADMIN') {
-        console.log("Access granted");
+      if (decodedToken.role === 'GURU' || decodedToken.role === 'STAFF') {
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect('/berita');
       }
     }
@@ -90,14 +88,13 @@ const BeritaDetail = ({ params }) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Berita updated successfully');
       setIsSuccess(true)
       setJudulBerita('');
       setIsiBerita('');
       setGambar(null);
       setKategori([]);
     } catch (error) {
-      console.error('Error updating berita:', error);
+      setIsError(true);
     }
   };
 
@@ -131,7 +128,7 @@ const BeritaDetail = ({ params }) => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
+      <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <h1 className="text-2xl font-semibold mb-4 text-center">Update Berita</h1>
         <form onSubmit={handleSubmit}>
           <div>
@@ -178,11 +175,12 @@ const BeritaDetail = ({ params }) => {
                     {gambar ? (
                       <div className='flex flex-col items-center'>
                         <div className='w-40 h-40'>
-                          <div className='w-full h-full relative'>
+                          <div className='relative inline-block text-center'>
                             <img
                               src={URL.createObjectURL(gambar)}
                               layout='fill'
                               objectFit='contain'
+                              className="w-40 h-40 mx-auto"
                             />
                           </div>
                         </div>
@@ -194,10 +192,10 @@ const BeritaDetail = ({ params }) => {
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                         </svg>
                         <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG (MAX. 800x400px)</p>
                       </div>
                     )}
-                    <input id="dropzone-file" type="file" class="hidden" onChange={(e) => setGambar(e.target.files[0])} />
+                    <input id="dropzone-file" type="file" accept=".jpg, .jpeg, .png" class="hidden" onChange={(e) => setGambar(e.target.files[0])} />
                   </label>
                 </div>
               )}
@@ -225,7 +223,7 @@ const BeritaDetail = ({ params }) => {
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-green-600 font-semibold">Berita berhasil diupdate!</p>
-            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
           </div>
         </div>
       )}
@@ -233,7 +231,7 @@ const BeritaDetail = ({ params }) => {
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-red-600 font-semibold">Gagal update berita!</p>
-            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
           </div>
         </div>
       )}

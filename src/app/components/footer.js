@@ -10,7 +10,7 @@ const Footer = () => {
       setShowFooter(isBottom || isShortContent);
     };
 
-    handleScroll(); // Panggil fungsi handleScroll pertama kali untuk menentukan tampilan footer
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
