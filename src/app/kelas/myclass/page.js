@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 const KelasByUserId = () => {
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
+  const [error, setError] = useState(null);
   const [kelas, setKelas] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -42,27 +43,31 @@ const KelasByUserId = () => {
     const fetchKelas = async () => {
       try {
         if (decodedToken) {
-          setLoading(true);
-          if (decodedToken.role == 'GURU') {
-            const kelasData = await getAllKelasDiajarByIdGuru(decodedToken.id);
+          let kelasData;
+          if (decodedToken.role === 'GURU') {
+            kelasData = await getAllKelasDiajarByIdGuru(decodedToken.id);
+          } else if (decodedToken.role === 'MURID') {
+            kelasData = await getKelasByIdSiswa(decodedToken.id);
+          }
+          console.log(kelasData.data);
+          if (Array.isArray(kelasData.data)) {
             setKelas(kelasData.data);
-          } else if (decodedToken.role == 'MURID') {
-            const kelasData = await getKelasByIdSiswa(decodedToken.id);
-            setKelas(kelasData.data);
+          } else {
+            setKelas([kelasData.data]);
           }
         } else {
-          redirect(`/user/login`)
+          redirect(`/user/login`);
         }
-      setLoading(false);
+        setLoading(false);
       } catch (error) {
+        console.error('Error fetching kelas:', error);
         router.push(`/error/500`);
       }
     };
-
+  
     fetchKelas();
   }, [decodedToken]);
-
-  console.log(kelas)
+  
 
   // Fungsi untuk menghapus kelas
   const handleDeleteKelas = async () => {
@@ -77,9 +82,9 @@ const KelasByUserId = () => {
   };
 
   if (loading) {
-    return <SpinLoading/>;
-  } 
-  
+    return <SpinLoading />;
+  }
+
 
   return (
     <div className="bg-white dark:bg-gray-950">
@@ -93,7 +98,7 @@ const KelasByUserId = () => {
           <div className="container mx-auto mt-4">
             {loading && <p>Loading...</p>}
             {error && <p>Terdapat kesalahan saat memuat kelas</p>}
-            {kelas && (
+            {kelas && Array.isArray(kelas) && (
               <div className="container mx-auto mt-4">
                 <ul className="divide-y divide-gray-200">
                   {kelas.map((kelasItem) => (
