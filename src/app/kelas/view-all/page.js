@@ -12,25 +12,39 @@ import styles from '../../components/button-n-search.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 
 const ViewAllKelas = () => {
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  const username = decodedToken ? decodedToken.username : null;
-  const userRole = decodedToken ? decodedToken.role : null;
+  const router = useRouter();
+  const [decodedToken, setDecodedToken] = useState('');
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
 
-  if (decodedToken) {
-    console.log('Decoded Token:', decodedToken);
-    console.log('ID:', decodedToken.id);
-    console.log('Role:', decodedToken.role);
-    console.log('Username:', decodedToken.username);
-  } else {
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
       redirect('/user/login');
-  }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect(`/kelas/myclass`);
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchKelasList = async () => {
@@ -39,8 +53,7 @@ const ViewAllKelas = () => {
         setKelasList(data);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -60,7 +73,7 @@ const ViewAllKelas = () => {
   // Fungsi untuk menghapus kelas
   const handleDeleteKelas = async (idKelas) => {
     try {
-      await axios.delete(`http://localhost:8083/api/kelas/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
       // Refresh halaman setelah penghapusan berhasil
       window.location.reload();
     } catch (error) {
@@ -68,6 +81,10 @@ const ViewAllKelas = () => {
       // Tampilkan pesan error kepada pengguna
     }
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div class="bg-white dark:bg-gray-950">
@@ -105,7 +122,7 @@ const ViewAllKelas = () => {
                       <p className="text-gray-600 mb-4">{kelas.deskripsiKelas}</p>
                     </a>
                     {/* Icon gerigi untuk dropdown, hanya ditampilkan untuk peran GURU */}
-                    {userRole === 'GURU' && showDropdown === kelas.idKelas && (
+                    {decodedToken.role === 'ADMIN' && showDropdown === kelas.idKelas && (
                       
                       <div className="absolute top-0 right-0 mt-12 mr-2">
                                 
@@ -122,7 +139,7 @@ const ViewAllKelas = () => {
                       </div>
                     )}
                     {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih, hanya untuk peran GURU */}
-                    {userRole === 'GURU' && (
+                    {decodedToken.role === 'ADMIN' && (
                       <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
                         <span className="bg-white rounded-full p-1 font-bold opacity-50">Sunting</span>
                         <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(kelas.idKelas)} className="ml-1" />

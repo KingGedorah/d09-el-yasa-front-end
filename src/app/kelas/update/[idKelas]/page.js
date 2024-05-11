@@ -7,11 +7,15 @@ import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
 import { parseJwt } from '@/app/utils/jwtUtils';
-import { getUsersById } from '@/app/api/user';
+import { getUsersById, getAllGuru, getAllMurid } from '@/app/api/user';
 import { redirect } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const UpdateKelasForm = ({ params }) => {
+  const router = useRouter();
   const { idKelas } = params;
+  const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
   const [selectedNuptk, setSelectedNuptk] = useState('');
@@ -20,6 +24,30 @@ const UpdateKelasForm = ({ params }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [nisnFetched, setNisnFetched] = useState(false);
+  const [nuptkFetched, setNuptkFetched] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect(`/kelas/${idKelas}`);
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
@@ -33,8 +61,10 @@ const UpdateKelasForm = ({ params }) => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
+        setNuptkFetched(true);
+        setLo
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
   
@@ -53,8 +83,9 @@ const UpdateKelasForm = ({ params }) => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNisnOptions(options);
+        setNisnFetched(true);
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
   
@@ -64,33 +95,23 @@ const UpdateKelasForm = ({ params }) => {
   useEffect(() => {
     const fetchNisnUsers = async () => {
       try {
+        const response = await KelasApi.getKelasByIdKelas(idKelas);
+        const { data } = response;
         const nisnUsers = [];
         for (const nisn of data.nisnSiswa) {
           const user = await getUsersById(nisn);
+          console.log(user.id)
           nisnUsers.push({ value: nisn, label: `${user.firstname} ${user.lastname}` });
         }
         setSelectedNisn(nisnUsers);
       } catch (error) {
-        console.error('Error fetching NISN users:', error);
+        router.push(`/error/500`);
       }
     };
     
     fetchNisnUsers();
-  }, [data.nisnSiswa]);
+  }, []); 
   
-
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  if (decodedToken) {
-      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
-        console.log('You have authority')
-      } else {
-        console.log('You dont have authority')
-        redirect(`/kelas/myclass`)
-      }
-  } else {
-      redirect(`/user/login`)
-  }
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -101,8 +122,9 @@ const UpdateKelasForm = ({ params }) => {
         setDeskripsiKelas(data.deskripsiKelas);
         const dataNuptk = await getUsersById(data.nuptkWaliKelas)
         setSelectedNuptk({ value: data.nuptkWaliKelas, label: `${dataNuptk.firstname} ${dataNuptk.lastname}` });
+        setLoading(false);
       } catch (error) {
-        console.error('Error:', error.response.data);
+        router.push(`/error/500`);
       }
     }
 
@@ -148,9 +170,14 @@ const UpdateKelasForm = ({ params }) => {
     setShowSuccess(false);
   };
 
-  const filteredNisnOptions = nisnOptions.filter(option =>
+  const filteredNisnOptions = nisnOptions ? 
+  nisnOptions.filter(option =>
     !selectedNisn.some(selected => selected.value === option.value)
-  );
+  ) : [];
+
+  if (loading || !nisnFetched || !nuptkFetched) {
+    return <SpinLoading/>;
+  } 
 
   return (
     <div className="bg-white dark:bg-gray-950">
@@ -259,7 +286,8 @@ const UpdateKelasForm = ({ params }) => {
               onClick={handleCloseSuccessModal}
               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
             >
-              Tutup
+              <a href="/kelas/view-all">Tutup</a>
+              
             </button>
           </div>
         </div>

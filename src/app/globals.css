@@ -8,26 +8,21 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: black;
+  background-color: #F3F5FB;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.ql-toolbar.ql-snow {
+  border-bottom: 1px solid #6C80FF !important;
+  border-top: 0px !important ;
+  border-left: 0px !important ;
+  border-right: 0px !important ;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  padding: 8px;
+}
+
+.ql-container.ql-snow {
+  border: 0px solid !important;
 }
