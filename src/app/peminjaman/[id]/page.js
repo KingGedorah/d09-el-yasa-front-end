@@ -69,8 +69,7 @@ const DetailPeminjaman = (params) => {
         const inventories = await Promise.all(peminjamanData.listIdItem.map(itemId => getInventoryById(itemId)));
     
         peminjamanData.listItems = inventories.map(inventory => inventory.namaItem);
-    
-        console.log("GAGA",peminjamanData)
+
         setPeminjaman(peminjamanData);
         setLoading(false);
       } catch (error) {
@@ -102,16 +101,6 @@ const DetailPeminjaman = (params) => {
     fetchData();
   }, []); 
 
-  useEffect(() => {
-    if (decodedToken) {
-      if (decodedToken.role === 'ADMIN') {
-        console.log("Access granted");
-      } else {
-        console.log("Not authorized");
-        redirect('/artikel');
-      }
-    }
-  }, [decodedToken]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -218,12 +207,12 @@ const DetailPeminjaman = (params) => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
-        <h1 className="text-2xl font-semibold mb-4 text-center">Detail Peminjaman</h1>
+      <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg mb-32">
+        <h1 className="text-2xl font-semibold mb-4 text-center">Request Detail</h1>
         <form>
           <div>
             <div className="mb-4">
-              <label htmlFor="namaPeminjam" className="block text-gray-700 font-bold mb-2">Nama Peminjam</label>
+              <label htmlFor="namaPeminjam" className="block text-gray-700 font-bold mb-2">Applicant's name</label>
               <input disabled type="text" id="namaPeminjam" value={peminjaman?.nama} onChange={(e) => setNamaPeminjam(e.target.value)} name="namaPeminjam" className="border disabled cursor-not-allowed border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
@@ -247,20 +236,20 @@ const DetailPeminjaman = (params) => {
             </div> */}
 
             <div className="mb-4">
-              <label htmlFor="keperluanPeminjaman" className="block text-gray-700 font-bold mb-2">Keperluan Peminjaman</label>
+              <label htmlFor="keperluanPeminjaman" className="block text-gray-700 font-bold mb-2">Request Purpose</label>
               <input disabled type="text" id="keperluanPeminjaman" value={peminjaman?.keperluanPeminjaman} onChange={(e) => setKeperluanPeminjaman(e.target.value)} name="keperluanPeminjaman" className="border border-[#6C80FF] cursor-not-allowed rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
-              <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Tanggal Pengembalian</label>
+              <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Return Date</label>
               <input disabled type="date" id="tanggalPengembalian" value={peminjaman?.returnDate?.split('T')[0]} onChange={(e) => setTanggalPengembalian(e.target.value)} name="tanggalPeminjaman" className="border border-[#6C80FF] cursor-not-allowed rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
-                <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Daftar Barang Peminjaman</label>
+                <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Items Requested</label>
                 <div className='border border-[#6C80FF] rounded-xl grid grid-cols-2'>
-                    <div className='col-span-1 flex items-center py-4 justify-center'>Nama Barang</div>
-                    <div className='col-span-1 flex items-center justify-center'>Kuantitas</div>
+                    <div className='col-span-1 flex items-center py-4 justify-center'>Item Name</div>
+                    <div className='col-span-1 flex items-center justify-center'>Quantity</div>
                     <hr className='col-span-2 border-[#6C80FF] py-0'/>
                     {inventories?.map((inventory, index) => (
                     <React.Fragment key={inventory.id}>
@@ -288,18 +277,18 @@ const DetailPeminjaman = (params) => {
 
             <div className="flex gap-4 justify-end">
               {
-                peminjaman?.status === 'CONFIRMED' && (
-                  <button type='button' onClick={handleDelete} className="bg-[#E16B6B] border-[1px] border-[#E16B6B] text-white py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Selesaikan</button>
-                )
-              }
-              {
-                peminjaman?.status === 'PENDING' && (
-                  <button type='button' onClick={handleDecline} className="bg-white border-[1px] border-[#E16B6B] text-[#E16B6B] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Tolak</button>
-                )
-              }
-              {
-                (peminjaman?.status === 'PENDING') && (
-                  <button type='button' onClick={handleConfirm} className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Setujui</button>
+                (decodedToken?.role === "ADMIN" || decodedToken?.role === "STAFF") && (
+                  <>
+                    {peminjaman?.status === 'CONFIRMED' && (
+                      <button type='button' onClick={handleDelete} className="bg-[#E16B6B] border-[1px] border-[#E16B6B] text-white py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Complete</button>
+                    )}
+                    {peminjaman?.status === 'PENDING' && (
+                      <button type='button' onClick={handleDecline} className="bg-white border-[1px] border-[#E16B6B] text-[#E16B6B] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Decline</button>
+                    )}
+                    {peminjaman?.status === 'PENDING' && (
+                      <button type='button' onClick={handleConfirm} className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 w-40 rounded-xl">Approve</button>
+                    )}
+                  </>
                 )
               }
             </div>
@@ -310,7 +299,7 @@ const DetailPeminjaman = (params) => {
       {isSuccessDelete && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-green-600 font-semibold">Peminjaman berhasil diselesaikan!</p>
+            <p className="text-green-600 font-semibold">Request succesfully completed</p>
             <button onClick={handleSuccessDeletePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Selesaikan</button>
           </div>
         </div>
@@ -318,7 +307,7 @@ const DetailPeminjaman = (params) => {
       {isErrorDelete && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-red-600 font-semibold">Peminjaman gagal diselesaikan!</p>
+            <p className="text-red-600 font-semibold">Failed to complete request</p>
             <button onClick={handleErrorDeletePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Selesaikan</button>
           </div>
         </div>
@@ -326,32 +315,32 @@ const DetailPeminjaman = (params) => {
       {isSuccessConfirm && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-green-600 font-semibold">Peminjaman berhasil disetujui!</p>
-            <button onClick={handleSuccessConfirmPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-green-600 font-semibold">Request approved succesfully</p>
+            <button onClick={handleSuccessConfirmPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
           </div>
         </div>
       )}
       {isErrorConfirm && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-red-600 font-semibold">Peminjaman gagal disetujui!</p>
-            <button onClick={handleErrorConfirmPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-red-600 font-semibold">Failed to approve request</p>
+            <button onClick={handleErrorConfirmPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
           </div>
         </div>
       )}
       {isSuccessDecline && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-green-600 font-semibold">Peminjaman berhasil ditolak!</p>
-            <button onClick={handleSuccessDeclinePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-green-600 font-semibold">Request declined succesfully</p>
+            <button onClick={handleSuccessDeclinePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
           </div>
         </div>
       )}
       {isErrorDecline && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-red-600 font-semibold">Peminjaman gagal ditolak!</p>
-            <button onClick={handleErrorDeclinePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-red-600 font-semibold">Failed to decline request</p>
+            <button onClick={handleErrorDeclinePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
           </div>
         </div>
       )}

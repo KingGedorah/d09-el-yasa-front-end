@@ -57,11 +57,11 @@ const CreateArticle = () => {
 
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'ADMIN') {
+      if (decodedToken.role === 'MURID') {
         console.log("Access granted");
       } else {
         console.log("Not authorized");
-        redirect('/artikel');
+        router.push('/peminjaman');
       }
     }
   }, [decodedToken]);
@@ -72,7 +72,7 @@ const CreateArticle = () => {
         const inventoriesData = await getAllInventory();
         setInventories(inventoriesData);
       } catch (error) {
-        console.error('Failed to fetch data kelas:', error);
+        console.error('Failed to fetch data inventaris:', error);
       }
     };
 
@@ -154,12 +154,12 @@ const CreateArticle = () => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
-        <h1 className="text-2xl font-semibold mb-4 text-center">Buat Peminjaman</h1>
+      <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg mb-32">
+        <h1 className="text-2xl font-semibold mb-4 text-center">Create Request</h1>
         <form onSubmit={handleSubmit}>
           <div>
             <div className="mb-4">
-              <label htmlFor="namaPeminjam" className="block text-gray-700 font-bold mb-2">Nama Peminjam</label>
+              <label htmlFor="namaPeminjam" className="block text-gray-700 font-bold mb-2">Applicant's name</label>
               <input disabled type="text" id="namaPeminjam" value={namaPeminjam} onChange={(e) => setNamaPeminjam(e.target.value)} name="namaPeminjam" className="border disabled cursor-not-allowed border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
@@ -183,20 +183,20 @@ const CreateArticle = () => {
             </div> */}
 
             <div className="mb-4">
-              <label htmlFor="keperluanPeminjaman" className="block text-gray-700 font-bold mb-2">Keperluan Peminjaman</label>
+              <label htmlFor="keperluanPeminjaman" className="block text-gray-700 font-bold mb-2">Request Purpose</label>
               <input type="text" id="keperluanPeminjaman" value={keperluanPeminjaman} onChange={(e) => setKeperluanPeminjaman(e.target.value)} name="keperluanPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
-              <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Tanggal Pengembalian</label>
+              <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Return Date</label>
               <input type="date" min={new Date().toISOString().split('T')[0]} id="tanggalPengembalian" value={tanggalPengembalian} onChange={(e) => setTanggalPengembalian(e.target.value)} name="tanggalPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
             <div className="mb-4">
-                <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Daftar Barang Peminjaman</label>
+                <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Items Requested</label>
                 <div className='border border-[#6C80FF] rounded-xl grid grid-cols-2'>
-                    <div className='col-span-1 flex items-center py-4 justify-center'>Nama Barang</div>
-                    <div className='col-span-1 flex items-center justify-center'>Kuantitas</div>
+                    <div className='col-span-1 flex items-center py-4 justify-center'>Item Name</div>
+                    <div className='col-span-1 flex items-center justify-center'>Quantity</div>
                     <hr className='col-span-2 border-[#6C80FF] py-0'/>
                     {inventories?.map((inventory, index) => (
                     <React.Fragment key={inventory.id}>
@@ -232,16 +232,16 @@ const CreateArticle = () => {
       {isSuccess && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-green-600 font-semibold">Peminjaman berhasil dibuat!</p>
-            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-green-600 font-semibold">Request created succesfully</p>
+            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
           </div>
         </div>
       )}
       {isError && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-red-600 font-semibold">Gagal membuat peminjaman!</p>
-            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <p className="text-red-600 font-semibold">Failed to create request</p>
+            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
           </div>
         </div>
       )}
