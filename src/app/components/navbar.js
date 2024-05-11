@@ -12,10 +12,13 @@ const Navbar = () => {
                     </a>
                     <nav class="hidden md:flex gap-4 text-sm">
                         <a class="font-medium text-gray-900 dark:text-gray-100" href="/">
-                            Halaman Depan
+                            Beranda
                         </a>
-                        <a class="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
-                            Kelasku
+                        <a class="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Akademik
+                        </a>
+                        <a class="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Tentang Kami
                         </a>
                     </nav>
                     <div class="flex items-center gap-4 md:gap-6">
