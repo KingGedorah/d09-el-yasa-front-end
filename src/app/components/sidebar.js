@@ -16,7 +16,7 @@ const Sidebar = () => {
     const todayDateISO = currentDate.toISOString().split('T')[0];
 
     // Mendapatkan data jadwal sholat dari API
-    fetch('https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master/adzan/jakartatimur/2024/04   .json')
+    fetch('https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master/adzan/jakartatimur/2024/04.json')
       .then(response => response.json())
       .then(data => {
         // Cari data jadwal sholat untuk hari ini

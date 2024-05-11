@@ -32,7 +32,7 @@ const BeritaImage = ({ idBerita }) => {
     return <div>Error: {error.message}</div>;
   }
 
-  return <Image src={imageData} alt="berita" width="100" height="100"/>;
+  return <Image src={imageData} alt="berita" width="600" height="400"/>;
 };
 
 export default BeritaImage;
