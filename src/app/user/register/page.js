@@ -16,6 +16,18 @@ const RegisterPage = () => {
   // const [role, setRole] = useState('guru'); // Default role
   const [error, setError] = useState('');
 
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const handleSuccessPopup = () => {
+    setIsSuccess(false);
+    window.location.href = '/user/login';
+  };
+
+  const handleErrorPopup = () => {
+    setIsError(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -27,9 +39,10 @@ const RegisterPage = () => {
         password
       });
       // Redirect to dashboard or some other page on successful registration
-      window.location.href = '/user/login';
+      setIsSuccess(true)
     } catch (error) {
       console.error('Registration failed:', error);
+      setIsError(true)
       setError('Registration failed. Please try again.');
     }
   };
@@ -155,6 +168,22 @@ const RegisterPage = () => {
         </div>
       </div>
       <Footer />
+      {isSuccess && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute">
+            <p className="text-green-600 font-semibold">Account registered succesfully</p>
+            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
+          </div>
+        </div>
+      )}
+      {isError && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute">
+            <p className="text-red-600 font-semibold">Failed to register account</p>
+            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
