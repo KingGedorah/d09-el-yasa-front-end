@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import Link from 'next/link';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 // import { parseJwt } from '@/app/utils/jwtUtils';
@@ -104,6 +105,11 @@ const UpdateInventoryForm = ({ params }) => {
       <Navbar />
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="w-full max-w-sm space-y-4">
+        <Link href="/inventaris/view-all" passHref>
+            <button className="bg-gray-500 text-white px-4 py-2 rounded-md cursor-pointer">
+              Kembali ke daftar inventaris
+            </button>
+          </Link>
           <div className="space-y-2">
             <h1 className="text-3xl font-extrabold font-nunito-sans">Perbarui Inventaris</h1>
             <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
@@ -112,7 +118,7 @@ const UpdateInventoryForm = ({ params }) => {
           </div>
           <form onSubmit={handleSubmit} className="">
             <div className="mb-4">
-              <label htmlFor="nama-item" className="inline-block text-sm font-medium">
+              <label htmlFor="nama-item" className="inline-block text-lg font-bold">
                 Nama Item:
               </label>
               <input
@@ -139,7 +145,7 @@ const UpdateInventoryForm = ({ params }) => {
             </div>
             <div className="mb-4">
               <label htmlFor="image" className="inline-block text-sm font-medium">
-                Gambar:
+                Gambar: (maks 1 MB)
               </label>
               <input
                 type="file"

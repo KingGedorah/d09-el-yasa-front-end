@@ -45,22 +45,28 @@ const ViewAllInventory = () => {
       <div className="container mx-auto flex justify-center mt-8">
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
           <h2 className="text-3xl font-bold mb-4">Daftar Inventaris</h2>
+          <Link href="/inventaris/create" passHref>
+            <button className="bg-gray-500 text-white px-4 py-2 rounded-md cursor-pointer mb-4">
+              Tambah Inventaris
+            </button>
+          </Link>
           {loading && <p>Loading...</p>}
           {!loading && !error && inventoryList.length > 0 ? (
             inventoryList.map((item, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden mb-4 flex justify-between items-center">
+              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden mb-4 border border-dotted border-gray-300 transition-transform duration-300 hover:transform hover:scale-105">
                 <div className="p-4">
-                <h2 className="text-base">ID: {item.idItem}</h2>
-                <InventoryImage idInventaris={item.idItem} className="w-24 h-24 object-cover"/>
-
+                  {/* <h2 className="text-base">ID: {item.idItem}</h2> */}
+                  <div className="flex justify-center items-center mb-4">
+                    <InventoryImage idInventaris={item.idItem} className="w-24 h-24 object-cover"/>
+                  </div>
                   <h2 className="text-base">Nama Item: {item.namaItem}</h2>
                   <h2 className="text-base">Quantity: {item.quantityItem}</h2>
                   <h2 className="text-base">Quantity Borrowed: {item.quantityBorrowed}</h2>
                 </div>
-                <div className="p-4">
+                <div className="p-4 flex flex-col lg:flex-row justify-between items-center">
                   <Link href={`/inventaris/update/${item.idItem}`} passHref>
                     <button 
-                      className="bg-gray-500 text-white px-4 py-2 rounded-md cursor-pointer" 
+                      className="bg-gray-500 text-white px-4 py-2 rounded-md cursor-pointer mb-2 lg:mb-0 lg:mr-2"
                     >
                       Update
                     </button>
@@ -72,7 +78,6 @@ const ViewAllInventory = () => {
             <p>Tidak ada inventaris yang tersedia.</p>
           )}
         </main>
-        {/* <Sidebar /> */}
       </div>
       <Footer />
     </div>

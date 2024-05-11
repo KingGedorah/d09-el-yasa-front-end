@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import Link from 'next/link';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
 import { parseJwt } from '@/app/utils/jwtUtils';
@@ -12,7 +13,6 @@ const CreateInventoryForm = () => {
   const [decodedToken, setDecodedToken] = useState('');
   const [namaItem, setNamaItem] = useState('');
   const [quantityItem, setQuantityItem] = useState(0);
-  const [quantityBorrowed, setQuantityBorrowed] = useState(0);
   const [image, setImage] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -44,7 +44,6 @@ const CreateInventoryForm = () => {
       const formData = new FormData();
       formData.append('namaItem', namaItem);
       formData.append('quantityItem', quantityItem);
-      formData.append('quantityBorrowed', quantityBorrowed);
       formData.append('image', image);
 
       const response = await axios.post('https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/create', formData, {
@@ -66,6 +65,11 @@ const CreateInventoryForm = () => {
       <Navbar />
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="w-full max-w-sm space-y-4">
+        <Link href="/inventaris/view-all" passHref>
+            <button className="bg-gray-500 text-white px-4 py-2 rounded-md cursor-pointer">
+              Kembali ke daftar inventaris
+            </button>
+          </Link>
           <div className="space-y-2">
             <h1 className="text-3xl font-extrabold font-nunito-sans">Tambahkan inventaris</h1>
             <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
@@ -82,11 +86,7 @@ const CreateInventoryForm = () => {
               <input type="number" id="quantity-item" value={quantityItem} onChange={(e) => setQuantityItem(e.target.value)} required className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
             <div className="mb-4">
-              <label htmlFor="quantity-borrowed" className="inline-block text-sm font-medium">Quantity Borrowed:</label>
-              <input type="number" id="quantity-borrowed" value={quantityBorrowed} onChange={(e) => setQuantityBorrowed(e.target.value)} required className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="image" className="inline-block text-sm font-medium">Gambar:</label>
+              <label htmlFor="image" className="inline-block text-sm font-medium">Gambar: (maks 1 MB)</label>
               <input type="file" id="image" onChange={(e) => setImage(e.target.files[0])} required className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
             <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Tambah</button>
