@@ -29,7 +29,6 @@ const CreateKelasForm = () => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
@@ -37,9 +36,8 @@ const CreateKelasForm = () => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
-        console.log("Access granted");
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect(`/kelas/myclass`);
       }
     }
@@ -53,7 +51,6 @@ const CreateKelasForm = () => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
@@ -74,7 +71,6 @@ const CreateKelasForm = () => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNisnOptions(options);
@@ -97,7 +93,6 @@ const CreateKelasForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(selectedNisn);
     if (!selectedNuptk || !selectedNuptk.value || selectedNisn.length === 0) {
       // Hanya menampilkan pesan pada modal, tidak menggunakan window.alert lagi
       return;
@@ -109,7 +104,6 @@ const CreateKelasForm = () => {
         nuptkWaliKelas: selectedNuptk.value,
         nisnSiswa: selectedNisn.map(nisn => nisn.value),
       });
-      console.log('Response:', response.data);
       setShowSuccess(true);
     } catch (error) {
       console.error('Error:', error.response);

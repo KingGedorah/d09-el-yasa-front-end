@@ -22,7 +22,7 @@ const ViewAllKelas = () => {
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
+  const [showDropdown, setShowDropdown] = useState(null);
 
 
   useEffect(() => {
@@ -30,7 +30,6 @@ const ViewAllKelas = () => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
@@ -38,9 +37,8 @@ const ViewAllKelas = () => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'ADMIN') {
-        console.log("Access granted");
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect(`/kelas/myclass`);
       }
     }

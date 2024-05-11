@@ -33,7 +33,6 @@ const UpdateKelasForm = ({ params }) => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
@@ -41,9 +40,8 @@ const UpdateKelasForm = ({ params }) => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
-        console.log("Access granted");
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect(`/kelas/${idKelas}`);
       }
     }
@@ -57,7 +55,6 @@ const UpdateKelasForm = ({ params }) => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
@@ -79,7 +76,6 @@ const UpdateKelasForm = ({ params }) => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNisnOptions(options);
@@ -100,7 +96,6 @@ const UpdateKelasForm = ({ params }) => {
         const nisnUsers = [];
         for (const nisn of data.nisnSiswa) {
           const user = await getUsersById(nisn);
-          console.log(user.id)
           nisnUsers.push({ value: nisn, label: `${user.firstname} ${user.lastname}` });
         }
         setSelectedNisn(nisnUsers);
@@ -155,7 +150,6 @@ const UpdateKelasForm = ({ params }) => {
           nisnSiswa: uniqueSelectedNisn.map(nisn => nisn.value),
         }
       );
-      console.log('Response:', response.data);
       setShowSuccess(true);
     } catch (error) {
       console.error('Error:', error.response.data);

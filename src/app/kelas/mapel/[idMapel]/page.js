@@ -23,14 +23,13 @@ const DetailMapel = ({ params }) => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
 
   useEffect(() => {
     if (decodedToken) {
-      console.log("Access granted");
+      //Authorized
     }
   }, [decodedToken]);
 

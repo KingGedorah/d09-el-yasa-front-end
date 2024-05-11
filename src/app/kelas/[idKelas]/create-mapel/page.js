@@ -28,7 +28,6 @@ const FormCreateMapel = ({ params }) => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
@@ -36,9 +35,8 @@ const FormCreateMapel = ({ params }) => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'GURU') {
-        console.log("Access granted");
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect(`/kelas/${idKelas}`);
       }
     }
@@ -52,7 +50,6 @@ const FormCreateMapel = ({ params }) => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
@@ -72,9 +69,8 @@ const FormCreateMapel = ({ params }) => {
         namaMapel,
         nuptkGuruMengajar: selectedNuptk.value,
       });
-      console.log('Response:', response);
       setShowSuccess(true);
-      setShowModal(true); // Menampilkan modal setelah sukses
+      setShowModal(true);
     } catch (error) {
       console.error('Error:', error);
       window.alert('Periksa kembali inputan anda');
