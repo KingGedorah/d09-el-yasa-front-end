@@ -12,12 +12,15 @@ import Footer from '../../components/footer';
 import Sidebar from '../../components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
+import Navbar2 from '@/app/components/navbarmurid';
 
 const KelasByUserId = () => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const [kelas, setKelas] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -41,7 +44,6 @@ const KelasByUserId = () => {
       try {
         if (decodedToken) {
           setLoading(true);
-          setError(null);
           if (decodedToken.role == 'GURU') {
             const kelasData = await getAllKelasDiajarByIdGuru(decodedToken.id);
             setKelas(kelasData.data);
@@ -52,11 +54,9 @@ const KelasByUserId = () => {
         } else {
           redirect(`/user/login`)
         }
+      setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
-      } finally {
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -76,11 +76,15 @@ const KelasByUserId = () => {
       // Tampilkan pesan error kepada pengguna
     }
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  } 
   
 
   return (
     <div className="bg-white dark:bg-gray-950">
-      <Navbar />
+      <Navbar/>
       <div className="container mx-auto flex justify-center mt-8">
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
           <div className="search-container">

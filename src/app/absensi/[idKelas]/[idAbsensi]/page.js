@@ -7,6 +7,7 @@ import * as AbsensiApi from '../../../api/absensi';
 import Layout from '@/app/components/layout';
 import { useRouter } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import SpinLoading from '@/app/components/spinloading';
 
 const CreateAbsensiForm = ({ params }) => {
     const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
@@ -24,7 +25,7 @@ const CreateAbsensiForm = ({ params }) => {
                 const { data } = response;
                 setDetailAbsen(data)
             } catch (error) {
-                console.error('Error fetching data:', error);
+                router.push(`/error/500`);
             } finally {
                 setLoading(false);
             }
@@ -32,6 +33,10 @@ const CreateAbsensiForm = ({ params }) => {
 
         fetchData();
     }, []);
+
+    if (loading) {
+        return <SpinLoading />;
+    }
 
     return (
         <div className="bg-white dark:bg-gray-950">

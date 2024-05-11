@@ -8,8 +8,11 @@ import Navbar from '../../components/navbar';
 import { redirect } from 'next/navigation';
 import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const CreateKelasForm = () => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
@@ -18,6 +21,8 @@ const CreateKelasForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
+  const [nisnFetched, setNisnFetched] = useState(false);
+  const [nuptkFetched, setNuptkFetched] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -52,8 +57,9 @@ const CreateKelasForm = () => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
+        setNuptkFetched(true);
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
 
@@ -72,8 +78,9 @@ const CreateKelasForm = () => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNisnOptions(options);
+        setNisnFetched(true);
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
 
@@ -120,6 +127,10 @@ const CreateKelasForm = () => {
     const modal = document.getElementById('modal');
     modal.style.display = "none";
   };
+
+  if (!nisnFetched || !nuptkFetched) {
+    return <SpinLoading/>;
+  }  
 
   return (
     <div className="bg-white dark:bg-gray-950">
