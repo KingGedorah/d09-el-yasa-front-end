@@ -55,8 +55,7 @@ const BeritaDetail = ({ params }) => {
         setBerita(beritaData.data);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -122,7 +121,7 @@ const BeritaDetail = ({ params }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <SpinLoading/>;
   }
 
   return (

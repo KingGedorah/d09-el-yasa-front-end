@@ -9,8 +9,11 @@ import Footer from '../components/footer';
 import Sidebar from '../components/sidebar';
 import Image from 'next/image';
 import DOMPurify from 'dompurify';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const ArtikelList = () => {
+  const router = useRouter();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,8 +32,7 @@ const ArtikelList = () => {
         setArticles(articlesData);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -62,6 +64,10 @@ const ArtikelList = () => {
   const totalArticles = currentArticles.length;
   const totalPages = Math.ceil(totalArticles / articlesPerPage);
   const paginatedArticles = currentArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div>

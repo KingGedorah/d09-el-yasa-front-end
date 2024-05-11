@@ -9,8 +9,11 @@ import * as KelasApi from '../../../api/kelas';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { getUsersById, getAllGuru, getAllMurid } from '@/app/api/user';
 import { redirect } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const UpdateKelasForm = ({ params }) => {
+  const router = useRouter();
   const { idKelas } = params;
   const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
@@ -21,6 +24,9 @@ const UpdateKelasForm = ({ params }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [nisnFetched, setNisnFetched] = useState(false);
+  const [nuptkFetched, setNuptkFetched] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -55,8 +61,10 @@ const UpdateKelasForm = ({ params }) => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
+        setNuptkFetched(true);
+        setLo
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
   
@@ -75,8 +83,9 @@ const UpdateKelasForm = ({ params }) => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNisnOptions(options);
+        setNisnFetched(true);
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
   
@@ -96,12 +105,12 @@ const UpdateKelasForm = ({ params }) => {
         }
         setSelectedNisn(nisnUsers);
       } catch (error) {
-        console.error('Error fetching NISN users:', error);
+        router.push(`/error/500`);
       }
     };
     
     fetchNisnUsers();
-  }, []);
+  }, []); 
   
   useEffect(() => {
     async function fetchData() {
@@ -113,8 +122,9 @@ const UpdateKelasForm = ({ params }) => {
         setDeskripsiKelas(data.deskripsiKelas);
         const dataNuptk = await getUsersById(data.nuptkWaliKelas)
         setSelectedNuptk({ value: data.nuptkWaliKelas, label: `${dataNuptk.firstname} ${dataNuptk.lastname}` });
+        setLoading(false);
       } catch (error) {
-        console.error('Error:', error.response.data);
+        router.push(`/error/500`);
       }
     }
 
@@ -165,6 +175,9 @@ const UpdateKelasForm = ({ params }) => {
     !selectedNisn.some(selected => selected.value === option.value)
   ) : [];
 
+  if (loading || !nisnFetched || !nuptkFetched) {
+    return <SpinLoading/>;
+  } 
 
   return (
     <div className="bg-white dark:bg-gray-950">
