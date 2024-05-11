@@ -11,8 +11,11 @@ import Image from 'next/image';
 import { parseJwt } from '../utils/jwtUtils';
 import DOMPurify from 'dompurify';
 import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
 
 const BeritaList = () => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const [beritas, setBeritas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,13 +54,12 @@ const BeritaList = () => {
         setBeritas(beritasData);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
     fetchData();
-  }, []);
+  }, [router]);
 
   const handleChangeSearchBar = (e) => {
     setQuery(e.target.value)
@@ -83,6 +85,10 @@ const BeritaList = () => {
   const totalBeritas = currentBeritas.length;
   const totalPages = Math.ceil(totalBeritas / beritasPerPage);
   const paginatedBeritas = currentBeritas.slice(indexOfFirstBerita, indexOfLastBerita);
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div>

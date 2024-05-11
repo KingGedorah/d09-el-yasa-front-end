@@ -10,8 +10,11 @@ import DOMPurify from 'dompurify';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import axios from 'axios';
 import { redirect } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const ArtikelDetail = ({ params }) => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const { idArtikel } = params;
   const [article, setArticle] = useState(null);
@@ -37,8 +40,7 @@ const ArtikelDetail = ({ params }) => {
         setArticle(cleanedArtikel);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/505`);
       }
     };
 
@@ -55,11 +57,14 @@ const ArtikelDetail = ({ params }) => {
       await axios.delete(`https://myjisc-artikel-29c0ad65b512.herokuapp.com/api/artikel/delete/${idArtikel}`).then(() => {
         setIsSuccessDelete(true)
       })
-      // Redirect to a different page or show a success message
     } catch (error) {
-      setError(error);
+      router.push(`/error/505`);
     }
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div>
@@ -67,8 +72,6 @@ const ArtikelDetail = ({ params }) => {
       <div className="mt-8 p-12">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">
-            {loading && <div>Loading...</div>}
-            {error && <div>Error: {error.message}</div>}
             {article && (
               <div className="border-[1px] border-[#8D6B94] rounded-lg overflow-hidden">
                 <h2 className="text-xl font-semibold mt-4 text-center">{article.judulArtikel}</h2>

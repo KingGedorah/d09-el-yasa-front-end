@@ -5,12 +5,14 @@ import axios from 'axios';
 import * as KelasApi from '../../../api/kelas';
 import Layout from '@/app/components/layout';
 import { useRouter } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
 
 const CreateAbsensiForm = ({ params }) => {
     const { idKelas } = params;
     const [selectedNisn, setSelectedNisn] = useState([]);
     const [tanggalAbsen, setTanggalAbsen] = useState('');
     const [keteranganAbsen, setKeteranganAbsen] = useState('');
+    const [loading, setLoading] = useState(true);
     const [showSuccess, setShowSuccess] = useState(false);
     const router = useRouter()
 
@@ -20,8 +22,9 @@ const CreateAbsensiForm = ({ params }) => {
                 const response = await KelasApi.getKelasByIdKelas(idKelas);
                 const { data } = response;
                 setSelectedNisn(data.nisnSiswa.map(nisn => ({ value: nisn, label: nisn })));
+                setLoading(false);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                router.push(`/error/500`);
             }
         };
 
@@ -67,7 +70,9 @@ const CreateAbsensiForm = ({ params }) => {
         setErrorPopup(false);
     };
 
-
+    if (loading) {
+        return <SpinLoading/>;
+      }
 
     const handleAttendanceChange = (index, type) => {
         const updatedNisnList = [...selectedNisn];

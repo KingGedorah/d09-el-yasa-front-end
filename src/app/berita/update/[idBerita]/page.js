@@ -13,6 +13,7 @@ import { redirect } from 'next/navigation';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import SpinLoading from '@/app/components/spinloading';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -55,8 +56,7 @@ const BeritaDetail = ({ params }) => {
         setBerita(beritaData.data);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -122,7 +122,7 @@ const BeritaDetail = ({ params }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <SpinLoading/>;
   }
 
   return (
