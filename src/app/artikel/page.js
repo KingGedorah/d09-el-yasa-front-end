@@ -26,6 +26,7 @@ const ArtikelList = () => {
     const fetchData = async () => {
       try {
         const articlesData = await getAllArticles();
+        articlesData.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
         articlesData.forEach(article => {
           article.isiArtikel = DOMPurify.sanitize(article.isiArtikel);
         });
@@ -41,12 +42,12 @@ const ArtikelList = () => {
 
   const handleChangeSearchBar = (e) => {
     setQuery(e.target.value);
-    setCurrentPage(1); // Reset halaman ke halaman pertama setiap kali melakukan pencarian
+    setCurrentPage(1);
   };
 
   const handleFilterByCategory = (category) => {
     setSelectedCategory(category);
-    setCurrentPage(1); // Reset halaman ke halaman pertama setiap kali mengubah filter kategori
+    setCurrentPage(1);
   };
 
   const handlePageChange = (pageNumber) => {
@@ -95,7 +96,19 @@ const ArtikelList = () => {
             {!loading && !error && (
               <div className="flex flex-col gap-4 w-full">
                 {paginatedArticles.map(article => (
-                  <div key={article.idArtikel} className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl">
+                  <div
+                    key={article.idArtikel}
+                    className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl artikel-item"
+                    style={{
+                      transition: 'transform 0.3s',
+                      transform: 'scale(1)',
+                      ':hover': {
+                        transform: 'scale(1.05)',
+                      },
+                    }}
+                    onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
+                    onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}
+                  >
                     <div className='flex justify-center'>
                       {article.imageArtikel ? (
                         <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
