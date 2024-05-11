@@ -19,18 +19,15 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://myjisc-user-e270dbbfd631.herokuapp.com/api/v1/auth/Register', {
+      await axios.post('https://myjisc-user-e270dbbfd631.herokuapp.com/api/v1/auth/Register', {
         username,
         firstname: firstName,
         lastname: lastName,
         email,
         password
       });
-      const token = response.data.token;
-      sessionStorage.setItem('jwtToken', token);
-      console.log(token);
       // Redirect to dashboard or some other page on successful registration
-      // window.location.href = '/dashboard';
+      window.location.href = '/user/login';
     } catch (error) {
       console.error('Registration failed:', error);
       setError('Registration failed. Please try again.');
@@ -38,29 +35,30 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-950">
+    <div className="bg-[#F3F5FB]">
       <Navbar />
-      <div className="container px-4 md:px-6 flex items-center justify-center">
-        <div className="w-full max-w-sm space-y-4">
+      <div className="container py-8 px-4 md:px-6 flex items-center justify-center mx-auto">
+        <div className="w-full max-w-sm space-y-4 bg-white p-8 rounded-xl shadow-lg">
           <div className="space-y-2">
-            <h1 className="text-3xl font-extrabold font-nunito-sans">Daftar</h1>
-            <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
-              Masukkan informasi di bawah ini.
+            <h1 className="text-3xl font-extrabold font-nunito-sans">Register</h1>
+            <p className="text-gray-400  font-nunito">
+              Insert the correct information
             </p>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="space-y-2">
               <div className="space-y-1">
-                <label htmlFor="username" className="inline-block text-sm font-medium font-nunito-sans">
+                <label htmlFor="username" className="inline-block text-sm font-medium font-nunito">
                   Username
                 </label>
                 <input
-                  className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
+                  className="h-10 w-full rounded-md border border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400  font-nunito"
                   id="username"
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   style={{ color: 'black' }}
+                  required
                 />
               </div>
 
@@ -69,12 +67,13 @@ const RegisterPage = () => {
                   Firstname
                 </label>
                 <input
-                  className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
+                  className="h-10 w-full rounded-md border border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400 font-nunito"
                   id="firstname"
                   placeholder="Firstname"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   style={{ color: 'black' }}
+                  required
                 />
               </div>
 
@@ -83,12 +82,13 @@ const RegisterPage = () => {
                   Lastname
                 </label>
                 <input
-                  className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
+                  className="h-10 w-full rounded-md border border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400 font-nunito"
                   id="lastname"
                   placeholder="Lastname"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   style={{ color: 'black' }}
+                  required
                 />
               </div>
 
@@ -97,13 +97,14 @@ const RegisterPage = () => {
                   Email
                 </label>
                 <input
-                  className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
+                  className="h-10 w-full rounded-md border border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400 font-nunito"
                   id="email"
-                  placeholder="afiq.ilyasa@ui.ac.id"
+                  placeholder="john.doe@jisc.ac.id"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{ color: 'black' }}
+                  required
                 />
               </div>
 
@@ -112,12 +113,13 @@ const RegisterPage = () => {
                   Password
                 </label>
                 <input
-                  className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
+                  className="h-10 w-full rounded-md border border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400  focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={{ color: 'black' }}
+                  required
                 />
               </div>
 
@@ -143,9 +145,9 @@ const RegisterPage = () => {
             <div className="flex justify-end mt-4">
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 font-nunito-sans"
+                className="px-4 py-2 text-sm font-medium rounded-md text-white bg-[#6C80FF] hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 font-nunito"
               >
-                Daftar!
+                Register
               </button>
             </div>
           </form>
