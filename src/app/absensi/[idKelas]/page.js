@@ -10,6 +10,7 @@ import Image from 'next/image';
 import * as AbsensiApi from '../../api/absensi';
 import { useRouter } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import SpinLoading from '@/app/components/spinloading';
 
 const AbsensiList = ({ params }) => {
   const { idKelas } = params;
@@ -25,7 +26,7 @@ const AbsensiList = ({ params }) => {
         const response = await AbsensiApi.retrieveAbsensiKelas(idKelas);
         setAbsensiList(response)
       } catch (error) {
-        console.error('Error fetching data:', error);
+        router.push(`/error/500`);
       } finally {
         setLoading(false);
       }
@@ -39,6 +40,10 @@ const AbsensiList = ({ params }) => {
     month: "long",
     year: "numeric",
   });
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div>

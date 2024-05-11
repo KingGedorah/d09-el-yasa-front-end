@@ -8,8 +8,11 @@ import Select from 'react-select';
 import { getAllGuru, getUsersById } from '@/app/api/user';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const FormCreateMapel = ({ params }) => {
+  const router = useRouter();
   const { idKelas } = params;
   const [namaMapel, setNamaMapel] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
@@ -53,8 +56,9 @@ const FormCreateMapel = ({ params }) => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
+        setLoading(false);
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
 
@@ -80,6 +84,10 @@ const FormCreateMapel = ({ params }) => {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div className="bg-white dark:bg-gray-950">

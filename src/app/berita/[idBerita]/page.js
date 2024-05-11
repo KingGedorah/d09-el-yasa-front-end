@@ -12,10 +12,11 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 import axios from 'axios';
 import { FaArrowLeft } from 'react-icons/fa';
 import { redirect } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
 
 const BeritaDetail = ({ params }) => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
-  const router = useRouter()
   const { idBerita } = params;
   const [berita, setBerita] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,8 +50,7 @@ const BeritaDetail = ({ params }) => {
         setBerita(cleanedBerita);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -75,7 +75,7 @@ const BeritaDetail = ({ params }) => {
       setIsSuccessDelete(true);
       setShowDeleteConfirmation(false);
     } catch (error) {
-      setError(error);
+      router.push(`/error/500`);
     }
   };
 
@@ -87,6 +87,10 @@ const BeritaDetail = ({ params }) => {
   const handleCloseDeleteConfirmation = () => {
     setShowDeleteConfirmation(false);
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div>
