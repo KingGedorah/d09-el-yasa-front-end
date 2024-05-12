@@ -7,11 +7,12 @@ import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
 import * as KelasApi from '../../../api/kelas';
 import { parseJwt } from '@/app/utils/jwtUtils';
-import { getUsersById } from '@/app/api/user';
+import { getUsersById, getAllGuru, getAllMurid } from '@/app/api/user';
 import { redirect } from 'next/navigation';
 
 const UpdateKelasForm = ({ params }) => {
   const { idKelas } = params;
+  const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
   const [selectedNuptk, setSelectedNuptk] = useState('');
@@ -20,6 +21,27 @@ const UpdateKelasForm = ({ params }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
+        console.log("Access granted");
+      } else {
+        console.log("Not authorized");
+        redirect(`/kelas/${idKelas}`);
+      }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
@@ -64,9 +86,12 @@ const UpdateKelasForm = ({ params }) => {
   useEffect(() => {
     const fetchNisnUsers = async () => {
       try {
+        const response = await KelasApi.getKelasByIdKelas(idKelas);
+        const { data } = response;
         const nisnUsers = [];
         for (const nisn of data.nisnSiswa) {
           const user = await getUsersById(nisn);
+          console.log(user.id)
           nisnUsers.push({ value: nisn, label: `${user.firstname} ${user.lastname}` });
         }
         setSelectedNisn(nisnUsers);
@@ -76,21 +101,8 @@ const UpdateKelasForm = ({ params }) => {
     };
     
     fetchNisnUsers();
-  }, [data.nisnSiswa]);
+  }, []);
   
-
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  if (decodedToken) {
-      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
-        console.log('You have authority')
-      } else {
-        console.log('You dont have authority')
-        redirect(`/kelas/myclass`)
-      }
-  } else {
-      redirect(`/user/login`)
-  }
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -148,9 +160,11 @@ const UpdateKelasForm = ({ params }) => {
     setShowSuccess(false);
   };
 
-  const filteredNisnOptions = nisnOptions.filter(option =>
+  const filteredNisnOptions = nisnOptions ? 
+  nisnOptions.filter(option =>
     !selectedNisn.some(selected => selected.value === option.value)
-  );
+  ) : [];
+
 
   return (
     <div className="bg-white dark:bg-gray-950">
@@ -259,7 +273,8 @@ const UpdateKelasForm = ({ params }) => {
               onClick={handleCloseSuccessModal}
               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
             >
-              Tutup
+              <a href="/kelas/view-all">Tutup</a>
+              
             </button>
           </div>
         </div>

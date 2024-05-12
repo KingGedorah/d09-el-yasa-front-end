@@ -72,7 +72,7 @@ const CreateAbsensiForm = ({ params }) => {
                             )}
                             <button
                                 onClick={() => router.push(`/absensi/${idKelas}`)}
-                                className="w-full py-2 px-4 border-blue-500 border text-white rounded-lg focus:outline-none"
+                                className="w-full py-2 px-4 border-[#6C80FF] border text-[#6C80FF] rounded-lg focus:outline-none"
                             >
                                 Kembali
                             </button>

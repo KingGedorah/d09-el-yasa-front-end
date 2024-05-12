@@ -6,6 +6,7 @@ import ArticleImage from '@/app/artikelimage/page';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Sidebar from '../../components/sidebar';
+import DOMPurify from 'dompurify';
 
 const ArtikelDetail = ({ params }) => {
   const { idArtikel } = params;
@@ -17,7 +18,11 @@ const ArtikelDetail = ({ params }) => {
     const fetchArticle = async () => {
       try {
         const articleData = await getArticleById(idArtikel);
-        setArticle(articleData.data); // Access the 'data' property from the response
+        const cleanedArtikel = {
+          ...articleData.data,
+          isiArtikel: DOMPurify.sanitize(articleData.data.isiArtikel)
+        }
+        setArticle(articleData.data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -44,22 +49,19 @@ const ArtikelDetail = ({ params }) => {
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
             {article && (
-              <div class="bg-gray-200 rounded-lg overflow-hidden">
-                <div className="p-4">
-                  {article.imageArtikel ? (
-                    <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
-                  ) : (
-                    <img src="https://via.placeholder.com/600x400" alt="Placeholder" className="w-full h-48 object-cover" />
-                  )}
+              <div className="border-[1px] border-[#8D6B94] rounded-lg overflow-hidden">
+                <h2 className="text-xl font-semibold mt-4 text-center">{article.judulArtikel}</h2>
+                <div className="p-4 w-full">
+                  {article.imageArtikel && <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />}
+                  {!article.imageArtikel && <div className="w-full h-48 bg-gray-200"></div>}
                 </div>
-                <div class="p-4">
-                  <h2 class="text-xl font-semibold mb-2">{article.judulArtikel}</h2>
-                  <p class="text-gray-700 mb-4">{article.isiArtikel}</p>
+                <div className="p-4">
+                  <div dangerouslySetInnerHTML={{ __html: article.isiArtikel }} />
                   {/* Menampilkan kategori artikel */}
                   <div className="flex flex-wrap">
                     <span className="font-semibold mr-2 mb-2">Tags:</span>
-                    {article.kategori.map((kategori, index) => (
-                      <span key={index} className="bg-blue-500 text-white rounded-full px-2 py-1 mr-2 mb-2 text-sm">{kategori}</span>
+                    {article.kategori?.map((kategori, index) => (
+                      <span key={index} className="bg-[#6C80FF] text-white rounded-full px-2 py-1 mr-2 mb-2 text-sm">{kategori}</span>
                     ))}
                   </div>
                 </div>
@@ -71,7 +73,7 @@ const ArtikelDetail = ({ params }) => {
       </div>
       <Footer />
     </div>
-  );
+  );  
 };
 
 export default ArtikelDetail;

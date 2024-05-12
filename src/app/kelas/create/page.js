@@ -10,6 +10,7 @@ import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
 import { parseJwt } from '@/app/utils/jwtUtils';
 
 const CreateKelasForm = () => {
+  const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
   const [selectedNuptk, setSelectedNuptk] = useState('');
@@ -18,17 +19,26 @@ const CreateKelasForm = () => {
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [nisnOptions, setNisnOptions] = useState(null);
 
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  if (decodedToken) {
-      if (decodedToken.role == 'ADMIN' || decodedToken.role == 'GURU') {
-        console.log('You have authority')
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
+      redirect('/user/login');
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
+        console.log("Access granted");
       } else {
-        console.log('You dont have authority')
-        redirect(`/kelas/myclass`)
+        console.log("Not authorized");
+        redirect(`/kelas/myclass`);
       }
-  } else {
-      redirect(`/user/login`)
-  }
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchNuptkOptions = async () => {
@@ -46,7 +56,7 @@ const CreateKelasForm = () => {
         console.log(error);
       }
     };
-  
+
     fetchNuptkOptions();
   }, []);
 
@@ -66,10 +76,10 @@ const CreateKelasForm = () => {
         console.log(error);
       }
     };
-  
+
     fetchNisnOptions();
   }, []);
-  
+
   useEffect(() => {
     if (showSuccess) {
       setTimeout(() => {
@@ -158,11 +168,11 @@ const CreateKelasForm = () => {
         {showSuccess && (
           <div id="modal" className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
             <div className="bg-white max-w-xl w-full rounded-md">
-              <div className="p-3 flex items-center justify-between border-b border-b-gray-300"> 
+              <div className="p-3 flex items-center justify-between border-b border-b-gray-300">
                 <h3 className="font-semibold text-xl">
                   Berhasil :)
                 </h3>
-                <span className="modal-close cursor-pointer" onClick={handleCloseModal}>×</span> 
+                <span className="modal-close cursor-pointer" onClick={handleCloseModal}>×</span>
               </div>
               <div className="p-3 border-b border-b-gray-300">
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">

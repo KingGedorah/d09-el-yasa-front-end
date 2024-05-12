@@ -15,9 +15,7 @@ import { redirect } from 'next/navigation';
 
 
 const DetailKelas = ({ params }) => {
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
-  const username = decodedToken ? decodedToken.username : null;
-  const userRole = decodedToken ? decodedToken.role : null;
+  const [decodedToken, setDecodedToken] = useState('');
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
@@ -25,14 +23,21 @@ const DetailKelas = ({ params }) => {
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
 
-  if (decodedToken) {
-    console.log('Decoded Token:', decodedToken);
-    console.log('ID:', decodedToken.id);
-    console.log('Role:', decodedToken.role);
-    console.log('Username:', decodedToken.username);
-  } else {
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      console.log("Need to login");
       redirect('/user/login');
-  }
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (decodedToken) {
+      console.log("Access granted");
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchMapelInfo = async () => {
@@ -68,7 +73,7 @@ const DetailKelas = ({ params }) => {
   // Fungsi untuk menghapus mata pelajaran
   const handleDeleteMapel = async (mapelId) => {
     try {
-      await axios.delete(`http://localhost:8083/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
       // Refresh halaman setelah penghapusan berhasil
       window.location.reload();
     } catch (error) {
@@ -104,7 +109,7 @@ const DetailKelas = ({ params }) => {
                         <p className="text-gray-600 mb-4">Guru Pengajar: {mapel.nuptkGuruMengajar}</p>
                       </a>
                       {/* Icon gerigi untuk dropdown, hanya ditampilkan untuk peran GURU */}
-                      {userRole === 'GURU' && showDropdown === index && (
+                      {decodedToken.role === 'GURU' && showDropdown === index && (
                         <div className="absolute top-0 right-0 mt-12 mr-2">
                           <div className="bg-white dark:bg-gray-800 rounded-md shadow-md">
                             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -119,7 +124,7 @@ const DetailKelas = ({ params }) => {
                         </div>
                       )}
                       {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih, hanya untuk peran GURU */}
-                      {userRole === 'GURU' && (
+                      {decodedToken.role  === 'GURU' && (
                         <div className="absolute top-0 right-0 mt-2 mr-2 flex items-center">
                           <p className="font-bold bg-white rounded-full p-1 opacity-50">Sunting</p>
                           <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(index)} className="ml-1" />
