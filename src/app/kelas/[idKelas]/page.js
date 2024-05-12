@@ -78,8 +78,14 @@ const DetailKelas = ({ params }) => {
   // Fungsi untuk menghapus mata pelajaran
   const handleDeleteMapel = async (mapelId) => {
     try {
-      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/mapel/${mapelId}`); // Hapus mata pelajaran menggunakan axios.delete
-      await axios.delete(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/delete/mape/${mapelId}`);
+      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/mapel/${mapelId}`);
+      
+      // Pengecekan jika terdapat nilai siswa dari mapel tersebut
+      const scoreResponse = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/view-all/mapel/${mapelId}`); 
+      if (scoreResponse.status === 200) {
+        await axios.delete(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/delete/mape/${mapelId}`);
+      }
+
       setIsSuccessDelete(true);
     } catch (error) {
       setIsErrorDelete(true);
@@ -171,10 +177,10 @@ const DetailKelas = ({ params }) => {
             <p className="text-red-600 font-semibold mb-4">Semua data yang ada tidak dapat dipulihkan kembali!</p>
             <div className="flex">
               <button onClick={confirmDelete} className="bg-red-500 text-white py-2 px-4 rounded-md mr-2 hover:bg-red-600 transition duration-300">
-                Hapus
+                Delete
               </button>
               <button onClick={handleCloseDeleteConfirmation} className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition duration-300 flex items-center justify-center mx-auto">
-                Batal
+                Cancel
               </button>
             </div>
           </div>
