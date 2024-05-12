@@ -9,6 +9,7 @@ import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 
 const LoginPage = () => {
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -34,7 +35,9 @@ const LoginPage = () => {
     // Clear session storage or remove the token
     sessionStorage.removeItem('jwtToken');
     // Redirect to login page or home page
+    setIsLoggedIn(false);
     window.location.href = '/user/login';
+    
   };
 
   return (

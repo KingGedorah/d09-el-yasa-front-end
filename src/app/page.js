@@ -1,6 +1,7 @@
 // pages/index.js
 
 import Head from 'next/head';   
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -30,9 +31,11 @@ export default function Home() {
             <a className="font-medium text-gray-500 dark:text-gray-400" href="#">Kontak</a>
           </nav>
           <div className="flex items-center gap-4 md:gap-6">
+          <Link href="/user/login">
             <button type="button" className="text-sm font-medium font-nunito-sans">Masuk</button>
-          </div>
+          </Link>
         </div>
+                </div>
       </nav>
 
       <main className="py-16 md:py-24 lg:py-32 hero-bg">
