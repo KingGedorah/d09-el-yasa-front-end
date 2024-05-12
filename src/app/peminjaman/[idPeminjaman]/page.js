@@ -20,6 +20,7 @@ import { declinePeminjaman } from '@/app/api/peminjaman';
 import { deletePeminjaman } from '@/app/api/peminjaman';
 
 const DetailPeminjaman = (params) => {
+  const {idPeminjaman} = params;
   const router = useRouter()
   const [decodedToken, setDecodedToken] = useState('');
 
@@ -54,7 +55,7 @@ const DetailPeminjaman = (params) => {
     const fetchData = async () => {
       try {
         const allPeminjaman = await getAllPeminjaman();
-        let peminjamanData = allPeminjaman.find(data => data.idRequest === params.params.id); 
+        let peminjamanData = allPeminjaman.find(data => data.idRequest === idPeminjaman); 
     
         if (!peminjamanData) {
           console.log("No matching peminjaman data found");
@@ -99,7 +100,7 @@ const DetailPeminjaman = (params) => {
     };
 
     fetchData();
-  }, []); 
+  }, [decodedToken]); 
 
 
   useEffect(() => {
@@ -147,7 +148,7 @@ const DetailPeminjaman = (params) => {
   const handleConfirm = async (e) => {
     e.preventDefault()
     try {
-      const data = await confirmPeminjaman(params.params.id)
+      const data = await confirmPeminjaman(idPeminjaman)
       setIsSuccessConfirm(true);
     } catch (error) {
       console.error('Error confirm peminjaman:', error);
@@ -158,7 +159,7 @@ const DetailPeminjaman = (params) => {
   const handleDecline = async (e) => {
     e.preventDefault()
     try {
-      const data = await declinePeminjaman(params.params.id)
+      const data = await declinePeminjaman(idPeminjaman)
       setIsSuccessDecline(true);
     } catch (error) {
       console.error('Error decline peminjaman:', error);
@@ -169,7 +170,7 @@ const DetailPeminjaman = (params) => {
   const handleDelete = async (e) => {
     e.preventDefault()
     try {
-      const data = await deletePeminjaman(params.params.id)
+      const data = await deletePeminjaman(idPeminjaman)
       setIsSuccessDelete(true);
     } catch (error) {
       console.error('Error decline peminjaman:', error);
