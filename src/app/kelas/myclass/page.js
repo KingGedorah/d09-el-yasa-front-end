@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import Navbar2 from '@/app/components/navbarmurid';
 
 const KelasByUserId = () => {
   const router = useRouter();
@@ -83,7 +84,7 @@ const KelasByUserId = () => {
 
   return (
     <div className="bg-white dark:bg-gray-950">
-      <Navbar />
+      <Navbar/>
       <div className="container mx-auto flex justify-center mt-8">
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
           <div className="search-container">
