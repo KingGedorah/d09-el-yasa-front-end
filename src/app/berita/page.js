@@ -48,6 +48,7 @@ const BeritaList = () => {
     const fetchData = async () => {
       try {
         const beritasData = await getAllBeritas();
+        beritasData.sort((a, b) => new Date(b.dateUpdated) - new Date(a.dateUpdated));
         beritasData.forEach(berita => {
           berita.isiBerita = DOMPurify.sanitize(berita.isiBerita);
         });
