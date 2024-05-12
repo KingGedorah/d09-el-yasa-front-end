@@ -2,9 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
 
 const UpdateUserPage = ({ params }) => {
+  const router = useRouter();
   const { IdUser } = params;
+  const [loading, setLoading] = useState(true);
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [error, setError] = useState('');
@@ -19,8 +23,9 @@ const UpdateUserPage = ({ params }) => {
         const userData = response.data;
         setFirstname(userData.firstname);
         setLastname(userData.lastname);
+        setLoading(false);
       } catch (error) {
-        setError('Error fetching user data');
+        router.push(`/error/500`);
       }
     };
 
@@ -39,6 +44,10 @@ const UpdateUserPage = ({ params }) => {
       setError('Error updating user');
     }
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">

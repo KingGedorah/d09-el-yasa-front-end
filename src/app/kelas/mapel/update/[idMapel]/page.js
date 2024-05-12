@@ -9,8 +9,11 @@ import { getUsersById, getAllGuru } from '@/app/api/user';
 import { getMapelByIdMapel} from '@/app/api/kelas';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const UpdateMapelForm = ({ params }) => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [namaMapel, setNamaMapel] = useState('');
@@ -20,6 +23,7 @@ const UpdateMapelForm = ({ params }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState(null);
+  const [fetchedNuptk, setFetchedNuptk] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -53,8 +57,9 @@ const UpdateMapelForm = ({ params }) => {
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
+        setFetchedNuptk(true);
       } catch (error) {
-        console.log(error);
+        router.push(`/error/500`);
       }
     };
   
@@ -72,8 +77,9 @@ const UpdateMapelForm = ({ params }) => {
         setNamaMapel(data.namaMapel);
         const dataNuptk = await getUsersById(data.nuptkGuruMengajar)
         setSelectedNuptk({ value: data.nuptkGuruMengajar, label: `${dataNuptk.firstname} ${dataNuptk.lastname}` });
+        setLoading(false);
       } catch (error) {
-        console.error('Error', error.response);
+        router.push(`/error/500`);
       }
     }
     fetchData();
@@ -103,6 +109,10 @@ const UpdateMapelForm = ({ params }) => {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  if (loading || !fetchedNuptk) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div className="bg-white dark:bg-gray-950">

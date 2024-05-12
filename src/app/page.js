@@ -1,7 +1,7 @@
 // pages/index.js
 
 import Head from 'next/head';   
-import Link from 'next/link';
+import Navbar from './components/navbar';
 
 export default function Home() {
   return (
@@ -19,24 +19,7 @@ export default function Home() {
         </style>
       </Head>
 
-      <nav className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-850 px-4 py-6 md:px-6 lg:px-8">
-        <div className="container mx-auto flex items-center justify-between">
-          <a className="flex gap-4 items-center font-nunito-sans" href="#">
-            <span className="font-semibold text-base sm:text-xl">Jakarta Islamic School</span>
-          </a>
-          <nav className="hidden md:flex gap-4 text-sm font-nunito-sans">
-            <a className="font-medium text-gray-900 dark:text-gray-100" href="#">Halaman Depan</a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">Tentang</a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">Program</a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">Kontak</a>
-          </nav>
-          <div className="flex items-center gap-4 md:gap-6">
-          <Link href="/user/login">
-            <button type="button" className="text-sm font-medium font-nunito-sans">Masuk</button>
-          </Link>
-        </div>
-                </div>
-      </nav>
+      <Navbar/>
 
       <main className="py-16 md:py-24 lg:py-32 hero-bg">
         <div className="container px-4 md:px-6 flex items-center justify-center">

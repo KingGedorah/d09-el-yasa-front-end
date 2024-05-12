@@ -12,9 +12,12 @@ import styles from '../../components/button-n-search.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 
 const ViewAllKelas = () => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const [kelasList, setKelasList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,8 +53,7 @@ const ViewAllKelas = () => {
         setKelasList(data);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -79,6 +81,10 @@ const ViewAllKelas = () => {
       // Tampilkan pesan error kepada pengguna
     }
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div class="bg-white dark:bg-gray-950">

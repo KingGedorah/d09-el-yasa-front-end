@@ -12,16 +12,19 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 
 const DetailKelas = ({ params }) => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(null); // State untuk menampilkan dropdown
+  const [showDropdown, setShowDropdown] = useState(null);
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -52,8 +55,7 @@ const DetailKelas = ({ params }) => {
         setMapelInfo(mapelData);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -80,6 +82,10 @@ const DetailKelas = ({ params }) => {
       console.error('Error deleting mapel:', error);
     }
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div className="bg-white dark:bg-gray-950">

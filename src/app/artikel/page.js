@@ -9,25 +9,31 @@ import Footer from '../components/footer';
 import Sidebar from '../components/sidebar';
 import Image from 'next/image';
 import DOMPurify from 'dompurify';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const ArtikelList = () => {
+  const router = useRouter();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 6;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const articlesData = await getAllArticles();
+        articlesData.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
         articlesData.forEach(article => {
           article.isiArtikel = DOMPurify.sanitize(article.isiArtikel);
         });
         setArticles(articlesData);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -35,36 +41,79 @@ const ArtikelList = () => {
   }, []);
 
   const handleChangeSearchBar = (e) => {
-    setQuery(e.target.value)
-  }
+    setQuery(e.target.value);
+    setCurrentPage(1);
+  };
 
+  const handleFilterByCategory = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = articles.filter(article => {
+    const containsCategory = selectedCategory ? (Array.isArray(article.kategori) && article.kategori.includes(selectedCategory)) : true;
+    const containsQuery = query ? article.judulArtikel.toLowerCase().includes(query.toLowerCase()) : true;
+    return containsCategory && containsQuery;
+  });
+
+  const totalArticles = currentArticles.length;
+  const totalPages = Math.ceil(totalArticles / articlesPerPage);
+  const paginatedArticles = currentArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div>
       <Navbar />
-      <div className="mx-auto mt-8 px-12 rounded-lg">
+      <div className="mx-auto mt-8 px-12 rounded-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">
-          <div className='relative'>
-            <input onChange={handleChangeSearchBar} type='text' className="border border-[#6C80FF] mb-4 rounded-xl py-3 bg-transparent px-4 w-full focus:outline-none focus:border-blue-500" />
-            <div className='absolute top-[14px] right-4'>
-              <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 0C13.968 0 18 4.032 18 9C18 13.968 13.968 18 9 18C4.032 18 0 13.968 0 9C0 4.032 4.032 0 9 0ZM9 16C12.867 16 16 12.867 16 9C16 5.132 12.867 2 9 2C5.132 2 2 5.132 2 9C2 12.867 5.132 16 9 16ZM17.485 16.071L20.314 18.899L18.899 20.314L16.071 17.485L17.485 16.071Z" fill="#6C80FF"/>
-              </svg>
+            <div className='relative'>
+              <input onChange={handleChangeSearchBar} type='text' className="border border-[#6C80FF] mb-4 rounded-xl py-3 bg-transparent px-4 w-full focus:outline-none focus:border-blue-500" />
+              <div className='absolute top-[14px] right-4'>
+                <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 0C13.968 0 18 4.032 18 9C18 13.968 13.968 18 9 18C4.032 18 0 13.968 0 9C0 4.032 4.032 0 9 0ZM9 16C12.867 16 16 12.867 16 9C16 5.132 12.867 2 9 2C5.132 2 2 5.132 2 9C2 12.867 5.132 16 9 16ZM17.485 16.071L20.314 18.899L18.899 20.314L16.071 17.485L17.485 16.071Z" fill="#6C80FF" />
+                </svg>
+              </div>
             </div>
+            <div className="flex gap-4 mb-4">
+              <button onClick={() => handleFilterByCategory(null)} className={`bg-[#6C80FF] text-white px-4 py-2 rounded-md ${selectedCategory === null ? 'bg-opacity-100' : 'bg-opacity-50'}`}>All</button>
+              <button onClick={() => handleFilterByCategory("Pendidikan")} className={`bg-[#6C80FF] text-white px-4 py-2 rounded-md ${selectedCategory === "Pendidikan" ? 'bg-opacity-100' : 'bg-opacity-50'}`}>Pendidikan</button>
+              <button onClick={() => handleFilterByCategory("Teknologi")} className={`bg-[#6C80FF] text-white px-4 py-2 rounded-md ${selectedCategory === "Teknologi" ? 'bg-opacity-100' : 'bg-opacity-50'}`}>Teknologi</button>
+              <button onClick={() => handleFilterByCategory("Olahraga")} className={`bg-[#6C80FF] text-white px-4 py-2 rounded-md ${selectedCategory === "Olahraga" ? 'bg-opacity-100' : 'bg-opacity-50'}`}>Olahraga</button>
+              <button onClick={() => handleFilterByCategory("Prestasi")} className={`bg-[#6C80FF] text-white px-4 py-2 rounded-md ${selectedCategory === "Prestasi" ? 'bg-opacity-100' : 'bg-opacity-50'}`}>Prestasi</button>
             </div>
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
-            {!loading && !error && articles && articles.length > 0 && (
+            {!loading && !error && (
               <div className="flex flex-col gap-4 w-full">
-                {articles.filter(article => article.judulArtikel.toLowerCase().includes(query.toLowerCase())).map(article => (
-                  <div key={article.idArtikel} className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl">
+                {paginatedArticles.map(article => (
+                  <div
+                    key={article.idArtikel}
+                    className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl artikel-item"
+                    style={{
+                      transition: 'transform 0.3s',
+                      transform: 'scale(1)',
+                      ':hover': {
+                        transform: 'scale(1.05)',
+                      },
+                    }}
+                    onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
+                    onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}
+                  >
                     <div className='flex justify-center'>
-
                       {article.imageArtikel ? (
                         <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
                       ) : (
-                        <Image src="https://via.placeholder.com/600x400" width="600" height="400" objectFit="cover" alt="Placeholder" />
+                        <Image src="https://via.placeholder.com/600x400" width="600" height="400" objectFit="cover" alt="Placeholder" loading="lazy" />
                       )}
                     </div>
                     <Link href={`/artikel/${article.idArtikel}`} passHref>
@@ -76,14 +125,28 @@ const ArtikelList = () => {
                     </Link>
                   </div>
                 ))}
+                {totalArticles === 0 && <div>Tidak ada hasil pencarian.</div>}
+                <ul className="flex justify-center mb-8" style={{marginBottom: '30px'}}> {/* Updated with margin-bottom */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+                    <li key={number}>
+                      <button
+                        onClick={() => handlePageChange(number)}
+                        className={`mx-1 px-3 py-1 rounded-md ${currentPage === number ? 'bg-blue-500 text-white' : 'bg-gray-300'
+                          }`}
+                      >
+                        {number}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
           <div className='flex flex-col gap-4'>
             <Link href="/artikel/create" className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'><svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12.5 22C18.0228 22 22.5 17.5228 22.5 12C22.5 6.47715 18.0228 2 12.5 2C6.97715 2 2.5 6.47715 2.5 12C2.5 17.5228 6.97715 22 12.5 22Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M12.5 8V16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M8.5 12H16.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M12.5 22C18.0228 22 22.5 17.5228 22.5 12C22.5 6.47715 18.0228 2 12.5 2C6.97715 2 2.5 6.47715 2.5 12C2.5 17.5228 6.97715 22 12.5 22Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M12.5 8V16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M8.5 12H16.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
               Post Artikel
             </Link>
@@ -91,9 +154,10 @@ const ArtikelList = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer/> {/* Menambahkan margin atas pada footer */}
     </div>
   );
+
 };
 
 export default ArtikelList;

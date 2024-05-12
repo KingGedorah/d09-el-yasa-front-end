@@ -22,7 +22,6 @@ const CreateArticle = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
-
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
@@ -109,6 +108,7 @@ const CreateArticle = () => {
                 value={isiArtikel}
                 onChange={setIsiArtikel}
                 required
+                className = "border border-[#6C80FF] rounded-xl overflow-hidden"
               />
             </div>
 
@@ -164,7 +164,7 @@ const CreateArticle = () => {
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-green-600 font-semibold">Artikel berhasil dibuat!</p>
-            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Tutup</button>
           </div>
         </div>
       )}
@@ -172,7 +172,7 @@ const CreateArticle = () => {
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-red-600 font-semibold">Gagal membuat artikel!</p>
-            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Tutup</button>
+            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Tutup</button>
           </div>
         </div>
       )}

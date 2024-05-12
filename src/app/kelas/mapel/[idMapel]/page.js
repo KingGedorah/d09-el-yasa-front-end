@@ -4,12 +4,13 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Sidebar from '@/app/components/sidebar';
-import styles from '../../../components/button-n-search.css';
-
 import * as KelasApi from '../../../api/kelas';
 import axios from 'axios';
+import SpinLoading from '@/app/components/spinloading';
+import { useRouter } from 'next/navigation';
 
 const DetailMapel = ({ params }) => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [materiInfo, setMateriInfo] = useState([]);
@@ -46,8 +47,7 @@ const DetailMapel = ({ params }) => {
         setMapelInfo(mapelData.data);
         setLoading(false);
       } catch (error) {
-        setError(error);
-        setLoading(false);
+        router.push(`/error/500`);
       }
     };
 
@@ -64,6 +64,10 @@ const DetailMapel = ({ params }) => {
       console.error('Error deleting materi:', error);
     }
   };
+
+  if (loading) {
+    return <SpinLoading/>;
+  }
 
   return (
     <div className="bg-white dark:bg-gray-950">
