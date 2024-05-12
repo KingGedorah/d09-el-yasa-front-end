@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { getAllInventory } from '@/app/api/peminjaman';
-import { getAllKelas } from '@/app/api/kelas';
 import { getUsersById } from '@/app/api/user';
 import { redirect } from 'next/navigation';
 import axios from 'axios';
@@ -13,24 +11,24 @@ import Link from 'next/link';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
+import SpinLoading from '@/app/components/spinloading';
+import Select from 'react-select'; // Import react-select
 
-const CreateArticle = () => {
-  const router = useRouter()
+const CreatePeminjaman = () => {
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
-
   const [idPeminjam, setIdPeminjam] = useState('');
   const [namaPeminjam, setNamaPeminjam] = useState('');
-  const [kelasDipinjam, setKelasDipinjam] = useState('');
   const [keperluanPeminjaman, setKeperluanPeminjaman] = useState('');
   const [tanggalPengembalian, setTanggalPengembalian] = useState('');
-  const [itemQuantities, setItemQuantities] = useState([]);
-
-  const [inventories, setInventories] = useState([])
-  const [kelas, setKelas] = useState([])
-
+  const [selectedOption, setSelectedOption] = useState(null); // Ubah selected item menjadi selectedOption
+  const [itemQuantities, setItemQuantities] = useState({});
+  const [inventories, setInventories] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
-
+  const [isCreateError, setIsCreateError] = useState(false);
+  const [fetchedUser, setFetchedUser] = useState(false);
+  const [fetchedInventory, setFetchedInventory] = useState(false);
+  const [selectedItemsList, setSelectedItemsList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,28 +37,24 @@ const CreateArticle = () => {
         try {
           const decodedToken = parseJwt(token);
           const user = await getUsersById(decodedToken.id);
-          console.log(user)
           setIdPeminjam(decodedToken.id);
-          setNamaPeminjam(user.firstname + " " + user.lastname)
+          setNamaPeminjam(user.firstname + " " + user.lastname);
           setDecodedToken(decodedToken);
+          setFetchedUser(true);
         } catch (error) {
-          console.error('Failed to fetch user:', error);
+          router.push(`/error/500`);
         }
       } else {
-        console.log("Need to login");
         router.push('/user/login');
       }
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'MURID') {
-        console.log("Access granted");
-      } else {
-        console.log("Not authorized");
+      if (decodedToken.role !== 'MURID') {
         router.push('/peminjaman');
       }
     }
@@ -71,85 +65,87 @@ const CreateArticle = () => {
       try {
         const inventoriesData = await getAllInventory();
         setInventories(inventoriesData);
+        setFetchedInventory(true);
       } catch (error) {
-        console.error('Failed to fetch data inventaris:', error);
+        router.push(`/error/500`);
       }
     };
 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const kelasData = await getAllKelas();
-        setKelas(kelasData);
-      } catch (error) {
-        console.error('Failed to fetch data kelas:', error);
-      }
-    };
+  const handleQuantityChange = (itemId, quantity) => {
+    setItemQuantities(prevState => ({
+      ...prevState,
+      [itemId]: quantity
+    }));
+  };
 
-    fetchData();
-  }, []);
-
-  const handleQuantityChange = (idItem, newQuantity) => {
-    console.log(idItem, newQuantity)
-    setItemQuantities(currentQuantities => {
-      const index = currentQuantities.findIndex(item => item.idItem === idItem);
-      console.log("index", index)
-      const newQuantities = [...currentQuantities];
-      
-      if (index !== -1) {
-        newQuantities[index] = { ...newQuantities[index], quantity: newQuantity };
+  const handleAddOrUpdateSelectedItem = () => {
+    if (selectedOption && itemQuantities[selectedOption.value]) {
+      const existingItemIndex = selectedItemsList.findIndex(item => item.id === selectedOption.value);
+      if (existingItemIndex !== -1) {
+        const updatedSelectedItemsList = [...selectedItemsList];
+        updatedSelectedItemsList[existingItemIndex].quantity += parseInt(itemQuantities[selectedOption.value]);
+        setSelectedItemsList(updatedSelectedItemsList);
       } else {
-        newQuantities.push({ idItem, quantity: newQuantity });
+        const newItem = {
+          id: selectedOption.value,
+          name: selectedOption.label,
+          quantity: parseInt(itemQuantities[selectedOption.value])
+        };
+        setSelectedItemsList(prevList => [...prevList, newItem]);
       }
-      return newQuantities;
-    });
+      setSelectedOption(null);
+    }
+  };
+
+  const handleRemoveSelectedItem = (itemId) => {
+    setSelectedItemsList(prevList => prevList.filter(item => item.id !== itemId));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const listIdItem = []
-    const listQuantityItem = []
-
-    for (const itemQuantity of itemQuantities) {
-        listIdItem.push(itemQuantity["idItem"])
-        listQuantityItem.push(itemQuantity["quantity"])
+    if (selectedItemsList.length === 0) {
+      setIsCreateError(true);
+      return;
     }
+    const listIdItem = selectedItemsList.map(item => item.id);
+    const listQuantityItem = selectedItemsList.map(item => item.quantity);
 
     const formData = {
-        idPeminjam,
-        keperluanPeminjaman,
-        returnDate: tanggalPengembalian,
-        listIdItem,
-        listQuantityItem
-      };
-  
-      const jsonString = JSON.stringify(formData, null, 2);
+      idPeminjam,
+      keperluanPeminjaman,
+      returnDate: tanggalPengembalian,
+      listIdItem,
+      listQuantityItem
+    };
 
     try {
-      const response = await axios.post('https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/borrow', jsonString, {
+      const response = await axios.post('https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/borrow', formData, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      
+
       setIsSuccess(true);
     } catch (error) {
-      console.error('Error updating:', error);
-      setIsError(true);
+      setIsCreateError(true);
     }
   };
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
-    router.push('/peminjaman')
+    router.push('/peminjaman');
   };
 
-  const handleErrorPopup = () => {
-    setIsError(false);
+  const handleErrorCreatePopup = () => {
+    setIsCreateError(false);
   };
+
+  if (!fetchedUser && !fetchedInventory) {
+    return <SpinLoading />;
+  }
 
   return (
     <div>
@@ -160,66 +156,74 @@ const CreateArticle = () => {
           <div>
             <div className="mb-4">
               <label htmlFor="namaPeminjam" className="block text-gray-700 font-bold mb-2">Applicant's name</label>
-              <input disabled type="text" id="namaPeminjam" value={namaPeminjam} onChange={(e) => setNamaPeminjam(e.target.value)} name="namaPeminjam" className="border disabled cursor-not-allowed border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
+              <input disabled type="text" id="namaPeminjam" value={namaPeminjam} name="namaPeminjam" className="border disabled cursor-not-allowed border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
-
-            {/* <div className="mb-4">
-            <label htmlFor="kelasDipinjam" className="block text-gray-700 font-bold mb-2">Kelas Dipinjam</label>
-            <select
-                id="kelasDipinjam"
-                value={kelasDipinjam}
-                onChange={(e) => setKelasDipinjam(e.target.value)}
-                name="kelasPeminjam"
-                className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500"
-                required
-            >
-                <option value="">Select a class</option>
-                {kelas.map((item) => (
-                <option key={item.idKelas} value={item.idKelas}>
-                    {item.namaKelas}
-                </option>
-                ))}
-            </select>
-            </div> */}
-
             <div className="mb-4">
               <label htmlFor="keperluanPeminjaman" className="block text-gray-700 font-bold mb-2">Request Purpose</label>
               <input type="text" id="keperluanPeminjaman" value={keperluanPeminjaman} onChange={(e) => setKeperluanPeminjaman(e.target.value)} name="keperluanPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
-
             <div className="mb-4">
               <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Return Date</label>
               <input type="date" min={new Date().toISOString().split('T')[0]} id="tanggalPengembalian" value={tanggalPengembalian} onChange={(e) => setTanggalPengembalian(e.target.value)} name="tanggalPeminjaman" className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
-            <div className="mb-4">
-                <label htmlFor="tanggalPengembalian" className="block text-gray-700 font-bold mb-2">Items Requested</label>
-                <div className='border border-[#6C80FF] rounded-xl grid grid-cols-2'>
-                    <div className='col-span-1 flex items-center py-4 justify-center'>Item Name</div>
-                    <div className='col-span-1 flex items-center justify-center'>Quantity</div>
-                    <hr className='col-span-2 border-[#6C80FF] py-0'/>
-                    {inventories?.map((inventory, index) => (
-                    <React.Fragment key={inventory.id}>
-                        <div className='col-span-1 flex py-4 items-center justify-center'>{inventory.namaItem}</div>
-                        <div className='flex items-center justify-center col-span-1'>
-                        <input
-                            type="number"
-                            id={inventory.idItem}
-                            min={0}
-                            value={itemQuantities.find(item => item.idItem === inventory.idItem)?.quantity || 0}
-                            onChange={(e) => handleQuantityChange(inventory.idItem, parseInt(e.target.value, 10) || 0)}
-                            name="keperluanPeminjaman"
-                            className="border border-[#6C80FF] rounded-xl mx-auto py-2 px-4 w-24 h-10 focus:outline-none focus:border-blue-500"
-                            required
-                        />
-                        </div>
-                        {index !== inventories.length - 1 && (
-                        <hr className='col-span-2 border-[#6C80FF]'/>
-                        )}
-                    </React.Fragment>
+            <div className="mb-4 flex flex-col md:flex-row items-center">
+              <div className="flex-grow">
+                <label htmlFor="itemsRequested" className="block text-gray-700 font-bold mb-2">Item Requested</label>
+                <Select
+                  id="itemsRequested"
+                  value={selectedOption}
+                  onChange={setSelectedOption}
+                  options={inventories.map(inventory => ({ value: inventory.idItem, label: inventory.namaItem }))}
+                  isSearchable={true}
+                  placeholder="Select Item"
+                />
+              </div>
+
+              <div className="flex-grow ml-4 mb-4 md:mb-0">
+                <label htmlFor="quantity" className="block text-gray-700 font-bold mb-2">Quantity</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={itemQuantities[selectedOption?.value] || ''}
+                  onChange={(e) => handleQuantityChange(selectedOption?.value, e.target.value)}
+                  className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="ml-4">
+                <label htmlFor="addItem" className="block text-gray-700 font-bold mb-2" style={{ opacity: 0 }}>Tambahkan item</label>
+                <button type="button" onClick={handleAddOrUpdateSelectedItem} className="bg-[#6C80FF] text-white py-2 px-4 transition duration-300 rounded-xl">Add Item</button>
+              </div>
+            </div>
+
+            {selectedItemsList.length > 0 && (
+              <div className="max-w-md mx-auto">
+                <table className="w-full mb-4 border border-gray-300 rounded-lg overflow-hidden">
+                  <thead>
+                    <tr className="bg-blue-100">
+                      <th className="text-left py-3 px-2">Item Requested</th>
+                      <th className="text-left py-3 px-2">Quantity</th>
+                      <th className="p-3"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-blue-50">
+                    {selectedItemsList.map(item => (
+                      <tr key={item.id} className="border-b border-gray-300">
+                        <td className="py-2 px-2">{item.name}</td>
+                        <td className="py-2 px-2">{item.quantity}</td>
+                        <td className="p-2 flex items-center justify-end">
+                          <button type="button" onClick={() => handleRemoveSelectedItem(item.id)} className="text-red-500 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
                     ))}
-                </div>
-                </div>
+                  </tbody>
+                </table>
+              </div>
+            )}
 
             <div className="flex gap-4 justify-end">
               <Link href="/peminjaman" className="bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] py-2 px-4 transition duration-300 w-40 rounded-xl text-center">Cancel</Link>
@@ -232,16 +236,16 @@ const CreateArticle = () => {
       {isSuccess && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-green-600 font-semibold">Request created succesfully</p>
-            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
+            <p className="text-green-600 font-semibold">Request created successfully</p>
+            <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
           </div>
         </div>
       )}
-      {isError && (
+      {isCreateError && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-red-600 font-semibold">Failed to create request</p>
-            <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Close</button>
+            <button onClick={handleErrorCreatePopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
           </div>
         </div>
       )}
@@ -250,4 +254,4 @@ const CreateArticle = () => {
   );
 };
 
-export default CreateArticle;
+export default CreatePeminjaman;
