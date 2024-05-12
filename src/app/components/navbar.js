@@ -1,7 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 
-const Navbar = ({ handleLogout }) => {
+const Navbar = () => {
   return (
         <div class="border-b border-gray-200 dark:border-gray-850">
             <div class="px-4 py-6 md:px-6 lg:px-8">

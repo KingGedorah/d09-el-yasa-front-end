@@ -49,13 +49,6 @@ const ArtikelDetail = ({ params }) => {
     fetchArticle();
   }, [idArtikel]);
 
-  const handleLogout = () => {
-    // Clear session storage or remove the token
-    sessionStorage.removeItem('jwtToken');
-    // Redirect to login page or home page
-    window.location.href = '/user/login';
-  };
-
   const handleDelete = async () => {
     try {
       await axios.delete(`https://myjisc-artikel-29c0ad65b512.herokuapp.com/api/artikel/delete/${idArtikel}`).then(() => {
@@ -91,7 +84,7 @@ const ArtikelDetail = ({ params }) => {
 
   return (
     <div>
-      <Navbar handleLogout={handleLogout} />
+      <Navbar />
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">
