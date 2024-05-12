@@ -128,9 +128,9 @@ const PeminjamanList = () => {
                     <p className="text-sm text-gray-600">You don't have any existing requests.</p>
                   </div>
                 ) : (
-                  peminjaman.filter((p) => selectedStatus ? p.status === selectedStatus : p).map((p) => (
-                    <div key={p.idRequest} className="relative flex flex-col gap-2 p-4 border-[1px] border-[#6C80FF] w-full rounded-xl">
-                      <strong className="text-lg">Inventory Request {p.idRequest.slice(0, 5)}</strong>
+                  peminjaman.filter((p) => selectedStatus ? p.status === selectedStatus : p).map((p, index) => (
+                    <div key={p.idRequest || index} className="relative flex flex-col gap-2 p-4 border-[1px] border-[#6C80FF] w-full rounded-xl">
+                      <strong className="text-lg">Inventory Request {p.idRequest?.slice(0, 5)}</strong>
                       <p>Return Date: {new Date(p.returnDate).toLocaleDateString()}</p>
                       <p>Request Purpose: {p.keperluanPeminjaman}</p>
                       <p>Item Request: {p.listItems.join(", ")}</p>
@@ -143,6 +143,7 @@ const PeminjamanList = () => {
                     </div>
                   ))
                 )}
+
               </div>
             )}
           </div>
