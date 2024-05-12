@@ -165,8 +165,8 @@ const PeminjamanList = () => {
                     </svg>
                     <h3 className="text-lg font-semibold">Inbox</h3>
                   </div>
-                  {msg && msg.map(m => (
-                    <h3 className="text-base font-normal mb-2">
+                  {msg && msg.map((m, index) => (
+                    <h3 key={index} className="text-base font-normal mb-2">
                       {m.message.slice(0, 11)}{m.idRequest.slice(0, 5)}
                       {m.message.slice(10).includes("ditolak") ? <span className="text-[#E16B6B]">{m.message.slice(10)}</span> : <span className="text-[#1BC590]">{m.message.slice(10)}</span>}
                     </h3>
