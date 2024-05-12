@@ -30,8 +30,15 @@ const LoginPage = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Clear session storage or remove the token
+    sessionStorage.removeItem('jwtToken');
+    // Redirect to login page or home page
+    window.location.href = '/user/login';
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-950">
+    <div className="bg-white">
       <Head>
         <title>Your Title</title>
         <meta charSet="UTF-8" />
@@ -39,39 +46,15 @@ const LoginPage = () => {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
       </Head>
 
-      <div className="border-b border-gray-200 dark:border-gray-850">
-        <div className="px-4 py-6 md:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <a className="flex gap-4 items-center font-nunito-sans" href="#">
-              <span className="font-semibold text-base sm:text-xl">MyJISc</span>
-            </a>
-            <nav className="hidden md:flex gap-4 text-sm font-nunito-sans">
-              <a className="font-medium text-gray-900 dark:text-gray-100" href="#">
-                Halaman Depan
-              </a>
-              <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                Siswa
-              </a>
-              <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                Guru
-              </a>
-            </nav>
-            <div className="flex items-center gap-4 md:gap-6">
-              <button type="button" className="text-sm font-medium font-nunito-sans">
-                Masuk
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Navbar handleLogout={handleLogout} />
 
-      <main className="py-16 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6 flex items-center justify-center">
-          <div className="w-full max-w-sm space-y-4">
+      <main className="py-16 md:py-24 lg:py-32 bg-[#F3F5FB]">
+        <div className="container px-4 md:px-6 flex items-center justify-center mx-auto">
+          <div className="w-full max-w-sm space-y-4 p-8 bg-white rounded-xl shadow-lg">
             <div className="space-y-2">
-              <h1 className="text-3xl font-extrabold font-nunito-sans">Masuk</h1>
-              <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
-                Masukkan informasi akun Anda di bawah ini.
+              <h1 className="text-3xl font-extrabold font-nunito-sans">Welcome Back!</h1>
+              <p className="text-gray-400 font-nunito">
+                Please enter your account information
               </p>
             </div>
             <form onSubmit={handleSubmit}>
@@ -81,9 +64,10 @@ const LoginPage = () => {
                     Email
                   </label>
                   <input
-                    className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
+                    required
+                    className="h-10 w-full rounded-md border border-[#6C80FF] px-3 py-2 text-sm placeholder-gray-400 font-nunito"
                     id="email"
-                    placeholder="afiq.ilyasa@ui.ac.id"
+                    placeholder="john.doe@jisc.ac.id"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     style={{ color: 'black' }}
@@ -95,7 +79,8 @@ const LoginPage = () => {
                     Password
                   </label>
                   <input
-                    className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
+                    required 
+                    className="h-10 w-full rounded-md border border-[#6C80FF] px-3 py-2 text-sm placeholder-gray-400 font-nunito-sans"
                     id="password"
                     type="password"
                     value={password}
@@ -104,14 +89,13 @@ const LoginPage = () => {
                   />
                 </div>
               </div>
-
               {/* Submit */}
               <div className="flex justify-end mt-4">
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 font-nunito-sans"
+                  className="px-4 py-2 text-sm font-medium rounded-md text-white bg-[#6C80FF] hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 font-nunito"
                 >
-                  Masuk
+                  Login
                 </button>
               </div>
             </form>
@@ -119,11 +103,11 @@ const LoginPage = () => {
         </div>
       </main>
       {/* Footer */}
-      <footer className="bg-gray-900 text-white text-center py-6 absolute bottom-0 w-full">
-        <p>&copy; 2024 Jakarta Islamic School. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 };
 
 export default LoginPage;
+
+
