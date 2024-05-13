@@ -88,6 +88,12 @@ const BeritaDetail = ({ params }) => {
     setShowDeleteConfirmation(false);
   };
 
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', options);
+  }
+
   if (loading) {
     return <SpinLoading/>;
   }
@@ -114,6 +120,9 @@ const BeritaDetail = ({ params }) => {
                       <FaArrowLeft className="mr-2" />
                       Back
                     </button>
+                    <div>
+                      <span className="text-sm text-gray-500">Tanggal Pembuatan: {formatDate(berita.dateCreated)}</span>
+                    </div>
                   </div>
                   {berita.imageBerita ? (
                     <BeritaImage idBerita={berita.idBerita} className="w-full h-48 object-cover" />
