@@ -33,7 +33,6 @@ const UpdateKelasForm = ({ params }) => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
@@ -41,9 +40,8 @@ const UpdateKelasForm = ({ params }) => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
-        console.log("Access granted");
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect(`/kelas/${idKelas}`);
       }
     }
@@ -57,12 +55,10 @@ const UpdateKelasForm = ({ params }) => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
         setNuptkFetched(true);
-        setLo
       } catch (error) {
         router.push(`/error/500`);
       }
@@ -79,7 +75,6 @@ const UpdateKelasForm = ({ params }) => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNisnOptions(options);
@@ -100,7 +95,6 @@ const UpdateKelasForm = ({ params }) => {
         const nisnUsers = [];
         for (const nisn of data.nisnSiswa) {
           const user = await getUsersById(nisn);
-          console.log(user.id)
           nisnUsers.push({ value: nisn, label: `${user.firstname} ${user.lastname}` });
         }
         setSelectedNisn(nisnUsers);
@@ -155,7 +149,6 @@ const UpdateKelasForm = ({ params }) => {
           nisnSiswa: uniqueSelectedNisn.map(nisn => nisn.value),
         }
       );
-      console.log('Response:', response.data);
       setShowSuccess(true);
     } catch (error) {
       console.error('Error:', error.response.data);
@@ -180,14 +173,14 @@ const UpdateKelasForm = ({ params }) => {
   } 
 
   return (
-    <div className="bg-white dark:bg-gray-950">
+    <div className="bg-[#F2F3FB] pb-20">
       <Navbar />
-      <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
-      <div className="w-full max-w-sm space-y-4">
+      <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32 mx-auto">
+      <div className="w-full max-w-sm space-y-4 p-8 rounded-xl bg-white shadow-lg">
       <div className="space-y-2">
-            <h1 className="text-3xl font-extrabold font-nunito-sans">Perbarui kelas</h1>
-            <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
-              Masukkan informasi kelas di sini.
+            <h1 className="text-3xl font-extrabold font-nunito">Update Class</h1>
+            <p className="text-gray-500 dark:text-gray-400 font-nunito">
+            Please fill in the information about the class.
             </p>
           </div>
       <form
@@ -199,7 +192,7 @@ const UpdateKelasForm = ({ params }) => {
             htmlFor="nama-kelas"
             className="inline-block text-sm font-medium"
           >
-            Nama Kelas:
+            Class Name
           </label>
           <input
             type="text"
@@ -207,7 +200,7 @@ const UpdateKelasForm = ({ params }) => {
             value={namaKelas}
             onChange={(e) => setNamaKelas(e.target.value)}
             required
-            className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="h-10 w-full rounded-lg border border-[#6C80FF] bg-white px-3 py-1 text-sm placeholder-gray-400" 
           />
         </div>
         <div className="mb-4">
@@ -215,14 +208,14 @@ const UpdateKelasForm = ({ params }) => {
             htmlFor="deskripsi-kelas"
             className="inline-block text-sm font-medium"
           >
-            Deskripsi Kelas:
+            Class Description
           </label>
           <textarea
             id="deskripsi-kelas"
             value={deskripsiKelas}
             onChange={(e) => setDeskripsiKelas(e.target.value)}
             required
-            className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="min-h-20 w-full rounded-lg border border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400" 
           ></textarea>
         </div>
         <div className="mb-4">
@@ -230,13 +223,22 @@ const UpdateKelasForm = ({ params }) => {
             htmlFor="nuptk-wali-kelas"
             className="inline-block text-sm font-medium"
           >
-            NUPTK Wali Kelas:
+            Teacher
           </label>
           <Select
             value={selectedNuptk}
             onChange={setSelectedNuptk}
             options={nuptkOptions}
             isSearchable={true}
+            className='border-[#6C80FF] border-0 rounded-lg !hover:border-[#6C80FF] h-10'
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                borderColor: '#6C80FF',
+                borderRadius: '8px',
+                height: '40px'
+              }),
+            }}
           />
         </div>
         <div className="mb-4">
@@ -244,7 +246,7 @@ const UpdateKelasForm = ({ params }) => {
             htmlFor="nisn-siswa"
             className="inline-block text-sm font-medium"
           >
-            Daftar Siswa:
+            Students
           </label>
           <Select
             value={selectedNisn}
@@ -252,14 +254,24 @@ const UpdateKelasForm = ({ params }) => {
             options={filteredNisnOptions}
             isMulti
             isSearchable={true}
+            className='border-[#6C80FF] border-0 rounded-lg !hover:border-[#6C80FF]'
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                borderColor: '#6C80FF',
+                borderRadius: '8px',
+              }),
+            }}
           />
         </div>
+        <div className='w-full flex justify-end'>
         <button
           type="submit"
           className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
         >
-          Perbarui
+          Update
         </button>
+        </div>
       </form>
       {errorPopup && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
@@ -269,7 +281,7 @@ const UpdateKelasForm = ({ params }) => {
               onClick={handleCloseErrorPopup}
               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
             >
-              Selanjutnya
+              Next
             </button>
           </div>
         </div>
@@ -281,13 +293,12 @@ const UpdateKelasForm = ({ params }) => {
               <h2 className="text-xl font-bold">Success!</h2>
               <span className="modal-close cursor-pointer text-gray-700" onClick={handleCloseSuccessModal}>×</span>
             </div>
-            <p className="text-lg text-gray-800 mb-4">Kelas berhasil diperbarui.</p>
+            <p className="text-lg text-gray-800 mb-4">Class has been updated successfully.</p>
             <button
               onClick={handleCloseSuccessModal}
               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
             >
-              <a href="/kelas/view-all">Tutup</a>
-              
+              <a href="/kelas/view-all">Close</a>
             </button>
           </div>
         </div>

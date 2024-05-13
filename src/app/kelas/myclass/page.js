@@ -19,22 +19,26 @@ import Navbar2 from '@/app/components/navbarmurid';
 const KelasByUserId = () => {
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
+  const [error, setError] = useState(null);
   const [kelas, setKelas] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSuccessDelete, setIsSuccessDelete] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [isErrorDelete, setIsErrorDelete] = useState(false);
+  
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
 
   useEffect(() => {
     if (decodedToken) {
-      console.log("Access granted");
+      //Authorized
     }
   }, [decodedToken]);
 
@@ -43,44 +47,59 @@ const KelasByUserId = () => {
     const fetchKelas = async () => {
       try {
         if (decodedToken) {
-          setLoading(true);
-          if (decodedToken.role == 'GURU') {
-            const kelasData = await getAllKelasDiajarByIdGuru(decodedToken.id);
+          let kelasData;
+          if (decodedToken.role === 'GURU') {
+            kelasData = await getAllKelasDiajarByIdGuru(decodedToken.id);
+          } else if (decodedToken.role === 'MURID') {
+            kelasData = await getKelasByIdSiswa(decodedToken.id);
+          }
+          if (Array.isArray(kelasData.data)) {
             setKelas(kelasData.data);
-          } else if (decodedToken.role == 'MURID') {
-            const kelasData = await getKelasByIdSiswa(decodedToken.id);
-            setKelas(kelasData.data);
+          } else {
+            setKelas([kelasData.data]);
           }
         } else {
-          redirect(`/user/login`)
+          redirect(`/user/login`);
         }
-      setLoading(false);
+        setLoading(false);
       } catch (error) {
         router.push(`/error/500`);
       }
     };
-
+  
     fetchKelas();
   }, [decodedToken]);
-
-  console.log(kelas)
+  
 
   // Fungsi untuk menghapus kelas
   const handleDeleteKelas = async () => {
     try {
       await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/${kelas.idKelas}`); // Menghapus data dengan menggunakan Axios
       // Refresh halaman setelah penghapusan berhasil
-      window.location.reload();
+      setIsSuccessDelete(true);
     } catch (error) {
       console.error('Error deleting kelas:', error);
-      // Tampilkan pesan error kepada pengguna
+      setIsErrorDelete(true);
     }
   };
 
+  const handleSuccessDeletePopup = () => {
+    setIsSuccessDelete(false);
+    window.location.reload();
+  };
+
+  const handleCloseDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleErrorDeletePopUp = () => {
+    setIsErrorDelete(false);
+  };
+
   if (loading) {
-    return <SpinLoading/>;
-  } 
-  
+    return <SpinLoading />;
+  }
+
 
   return (
     <div className="bg-white dark:bg-gray-950">
@@ -94,7 +113,7 @@ const KelasByUserId = () => {
           <div className="container mx-auto mt-4">
             {loading && <p>Loading...</p>}
             {error && <p>Terdapat kesalahan saat memuat kelas</p>}
-            {kelas && (
+            {kelas && Array.isArray(kelas) && (
               <div className="container mx-auto mt-4">
                 <ul className="divide-y divide-gray-200">
                   {kelas.map((kelasItem) => (
@@ -122,6 +141,44 @@ const KelasByUserId = () => {
         </main>
         <Sidebar />
       </div>
+
+      {showDeleteConfirmation && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute flex flex-col items-center justify-center">
+            <p className="text-red-600 font-semibold mb-4 flex items-center">
+              <AiOutlineWarning className="mr-2" />
+              Apakah Anda yakin ingin menghapus kelas ini?
+            </p>
+            <div className="flex">
+              <button onClick={confirmDelete} className="bg-red-500 text-white py-2 px-4 rounded-md mr-2 hover:bg-red-600 transition duration-300">
+                Delete
+              </button>
+              <button onClick={handleCloseDeleteConfirmation} className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition duration-300 flex items-center justify-center mx-auto">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isSuccessDelete && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute flex flex-col items-center justify-center">
+            <p className="text-green-600 font-semibold mb-4">Kelas berhasil dihapus!</p>
+            <button onClick={handleSuccessDeletePopup} className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
+          </div>
+        </div>
+      )}
+
+      {isErrorDelete && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute flex flex-col items-center justify-center">
+            <p className="text-green-600 font-semibold mb-4">Terjadi kesalahan pada server coba lagi nanti</p>
+            <button onClick={handleErrorDeletePopUp} className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
