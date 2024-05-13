@@ -11,6 +11,7 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 
+
 const CreateKelasForm = () => {
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
@@ -127,36 +128,44 @@ const CreateKelasForm = () => {
   }  
 
   return (
-    <div className="bg-white dark:bg-gray-950">
+    <div className="bg-[#F3F5FB]">
       <Navbar />
-      <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
-        <div className="w-full max-w-sm space-y-4">
+      <div className="container mx-auto flex items-center justify-center py-16 ">
+        <div className="w-full max-w-sm space-y-4 bg-white shadow-md rounded-xl px-8 py-4">
           <div className="space-y-2">
-            <h1 className="text-3xl font-extrabold font-nunito-sans">Tambahkan kelas</h1>
-            <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
-              Masukkan informasi kelas di sini.
+            <h1 className=" text-center text-3xl font-bold font-nunito">Create a Class</h1>
+            <p className="text-gray-500 font-nunito">
+              Insert class data
             </p>
           </div>
           <form onSubmit={handleSubmit} className="">
             <div className="mb-4">
-              <label htmlFor="nama-kelas" className="inline-block text-sm font-medium">Nama Kelas:</label>
-              <input placeholder='Nama kelas' type="text" id="nama-kelas" value={namaKelas} onChange={(e) => setNamaKelas(e.target.value)} required className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <label htmlFor="nama-kelas" className="inline-block text-sm font-medium">Class Name</label>
+              <input placeholder='Class Name' type="text" id="nama-kelas" value={namaKelas} onChange={(e) => setNamaKelas(e.target.value)} required className="h-10 w-full rounded-lg border border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400" />
             </div>
             <div className="mb-4">
-              <label htmlFor="deskripsi-kelas" className="inline-block text-sm font-medium">Deskripsi Kelas:</label>
-              <textarea placeholder='Deskripsi kelas' id="deskripsi-kelas" value={deskripsiKelas} onChange={(e) => setDeskripsiKelas(e.target.value)} required className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+              <label htmlFor="deskripsi-kelas" className="inline-block text-sm font-medium">Class Description</label>
+              <textarea placeholder='Class Description' id="deskripsi-kelas" value={deskripsiKelas} onChange={(e) => setDeskripsiKelas(e.target.value)} required className="h-18 w-full rounded-lg border-[#6C80FF] bg-white px-3 py-2 text-sm placeholder-gray-400" style={{ boxShadow: '0 0 0 1px #6C80FF' }}></textarea>
             </div>
             <div className="mb-4">
-              <label htmlFor="nuptk-wali-kelas" className="inline-block text-sm font-medium">NUPTK Wali Kelas:</label>
+              <label htmlFor="nuptk-wali-kelas" className="inline-block text-sm font-medium">Primary Teacher</label>
               <Select
                 value={selectedNuptk}
                 onChange={setSelectedNuptk}
                 options={nuptkOptions}
                 isSearchable={true}
+                className='border-[#6C80FF] border-0 rounded-lg !hover:border-[#6C80FF]'
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: '#6C80FF',
+                    borderRadius: '8px'
+                  }),
+                }}
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="nisn-siswa" className="inline-block text-sm font-medium">Daftar Siswa:</label>
+              <label htmlFor="nisn-siswa" className="inline-block text-sm font-medium overflow-hidden">Students List</label>
               <Select
                 value={selectedNisn}
                 onChange={(selectedOption) => setSelectedNisn(selectedOption)}
@@ -164,9 +173,19 @@ const CreateKelasForm = () => {
                 isMulti
                 isSearchable={true}
                 closeMenuOnSelect={false}
+                className='border-[#6C80FF] border-0 rounded-lg !hover:border-[#6C80FF]'
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: '#6C80FF',
+                    borderRadius: '8px'
+                  }),
+                }}
               />
             </div>
-            <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Tambah</button>
+            <div className='w-full flex justify-end'>
+              <button type="submit" className=" bg-[#6C80FF] text-white px-4 py-2 rounded-md ">Create</button>
+            </div>
           </form>
         </div>
 
