@@ -106,6 +106,9 @@ const CreateKelasForm = () => {
         nisnSiswa: selectedNisn.map(nisn => nisn.value),
       });
       setShowSuccess(true);
+      setTimeout(() => {
+        router.push('/kelas/view-all');
+      }, 2000);
     } catch (error) {
       console.error('Error:', error.response);
       // Menampilkan pesan error pada modal
@@ -194,13 +197,13 @@ const CreateKelasForm = () => {
             <div className="bg-white max-w-xl w-full rounded-md">
               <div className="p-3 flex items-center justify-between border-b border-b-gray-300">
                 <h3 className="font-semibold text-xl">
-                  Berhasil :)
+                  Success!
                 </h3>
                 <span className="modal-close cursor-pointer" onClick={handleCloseModal}>×</span>
               </div>
               <div className="p-3 border-b border-b-gray-300">
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
-                  <p className="block sm:inline">Berhasil menambahkan kelas! Kembali ke <a className="font-bold" href="/kelas/view-all">halaman semua kelas</a>.</p>
+                  <p className="block sm:inline">Class created successfully! You will be redirected soon.</p>
                 </div>
               </div>
             </div>
