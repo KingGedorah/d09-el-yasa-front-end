@@ -40,7 +40,7 @@ const ViewAllKelas = () => {
 
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'ADMIN') {
+      if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
         //Authorized
       } else {
         redirect(`/kelas/myclass`);
@@ -106,7 +106,7 @@ const ViewAllKelas = () => {
   }
 
   return (
-    <div class="bg-white">
+    <div class="bg-[#F3F5FB]">
       <Navbar />
       <div class="container mx-auto flex justify-center mt-8 mb-16">
         <main class="w-4/5 md:w-3/5 lg:w-1/2 p-4">
@@ -145,7 +145,7 @@ const ViewAllKelas = () => {
                       <p className="text-gray-600">{kelas.deskripsiKelas}</p>
                     </a>
                     {/* Icon gerigi untuk dropdown, hanya ditampilkan untuk peran GURU */}
-                    {decodedToken.role === 'ADMIN' && showDropdown === kelas.idKelas && (
+                    {decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU' && showDropdown === kelas.idKelas && (
                       
                       <div className="absolute top-0 right-0 mt-8 mr-8">
                         <div className="bg-white rounded-md shadow-md">
@@ -161,7 +161,7 @@ const ViewAllKelas = () => {
                       </div>
                     )}
                     {/* Tampilkan ikon gerigi di sudut kanan atas gambar dengan latar belakang putih, hanya untuk peran GURU */}
-                    {decodedToken.role === 'ADMIN' && (
+                    {decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU' && (
                       <div className="absolute top-0 right-0 mt-8 mr-8 flex items-center rotate-90">
                         <FontAwesomeIcon icon={faEllipsisV} onClick={() => handleShowDropdown(kelas.idKelas)} />
                       </div>
