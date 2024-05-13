@@ -9,7 +9,7 @@ const Sidebar = () => {
     // Mendapatkan tanggal hari ini dalam format "DD MMMM YYYY"
     const currentDate = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = currentDate.toLocaleDateString('id-ID', options);
+    const formattedDate = currentDate.toLocaleDateString('en-EN', options);
     setTodayDate(formattedDate);
 
     // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
@@ -142,7 +142,6 @@ const Sidebar = () => {
       )}
       <h3 class="text-lg font-semibold mb-2">Ayat of the day</h3>
       <AyatQuran />
-      <p class="text-gray-600 dark:text-gray-300"></p>
     </aside>
   );
 };
