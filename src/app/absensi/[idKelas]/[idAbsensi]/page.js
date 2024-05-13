@@ -10,13 +10,29 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
 
 const CreateAbsensiForm = ({ params }) => {
-    const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+    // const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+    const [decodedToken, setDecodedToken] = useState('');
     const { idKelas, idAbsensi } = params;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showSuccess, setShowSuccess] = useState(false);
     const [detailAbsen, setDetailAbsen] = useState(null)
     const router = useRouter()
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('jwtToken');
+        if (token) {
+            setDecodedToken(parseJwt(token));
+        } else {
+            redirect('/user/login');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (decodedToken) {
+            //Authorized
+        }
+    }, [decodedToken]);
 
     useEffect(() => {
         const fetchData = async () => {
