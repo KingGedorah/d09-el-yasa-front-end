@@ -9,9 +9,13 @@ import axios from 'axios';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import {AiOutlineWarning} from 'react-icons/ai';
+import { parseJwt } from '@/app/utils/jwtUtils';
+import Navbarmurid from '@/app/components/navbarmurid';
+import Navbarguru from '@/app/components/navbarguru';
 
 const DetailMapel = ({ params }) => {
   const router = useRouter();
+  const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [materiInfo, setMateriInfo] = useState([]);
@@ -25,7 +29,11 @@ const DetailMapel = ({ params }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log("id: " + decoded.id);
+      console.log("role: " + decoded.role)
     } else {
       redirect('/user/login');
     }
@@ -33,7 +41,11 @@ const DetailMapel = ({ params }) => {
 
   useEffect(() => {
     if (decodedToken) {
-      //Authorized
+      if (decodedToken.role === 'MURID' || decodedToken.role === 'GURU') {
+        //Authorized
+      } else {
+        redirect(`/kelas/myclass`);
+      }
     }
   }, [decodedToken]);
 
@@ -50,7 +62,9 @@ const DetailMapel = ({ params }) => {
         setMapelInfo(mapelData.data);
         setLoading(false);
       } catch (error) {
-        router.push(`/error/500`);
+        setLoading(false)
+        console.log(error)
+        // router.push(`/error/500`);
       }
     };
 
@@ -87,7 +101,8 @@ const DetailMapel = ({ params }) => {
 
   return (
     <div className="bg-white dark:bg-gray-950">
-      <Navbar />
+      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}
+      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />} 
       <div className="container mx-auto flex justify-center mt-8">
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
           <div className="search-container">

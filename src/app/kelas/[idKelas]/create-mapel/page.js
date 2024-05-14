@@ -10,8 +10,10 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import Navbarguru from '@/app/components/navbarguru';
 
 const FormCreateMapel = ({ params }) => {
+  const [id, setId] = useState('');
   const router = useRouter();
   const { idKelas } = params;
   const [namaMapel, setNamaMapel] = useState('');
@@ -26,7 +28,11 @@ const FormCreateMapel = ({ params }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log("id: " + decoded.id);
+      console.log("role: " + decoded.role)
     } else {
       redirect('/user/login');
     }
@@ -90,7 +96,7 @@ const FormCreateMapel = ({ params }) => {
 
   return (
     <div className="bg-[#F3F5FB]">
-      <Navbar />
+      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}      
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32 mx-auto">
         <div className="w-full max-w-sm space-y-4 p-8 bg-white rounded-xl shadow-lg">
           <div className="space-y-2">
