@@ -14,6 +14,7 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import {AiOutlineWarning} from 'react-icons/ai';
 
 
 const ViewAllKelas = () => {

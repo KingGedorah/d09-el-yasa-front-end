@@ -8,6 +8,7 @@ import * as KelasApi from '../../../api/kelas';
 import axios from 'axios';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import {AiOutlineWarning} from 'react-icons/ai';
 
 const DetailMapel = ({ params }) => {
   const router = useRouter();
