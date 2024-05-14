@@ -8,9 +8,11 @@ import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
+import Navbaradmin from '@/app/components/navbaradmin';
 
 const CreateInventoryForm = () => {
   const [decodedToken, setDecodedToken] = useState('');
+  const [id, setId] = useState('');
   const [namaItem, setNamaItem] = useState('');
   const [quantityItem, setQuantityItem] = useState(0);
   const [image, setImage] = useState(null);
@@ -19,7 +21,9 @@ const CreateInventoryForm = () => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
     } else {
       console.log("Need to login");
       redirect('/user/login');
@@ -62,7 +66,8 @@ const CreateInventoryForm = () => {
 
   return (
     <div className="bg-white dark:bg-gray-950">
-      <Navbar />
+      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
+      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}      
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="w-full max-w-sm space-y-4">
         <Link href="/inventaris/view-all" passHref>
