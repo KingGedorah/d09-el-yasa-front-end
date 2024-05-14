@@ -3,10 +3,9 @@ const BASE_URL = 'https://myjisc-artikel-29c0ad65b512.herokuapp.com/api/artikel'
 export const getAllArticles = async () => {
   try {
     const response = await fetch(`${BASE_URL}/view-all`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    if (response.status == 404) {
+      return null;
     }
-    const data = await response.json();
     return data.data;
   } catch (error) {
     console.error('Error fetching articles:', error);
