@@ -37,7 +37,7 @@ const ViewAllKelas = () => {
 
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'ADMIN') {
+      if (decodedToken.role === 'GURU') {
         console.log("Access granted");
       } else {
         console.log("Not authorized");
