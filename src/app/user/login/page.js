@@ -47,6 +47,7 @@ const LoginPage = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('jwtToken');
     window.location.href = '/user/login';
+    
   };
 
   useEffect(() => {
