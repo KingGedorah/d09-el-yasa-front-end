@@ -13,6 +13,7 @@ export default function Home() {
     if (token) {
       const decodedToken = parseJwt(token);
       setId(decodedToken.id);
+      console.log("TES" + decodedToken.id)
     }
   }, []);
   return (
