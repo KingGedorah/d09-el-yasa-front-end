@@ -11,6 +11,7 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import Navbarguru from '@/app/components/navbarguru';
+import Navbaradmin from '@/app/components/navbaradmin';
 
 
 const CreateKelasForm = () => {
