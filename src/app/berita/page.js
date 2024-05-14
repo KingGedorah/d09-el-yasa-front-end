@@ -14,6 +14,7 @@ import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 import { FaRegSadCry } from 'react-icons/fa';
+import FadeIn from '../components/fadein-div';
 
 const BeritaList = () => {
   const router = useRouter();
@@ -101,7 +102,7 @@ const BeritaList = () => {
   }
 
   return (
-    <div>
+    <FadeIn>
       <Navbar />
       <div className="mx-auto mt-8 px-12 rounded-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8 w-full">
@@ -202,7 +203,7 @@ const BeritaList = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </FadeIn>
   );
 };
 

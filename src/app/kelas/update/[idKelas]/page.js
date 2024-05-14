@@ -296,7 +296,7 @@ const UpdateKelasForm = ({ params }) => {
             <p className="text-lg text-gray-800 mb-4">Class has been updated successfully.</p>
             <button
               onClick={handleCloseSuccessModal}
-              className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+              className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 flex items-center justify-center mx-auto"
             >
               <a href="/kelas/view-all">Close</a>
             </button>

@@ -3,11 +3,12 @@ const BASE_URL = 'https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas'
 export const getAllKelas = async () => {
   try {
     const response = await fetch(`${BASE_URL}/view-all`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    if (response.status == 404) {
+      return null
+    } else {
+      const data = await response.json();
+      return data.data;
     }
-    const data = await response.json();
-    return data.data;
   } catch (error) {
     console.error('Error fetching kelas:', error);
     throw error; // Re-throw the error for handling in the component
@@ -29,45 +30,47 @@ export const getKelasByIdKelas = async (idKelas) => {
 };
 
 export const getKelasByIdSiswa = async (idSiswa) => {
-    try {
-      const response = await fetch(`${BASE_URL}/siswa/${idSiswa}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+  try {
+    const response = await fetch(`${BASE_URL}/siswa/${idSiswa}`);
+    if (response.status == 404) {
+      return null
+    } else {
       const data = await response.json();
       return data;
-    } catch (error) {
-      console.error('Error fetching kelas by ID Siswa:', error);
-      throw error;
     }
+  } catch (error) {
+    console.error('Error fetching kelas by ID Siswa:', error);
+    throw error;
+  }
 };
 
 export const getAllKelasDiajarByIdGuru = async (idGuru) => {
-    try {
-      const response = await fetch(`${BASE_URL}/guru/${idGuru}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+  try {
+    const response = await fetch(`${BASE_URL}/guru/${idGuru}`);
+    if (response.status == 404) {
+      return null
+    } else {
       const data = await response.json();
       return data;
-    } catch (error) {
-      console.error('Error fetching kelas by ID Guru:', error);
-      throw error;
     }
+  } catch (error) {
+    console.error('Error fetching kelas by ID Guru:', error);
+    throw error;
+  }
 };
 
 export const getMapelByIdMapel = async (idMapel) => {
-    try {
-      const response = await fetch(`${BASE_URL}/mapel/${idMapel}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching Mapel by ID Mapel:', error);
-      throw error;
+  try {
+    const response = await fetch(`${BASE_URL}/mapel/${idMapel}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching Mapel by ID Mapel:', error);
+    throw error;
+  }
 };
 
 export const getMateriByIdMateri = async (idMateri) => {

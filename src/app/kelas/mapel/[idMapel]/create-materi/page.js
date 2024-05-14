@@ -16,6 +16,7 @@ const FormCreateMateri = ({ params }) => {
     const [judulKonten, setJudulKonten] = useState('');
     const [isiKonten, setIsiKonten] = useState('');
     const [file, setFile] = useState(null);
+    const [filePreview, setFilePreview] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -26,10 +27,7 @@ const FormCreateMateri = ({ params }) => {
             const decoded = parseJwt(token);
             setDecodedToken(decoded);
             setId(decoded.id);
-            console.log("id: " + decoded.id);
-            console.log("role: " + decoded.role)
         } else {
-            console.log("Need to login");
             redirect('/user/login');
         }
     }, []);
@@ -37,9 +35,8 @@ const FormCreateMateri = ({ params }) => {
     useEffect(() => {
         if (decodedToken) {
             if (decodedToken.role === 'GURU') {
-                console.log("Access granted");
+                // Authorized
             } else {
-                console.log("Not authorized");
                 redirect(`/kelas/mapel/${idKelas}`);
             }
         }
@@ -63,11 +60,11 @@ const FormCreateMateri = ({ params }) => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log(response.data);
             setIsSuccess(true);
             setJudulKonten('');
             setIsiKonten('');
             setFile(null);
+            setFilePreview(null);
             document.getElementById("fileInput").value = null;
             setShowModal(true); // Menampilkan modal setelah sukses
         } catch (error) {
@@ -78,8 +75,23 @@ const FormCreateMateri = ({ params }) => {
 
     const handleRemoveFile = () => {
         setFile(null);
+        setFilePreview(null);
         // Clear the file input field
         document.getElementById("fileInput").value = null;
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFile(file);
+        if (file && file.type === "application/pdf") {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setFilePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setFilePreview(null);
+        }
     };
 
     const closeModal = () => {
@@ -87,40 +99,75 @@ const FormCreateMateri = ({ params }) => {
     };
 
     return (
-        <div className="bg-white dark:bg-gray-950">
-            {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />} 
-            <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
-                <div className="w-full max-w-sm space-y-4">
-                    <div className="space-y-2">
-                        <h1 className="text-3xl font-extrabold font-nunito-sans">Tambahkan materi</h1>
+        <div className="bg-white min-h-screen flex flex-col justify-between">
+            {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+            <div className="flex-grow flex items-center justify-center py-16 md:py-24 lg:py-32">
+                <div className="w-full max-w-md space-y-6">
+                    <div className="space-y-2 text-center">
+                        <h1 className="text-3xl font-extrabold font-nunito-sans">Tambahkan Materi</h1>
                         <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
                             Masukkan informasi materi di sini.
                         </p>
                     </div>
-                    <form onSubmit={handleSubmit}>
-                        <div style={{ marginBottom: '15px' }}>
-                            <label style={{ color: '#333', fontWeight: 'bold' }}>Judul materi:</label>
-                            <input required type="text" value={judulKonten} onChange={(e) => setJudulKonten(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', color: '#333' }} />
+                    <form onSubmit={handleSubmit} className="p-6 border-2 border-gray-300 rounded-lg shadow-lg space-y-4">
+                        <div>
+                            <label className="block text-gray-700 font-bold mb-2">Judul Materi:</label>
+                            <input
+                                required
+                                type="text"
+                                value={judulKonten}
+                                onChange={(e) => setJudulKonten(e.target.value)}
+                                placeholder="Masukkan judul materi"
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
                         </div>
-                        <div style={{ marginBottom: '15px' }}>
-                            <label style={{ color: '#333', fontWeight: 'bold' }}>Isi materi:</label>
-                            <textarea required value={isiKonten} onChange={(e) => setIsiKonten(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', color: '#333' }} />
+                        <div>
+                            <label className="block text-gray-700 font-bold mb-2">Isi Materi:</label>
+                            <textarea
+                                required
+                                value={isiKonten}
+                                onChange={(e) => setIsiKonten(e.target.value)}
+                                placeholder="Masukkan isi materi"
+                                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
                         </div>
-                        <div style={{ marginBottom: '15px' }}>
-                            <label style={{ color: '#333', fontWeight: 'bold' }}>Upload file (maks 1 MB):</label>
-                            <input id="fileInput" type="file" onChange={(e) => setFile(e.target.files[0])} accept=".ppt,.pptx,.doc,.docx,.pdf,.xls,.xlsx" style={{ display: 'block', marginBottom: '8px', color: '#333' }} />
+                        <div>
+                            <label className="block text-gray-700 font-bold mb-2">Upload File (maks 1 MB):</label>
+                            <input
+                                id="fileInput"
+                                type="file"
+                                onChange={handleFileChange}
+                                accept=".ppt,.pptx,.doc,.docx,.pdf,.xls,.xlsx"
+                                className="block w-full text-gray-700 mb-2"
+                            />
                             {file && (
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <span style={{ color: '#333', marginRight: '10px' }}>{file.name}</span>
-                                    <button type="button" onClick={handleRemoveFile} style={{ background: '#ff5c5c', color: 'white', border: 'none', borderRadius: '4px', padding: '6px 12px', cursor: 'pointer' }}>X</button>
+                                <div className="flex items-center justify-between mt-2">
+                                    <span className="text-gray-700">{file.name}</span>
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveFile}
+                                        className="bg-red-500 text-white rounded-md px-3 py-1"
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
+                            )}
+                            {filePreview && (
+                                <div className="mt-4">
+                                    <iframe src={filePreview} width="100%" height="500px" className="border rounded-md"></iframe>
                                 </div>
                             )}
                         </div>
-                        <div className='grid place-items-center'>
-                            <button type="submit" style={{ background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', padding: '10px 20px', cursor: 'pointer' }}>Tambah materi</button>
+                        <div className="text-center">
+                            <button
+                                type="submit"
+                                className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                Tambah Materi
+                            </button>
                         </div>
-                        {isSuccess && <p style={{ color: '#4CAF50', marginTop: '10px', fontWeight: 'bold' }}>Materi berhasil dibuat</p>}
-                        {isError && <p style={{ color: '#ff5c5c', marginTop: '10px', fontWeight: 'bold' }}>Terjadi kesalahan saat membuat materi</p>}
+                        {isSuccess && <p className="text-green-500 mt-4 font-bold">Materi berhasil dibuat</p>}
+                        {isError && <p className="text-red-500 mt-4 font-bold">Terjadi kesalahan saat membuat materi</p>}
                     </form>
                 </div>
             </div>
