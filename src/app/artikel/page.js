@@ -43,7 +43,6 @@ const ArtikelList = () => {
       } catch (error) {
         setLoading(false);
         router.push(`/error/500`);
-        console.log(error);
       }
     };
 
@@ -67,7 +66,7 @@ const ArtikelList = () => {
 
 
   if (articles.length === 0) {
-    console.log("No data found")
+    // No data found
   } else {
     let indexOfLastArticle = currentPage * articlesPerPage;
     let indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
