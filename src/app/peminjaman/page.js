@@ -13,9 +13,11 @@ import { getNotifMessageByIdPeminjam } from '../api/peminjaman';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import { FaRegSadCry } from 'react-icons/fa';
+import Navbaradmin from '../components/navbaradmin';
 
 const PeminjamanList = () => {
   const router = useRouter();
+  const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState(null);
   const [peminjaman, setPeminjaman] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,9 @@ const PeminjamanList = () => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
     } else {
       router.push('/user/login')
     }
@@ -105,7 +109,8 @@ const PeminjamanList = () => {
 
   return (
     <div>
-      <Navbar />
+      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
+      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}  
       <div className="mx-auto mt-8 px-12 rounded-lg mb-32">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">
