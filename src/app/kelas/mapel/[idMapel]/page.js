@@ -63,6 +63,7 @@ const DetailMapel = ({ params }) => {
       try {
         const mapelData = await KelasApi.getMapelByIdMapel(idMapel);
         if (mapelData.data.listKontenMapel == null) {
+          setLoading(false);
           setMateriInfo([])
         } else {
           const materiPromises = mapelData.data.listKontenMapel.map(async (idMateri) => {
@@ -72,6 +73,7 @@ const DetailMapel = ({ params }) => {
           const materiData = await Promise.all(materiPromises);
           setMateriInfo(materiData);
           setMapelInfo(mapelData.data);
+          setLoading(false);
         }
         setMateriFetched(true);
       } catch (error) {
@@ -104,11 +106,14 @@ const DetailMapel = ({ params }) => {
           setScoreMap(scoreMap);
         } else {
           const response = await UserApi.getScoreByIdSiswa(decodedToken.id);
-          setScoreInfo(response);
+          const filteredScoreInfo = response.filter(item => item.idMapel === idMapel);
+          setScoreInfo(filteredScoreInfo);
         }
         setNilaiFetched(true);
       } catch (error) {
-        router.push(`/error/500`);
+        setNilaiFetched(true);
+        // console.log(error)
+        // router.push(`/error/500`);
       }
     };
 
@@ -309,7 +314,7 @@ const DetailMapel = ({ params }) => {
           </div>
 
           {activeTab === 'materi' && (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div></div>}>
               <div>
                 <div className='relative'>
                   <input onChange={handleChangeSearchBar} type='text' className="border border-[#6C80FF] mb-4 rounded-xl py-3 bg-transparent px-4 w-full focus:outline-none focus:border-blue-500" />
@@ -319,8 +324,6 @@ const DetailMapel = ({ params }) => {
                     </svg>
                   </div>
                 </div>
-                <h2 className="text-2xl font-bold">Materi</h2>
-                {loading && <p>Loading...</p>}
                 {!loading && !error && materiInfo.length > 0 ? (
                   materiInfo
                     .filter((materi) =>
@@ -332,25 +335,26 @@ const DetailMapel = ({ params }) => {
                           <h2 className="text-xl font-bold">{materi.judulKonten}</h2>
                           <h2 className="text-base">{materi.isiKonten}</h2>
                           {materi.nama_file && (
-                            <h2 className="text-base">
-                              <svg className="h-6 w-6 text-blue-500" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" />
-                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                                <line x1="12" y1="11" x2="12" y2="17" />
-                                <polyline points="9 14 12 17 15 14" />
-                              </svg>{' '}
-                              <a className="font-bold text-green-800" href={`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/get/materi/${materi.idKonten}`} target="_blank" rel="noopener noreferrer">
-                                {materi.nama_file}
+                            <div className="flex items-center">
+                              <a href={`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/get/materi/${materi.idKonten}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                                <svg className="h-6 w-6 text-blue-500 mr-2" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                  <path stroke="none" d="M0 0h24v24H0z" />
+                                  <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                  <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                  <line x1="12" y1="11" x2="12" y2="17" />
+                                  <polyline points="9 14 12 17 15 14" />
+                                </svg>
+                                <h2 className="text-xs font-bold">{materi.nama_file}</h2>
                               </a>
-                            </h2>
+                            </div>
                           )}
                           <h2 className="text-base">{materi.materiPelajaran}</h2>
                         </div>
-                        {/* Tombol Delete */}
-                        <div className="p-4">
-                          <button className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => showConfirmationPopup(materi.idKonten)}>Delete</button>
-                        </div>
+                        {decodedToken && decodedToken.role === 'GURU' && (
+                          <div className="p-4">
+                            <button className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => showConfirmationPopup(materi.idKonten)}>Delete</button>
+                          </div>
+                        )}
                       </div>
                     ))
                 ) : (
@@ -367,7 +371,7 @@ const DetailMapel = ({ params }) => {
           {activeTab === 'nilai' && (
             <div>
               <h2 className="text-2xl font-bold">Nilai</h2>
-              {decodedToken.role === "MURID" && (
+              {decodedToken.role === "MURID" && scoreInfo.length > 0 && (
                 <div>
                   <button onClick={toggleView} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     {showGraph ? 'Tampilkan Tabel' : 'Tampilkan Grafik'}
@@ -417,13 +421,17 @@ const DetailMapel = ({ params }) => {
                           ))}
                         </div>
                       ) : (
-                        <p className="mt-4 text-gray-600">Tidak ada data nilai yang tersedia.</p>
+                        <p className="mt-4 text-gray-600">No Scores available</p>
                       )}
                     </div>
                   )}
                 </div>
               )}
-              {decodedToken.role === "GURU" && (
+
+              {decodedToken.role === "MURID" && scoreInfo.length == 0 && (
+                <p className="mt-4 text-gray-600">No Scores available</p>
+              )}
+              {decodedToken.role === "GURU" && scoreMap && (
                 <div>
                   <table className="min-w-full bg-white border border-gray-200 mt-2">
                     <thead>
@@ -450,7 +458,11 @@ const DetailMapel = ({ params }) => {
                   </table>
                 </div>
               )}
-
+              {decodedToken.role === "GURU" && (!scoreMap || Object.keys(scoreMap).length === 0) && (
+                <div>
+                  <p>No scores available.</p>
+                </div>
+              )}
             </div>
           )}
         </main>
