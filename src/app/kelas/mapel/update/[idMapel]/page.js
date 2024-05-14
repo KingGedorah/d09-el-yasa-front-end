@@ -30,7 +30,6 @@ const UpdateMapelForm = ({ params }) => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
@@ -38,9 +37,8 @@ const UpdateMapelForm = ({ params }) => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
-        console.log("Access granted");
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect(`/kelas/mapel/${idMapel}`);
       }
     }
@@ -97,7 +95,6 @@ const UpdateMapelForm = ({ params }) => {
         namaMapel,
         nuptkGuruMengajar: selectedNuptk.value,
       });
-      console.log('Response:', response);
       setShowSuccess(true);
       setShowModal(true); // Menampilkan modal setelah sukses
     } catch (error) {

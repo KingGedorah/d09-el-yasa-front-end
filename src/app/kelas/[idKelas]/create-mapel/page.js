@@ -28,7 +28,6 @@ const FormCreateMapel = ({ params }) => {
     if (token) {
       setDecodedToken(parseJwt(token));
     } else {
-      console.log("Need to login");
       redirect('/user/login');
     }
   }, []);
@@ -36,9 +35,8 @@ const FormCreateMapel = ({ params }) => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'GURU') {
-        console.log("Access granted");
+        //Authorized
       } else {
-        console.log("Not authorized");
         redirect(`/kelas/${idKelas}`);
       }
     }
@@ -52,7 +50,6 @@ const FormCreateMapel = ({ params }) => {
         const options = [];
         for (const id of data) {
           const user = await getUsersById(id);
-          console.log(user.id)
           options.push({ label: `${user.firstname} ${user.lastname}`, value: user.id });
         }
         setNuptkOptions(options);
@@ -72,9 +69,11 @@ const FormCreateMapel = ({ params }) => {
         namaMapel,
         nuptkGuruMengajar: selectedNuptk.value,
       });
-      console.log('Response:', response);
       setShowSuccess(true);
-      setShowModal(true); // Menampilkan modal setelah sukses
+      setShowModal(true);
+      setTimeout(() => {
+        router.push(`/kelas/${idKelas}`);
+      }, 2000);
     } catch (error) {
       console.error('Error:', error);
       window.alert('Periksa kembali inputan anda');
@@ -90,22 +89,22 @@ const FormCreateMapel = ({ params }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-950">
+    <div className="bg-[#F3F5FB]">
       <Navbar />
-      <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
-        <div className="w-full max-w-sm space-y-4">
+      <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32 mx-auto">
+        <div className="w-full max-w-sm space-y-4 p-8 bg-white rounded-xl shadow-lg">
           <div className="space-y-2">
-            <h1 className="text-3xl font-extrabold font-nunito-sans">Tambahkan mata pelajaran baru</h1>
-            <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
-              Masukkan informasi mata pelajaran di sini.
+            <h1 className="text-3xl font-extrabold font-nunito">Add Subject</h1>
+            <p className="text-gray-500 dark:text-gray-400 font-nunito">
+              Please fill in the information about the subject.
             </p>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="inline-block text-sm font-medium" htmlFor="namaMapel">Nama mata pelajaran:</label>
+              <label className="inline-block text-sm font-medium" htmlFor="namaMapel">Subject Name</label>
               <input
                 type="text"
-                className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="h-10 w-full rounded-lg border border-[#6C80FF] bg-white px-3 py-1 text-sm placeholder-gray-400" 
                 id="namaMapel"
                 value={namaMapel}
                 onChange={(e) => setNamaMapel(e.target.value)}
@@ -113,18 +112,26 @@ const FormCreateMapel = ({ params }) => {
               />
             </div>
             <div className="mb-4">
-              <label className="inline-block text-sm font-medium" htmlFor="nuptkGuruMengajar">NUPTK Guru Mengajar:</label>
+              <label className="inline-block text-sm font-medium" htmlFor="nuptkGuruMengajar">Teacher</label>
               <Select
-                className='text-sm'
                 options={nuptkOptions}
                 value={selectedNuptk}
                 onChange={setSelectedNuptk}
-                placeholder="Pilih NUPTK Guru Mengajar"
+                placeholder="Select Teacher..."
+                className='border-[#6C80FF] border-0 rounded-lg !hover:border-[#6C80FF] h-10'
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: '#6C80FF',
+                    borderRadius: '8px',
+                    height: '40px'
+                  }),
+                }}
               />
             </div>
-            <div className='grid place-items-center'>
+            <div className='grid place-items-end'>
               <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 items-center">
-                Buat mata pelajaran
+                Submit
               </button>
             </div>
           </form>
@@ -134,13 +141,13 @@ const FormCreateMapel = ({ params }) => {
             <div className="bg-white max-w-xl w-full rounded-md">
               <div className="p-3 flex items-center justify-between border-b border-b-gray-300">
                 <h3 className="font-semibold text-xl">
-                  Berhasil :)
+                  Success!
                 </h3>
                 <span className="modal-close cursor-pointer" onClick={closeModal}>×</span>
               </div>
               <div className="p-3 border-b border-b-gray-300">
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-4 rounded relative mt-4" role="alert">
-                  <p className="block sm:inline">Mapel berhasil dibuat! Kembali ke <a className="font-bold" href={`/kelas/${idKelas}`}>halaman kelas</a>.</p>
+                  <p className="block sm:inline">Subject created successfully! You will be redirected soon.</p>
                 </div>
               </div>
             </div>
