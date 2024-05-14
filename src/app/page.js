@@ -1,9 +1,21 @@
 // pages/index.js
-
+"use client";
 import Head from 'next/head';   
 import Navbar from './components/navbar';
+import { useState, useEffect } from 'react';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 export default function Home() {
+  const [id, setId] = useState('');
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      const decodedToken = parseJwt(token);
+      setId(decodedToken.id);
+      console.log("TES" + decodedToken.id)
+    }
+  }, []);
   return (
     <div>
       <Head>
@@ -19,7 +31,7 @@ export default function Home() {
         </style>
       </Head>
 
-      <Navbar/>
+      <Navbar role={id} />
 
       <main className="py-16 md:py-24 lg:py-32 hero-bg">
         <div className="container px-4 md:px-6 flex items-center justify-center">
