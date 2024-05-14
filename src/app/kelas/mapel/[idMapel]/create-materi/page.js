@@ -7,9 +7,11 @@ import Footer from '@/app/components/footer';
 import { getMapelByIdMapel } from '@/app/api/kelas';
 import { redirect } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import Navbarguru from '@/app/components/navbarguru';
 
 const FormCreateMateri = ({ params }) => {
     const [decodedToken, setDecodedToken] = useState('');
+    const [id, setId] = useState('');
     const { idMapel } = params;
     const [judulKonten, setJudulKonten] = useState('');
     const [isiKonten, setIsiKonten] = useState('');
@@ -21,7 +23,11 @@ const FormCreateMateri = ({ params }) => {
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
         if (token) {
-            setDecodedToken(parseJwt(token));
+            const decoded = parseJwt(token);
+            setDecodedToken(decoded);
+            setId(decoded.id);
+            console.log("id: " + decoded.id);
+            console.log("role: " + decoded.role)
         } else {
             console.log("Need to login");
             redirect('/user/login');
@@ -30,7 +36,7 @@ const FormCreateMateri = ({ params }) => {
 
     useEffect(() => {
         if (decodedToken) {
-            if (decodedToken.role === 'ADMIN' || decodedToken.role === 'GURU') {
+            if (decodedToken.role === 'GURU') {
                 console.log("Access granted");
             } else {
                 console.log("Not authorized");
@@ -82,7 +88,7 @@ const FormCreateMateri = ({ params }) => {
 
     return (
         <div className="bg-white dark:bg-gray-950">
-            <Navbar />
+            {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />} 
             <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
                 <div className="w-full max-w-sm space-y-4">
                     <div className="space-y-2">
