@@ -43,8 +43,6 @@ const ViewAllKelas = ({ params }) => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
-      console.log("id: " + decoded.id);
-      console.log("role: " + decoded.role)
     } else {
       redirect('/user/login');
     }
@@ -189,7 +187,7 @@ const ViewAllKelas = ({ params }) => {
 
                 </>
               )}
-              {mapelInfo == null || mapelInfo.length == 0 &&(
+              {mapelInfo == null || mapelInfo.length == 0 && (
                 <div className="text-center">
                   <FaBook size={64} className="text-gray-400 mx-auto" />
                   <p className="text-lg font-semibold mt-4">Belum ada mata pelajaran yang terdaftar</p>
@@ -199,13 +197,15 @@ const ViewAllKelas = ({ params }) => {
             </div>
           </main>
           <div className='flex flex-col gap-4'>
-            <Link href={`/kelas/${kelasInfo.idKelas}/create-mapel`} className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'><svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12.5 22C18.0228 22 22.5 17.5228 22.5 12C22.5 6.47715 18.0228 2 12.5 2C6.97715 2 2.5 6.47715 2.5 12C2.5 17.5228 6.97715 22 12.5 22Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M12.5 8V16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M8.5 12H16.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-              Create New Subject
-            </Link>
+            {decodedToken.role === "GURU" && (
+              <Link href={`/kelas/${kelasInfo.idKelas}/create-mapel`} className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'><svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.5 22C18.0228 22 22.5 17.5228 22.5 12C22.5 6.47715 18.0228 2 12.5 2C6.97715 2 2.5 6.47715 2.5 12C2.5 17.5228 6.97715 22 12.5 22Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12.5 8V16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M8.5 12H16.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+                Create New Subject
+              </Link>
+            )}
             <Sidebar />
           </div>
         </div>
