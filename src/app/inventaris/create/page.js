@@ -94,7 +94,9 @@ const CreateInventoryForm = () => {
               <label htmlFor="image" className="inline-block text-sm font-medium">Gambar: (maks 1 MB)</label>
               <input type="file" id="image" onChange={(e) => setImage(e.target.files[0])} required className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
+            <div className="flex flex-col items-center">
             <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Tambah</button>
+            </div>
           </form>
         </div>
 

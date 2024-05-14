@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getUsersById } from '../api/user';
 
-
 const Navbarmurid = ({ role }) => {
   const [userName, setUserName] = useState('');
 
@@ -14,7 +13,7 @@ const Navbarmurid = ({ role }) => {
           }
         })
         .catch(error => {
-          //
+          console.error('Error fetching user:', error);
         });
     }
   }, [role]);
@@ -54,12 +53,12 @@ const Navbarmurid = ({ role }) => {
           </nav>
           <div className="flex items-center gap-4 md:gap-6">
             {userName ? (
-              <div className="relative">
+              <div className="relative group">
                 <button type="button" className="text-sm font-medium">
                   Halo, {userName}
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
-                  <button onClick={handleLogout} className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left">
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button onClick={handleLogout} className="block px-4 py-2 text-red-500 font-extrabold hover:bg-gray-100 w-full text-left">
                     Logout
                   </button>
                 </div>
@@ -77,4 +76,3 @@ const Navbarmurid = ({ role }) => {
 };
 
 export default Navbarmurid;
-

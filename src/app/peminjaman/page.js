@@ -14,6 +14,7 @@ import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import { FaRegSadCry } from 'react-icons/fa';
 import Navbaradmin from '../components/navbaradmin';
+import Navbarmurid from '../components/navbarmurid';
 
 const PeminjamanList = () => {
   const router = useRouter();
@@ -33,8 +34,16 @@ const PeminjamanList = () => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
       const decoded = parseJwt(token);
-      setDecodedToken(decoded);
+      setDecodedToken(decoded); 
+      if (!decodedToken) {
+        return
+      }
       setId(decoded.id);
+      console.log(decodedToken)
+      // Redirect
+      if (decoded.role !== "STAFF" && decoded.role !== "MURID") {
+        router.push('/inventory/view-all');
+      }
     } else {
       router.push('/user/login')
     }
@@ -109,8 +118,9 @@ const PeminjamanList = () => {
 
   return (
     <div>
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
-      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}  
+      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={decodedToken.id} />}  
+      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}  
+
       <div className="mx-auto mt-8 px-12 rounded-lg mb-32">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">

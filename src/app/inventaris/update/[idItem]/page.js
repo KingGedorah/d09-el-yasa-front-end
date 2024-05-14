@@ -159,12 +159,15 @@ const UpdateInventoryForm = ({ params }) => {
                 className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
+            <div className="flex flex-col items-center">
             <button
               type="submit"
               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
             >
               Perbarui
             </button>
+            </div>
+           
           </form>
           {errorPopup && (
             <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">

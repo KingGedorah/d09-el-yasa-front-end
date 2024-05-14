@@ -18,6 +18,7 @@ import { getInventoryById } from '@/app/api/peminjaman';
 import { confirmPeminjaman } from '@/app/api/peminjaman';
 import { declinePeminjaman } from '@/app/api/peminjaman';
 import { deletePeminjaman } from '@/app/api/peminjaman';
+import Navbarmurid from '@/app/components/navbarmurid';
 
 const DetailPeminjaman = (params) => {
   const {idPeminjaman} = params;
@@ -217,7 +218,9 @@ const DetailPeminjaman = (params) => {
 
   return (
     <div>
-      <Navbar />
+      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
+      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={decodedToken.id} />}
+
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg mb-32">
         <h1 className="text-2xl font-semibold mb-4 text-center">Request Detail</h1>
         <form>
