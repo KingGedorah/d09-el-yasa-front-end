@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.6.7",
+    "chart.js": "^4.4.2",
     "dompurify": "^3.1.2",
     "image-js": "^0.35.5",
     "jwt-decode": "^4.0.0",

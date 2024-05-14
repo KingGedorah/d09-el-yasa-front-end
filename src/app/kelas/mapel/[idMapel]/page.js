@@ -5,6 +5,7 @@ import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import Sidebar from '@/app/components/sidebar';
 import * as KelasApi from '../../../api/kelas';
+import * as UserApi from '../../../api/user';
 import axios from 'axios';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
@@ -14,29 +15,34 @@ import Navbarmurid from '@/app/components/navbarmurid';
 import Navbarguru from '@/app/components/navbarguru';
 import Link from 'next/link';
 import FadeIn from '@/app/components/fadein-div';
+import Chart from 'chart.js/auto';
 
 const DetailMapel = ({ params }) => {
   const router = useRouter();
   const [materiId, setMateriId] = useState(null);
-  const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
   const [materiInfo, setMateriInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [scoreInfo, setScoreInfo] = useState([]);
+  const [materiFetched, setMateriFetched] = useState(false);
+  const [nilaiFetched, setNilaiFetched] = useState(false);
   const [error, setError] = useState(null);
   const [isSuccessDelete, setIsSuccessDelete] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isErrorDelete, setIsErrorDelete] = useState(false);
   const [activeTab, setActiveTab] = useState('materi');
+  const [chartData, setChartData] = useState({});
+  const [scoreMap, setScoreMap] = useState(null);
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
-      setId(decoded.id);
     } else {
       redirect('/user/login');
     }
@@ -67,7 +73,7 @@ const DetailMapel = ({ params }) => {
           setMateriInfo(materiData);
           setMapelInfo(mapelData.data);
         }
-        setLoading(false);
+        setMateriFetched(true);
       } catch (error) {
         router.push(`/error/500`);
       }
@@ -75,6 +81,49 @@ const DetailMapel = ({ params }) => {
 
     fetchMapelInfo();
   }, [idMapel]);
+
+  useEffect(() => {
+    const fetchScoreInfo = async () => {
+      if (!decodedToken) {
+        return;
+      }
+      try {
+        if (decodedToken.role === "GURU") {
+          const response = await UserApi.getScoreByIdMapel(idMapel);
+          const promises = response.map(async (score) => {
+            const userResponse = await UserApi.getUsersById(score.idSiswa);
+            const fullName = `${userResponse.firstname} ${userResponse.lastname}`;
+            const averageScore = calculateAverage(score.listNilai);
+            return { fullName, idNilai: score.idNilai, averageScore };
+          });
+          const transformedData = await Promise.all(promises);
+          const scoreMap = transformedData.reduce((acc, curr) => {
+            acc[curr.fullName] = { idNilai: curr.idNilai, averageScore: curr.averageScore };
+            return acc;
+          }, {});
+          setScoreMap(scoreMap);
+        } else {
+          const response = await UserApi.getScoreByIdSiswa(decodedToken.id);
+          setScoreInfo(response);
+        }
+        setNilaiFetched(true);
+      } catch (error) {
+        router.push(`/error/500`);
+      }
+    };
+
+    fetchScoreInfo();
+  }, [idMapel, decodedToken]);
+
+  useEffect(() => {
+    if (showGraph && scoreInfo.length > 0) {
+      renderChart();
+    }
+  }, [showGraph, scoreInfo]);
+
+  useEffect(() => {
+    renderChart();
+  }, []);
 
   // Fungsi untuk menghapus materi
   const handleDeleteMateri = async (materiId) => {
@@ -117,16 +166,114 @@ const DetailMapel = ({ params }) => {
     setQuery(e.target.value);
   };
 
+  const renderChart = () => {
+    const canvas = document.getElementById('nilaiChart');
+    if (!canvas) {
+      return;
+    }
 
-  if (loading) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
+    const labels = [];
+    const values = {}; // Initialize values as an empty object
+    const counts = {}; // Initialize counts as an empty object to count occurrences
+
+    scoreInfo[0].tipeNilai.forEach((tipe, index) => {
+      // Memisahkan nama tipe dan nomor
+      const [namaTipe] = tipe.split(' ');
+
+      // Menambahkan nilai ke objek nilai berdasarkan tipe
+      if (!values[namaTipe]) {
+        values[namaTipe] = scoreInfo[0].listNilai[index];
+        counts[namaTipe] = 1; // Initialize count for this type
+      } else {
+        values[namaTipe] += scoreInfo[0].listNilai[index];
+        counts[namaTipe]++; // Increment count for this type
+      }
+    });
+
+    // Calculate the average values
+    Object.keys(values).forEach((tipe) => {
+      values[tipe] /= counts[tipe]; // Divide the sum by count to get the average
+    });
+
+    // Mendapatkan label dan nilai dari objek nilai
+    const dataValues = Object.values(values); // Get the values of the object
+
+    Object.keys(values).forEach((tipe) => {
+      labels.push(tipe);
+    });
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Nilai',
+          data: dataValues, // Use dataValues array here
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    setChartData(chart);
+  };
+
+  const exportChart = () => {
+    const canvas = document.getElementById('nilaiChart');
+    if (!canvas) return;
+
+    const url = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'chart.png';
+    link.click();
+  };
+
+  const toggleView = () => {
+    setShowGraph(!showGraph);
+    if (!showGraph) {
+      renderChart();
+    }
+  };
+
+  function calculateAverage(scores) {
+    const total = scores.reduce((acc, score) => acc + score, 0);
+    return total / scores.length;
+  }
+
+
+  if (!materiFetched || !nilaiFetched) {
     return <SpinLoading />;
   }
 
   return (
     <FadeIn>
-      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}
-      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
-      <div className="container mx-auto flex justify-center mt-8">
+      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
+      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={decodedToken.id} />}
+      <div className="container mx-auto flex justify-center mt-8" style={{ marginBottom: '100px' }}>
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
           <div className="tabs mb-4 flex" style={{ display: 'flex', gap: '10px' }}>
             <button
@@ -202,7 +349,7 @@ const DetailMapel = ({ params }) => {
                         </div>
                         {/* Tombol Delete */}
                         <div className="p-4">
-                        <button className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => showConfirmationPopup(materi.idKonten)}>Delete</button>
+                          <button className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => showConfirmationPopup(materi.idKonten)}>Delete</button>
                         </div>
                       </div>
                     ))
@@ -220,12 +367,95 @@ const DetailMapel = ({ params }) => {
           {activeTab === 'nilai' && (
             <div>
               <h2 className="text-2xl font-bold">Nilai</h2>
-              <div className="flex justify-center items-center h-64">Placeholder untuk nilai</div>
+              {decodedToken.role === "MURID" && (
+                <div>
+                  <button onClick={toggleView} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    {showGraph ? 'Tampilkan Tabel' : 'Tampilkan Grafik'}
+                  </button>
+                  {showGraph && (
+                    <div>
+                      <div className="flex justify-end mb-4">
+                        <button onClick={exportChart} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md mr-2 flex items-center">
+                          <svg className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5.293 4.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L11 10.414V15a1 1 0 11-2 0v-4.586l-1.293 1.293a1 1 0 01-1.414-1.414l5-5zM9 3a1 1 0 00-1 1v6a1 1 0 102 0V4a1 1 0 00-1-1z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                          </svg>
+                          Export Chart
+                        </button>
+                      </div>
+                      <canvas id="nilaiChart" width="400" height="400"></canvas>
+                    </div>
+                  )}
+                  {!showGraph && (
+                    <div>
+                      {scoreInfo.length > 0 ? (
+                        <div>
+                          {scoreInfo.map((info, index) => (
+                            <div key={index}>
+                              <h3 className="text-lg font-bold mt-4">{info.namaMataPelajaran}</h3>
+                              <table className="min-w-full bg-white border border-gray-200 mt-2">
+                                <thead>
+                                  <tr>
+                                    <th className="py-2 px-4 border-b">Tipe Nilai</th>
+                                    <th className="py-2 px-4 border-b">Nilai</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {info.tipeNilai.map((tipe, idx) => (
+                                    <tr key={idx}>
+                                      <td className="py-2 px-4 border-b text-center">{tipe}</td>
+                                      <td className="py-2 px-4 border-b text-center">{info.listNilai[idx]}</td>
+                                    </tr>
+                                  ))}
+                                  <tr>
+                                    <td className="py-2 px-4 border-b text-center font-bold">Rata-rata</td>
+                                    <td className="py-2 px-4 border-b text-center font-bold">{calculateAverage(info.listNilai)}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="mt-4 text-gray-600">Tidak ada data nilai yang tersedia.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+              {decodedToken.role === "GURU" && (
+                <div>
+                  <table className="min-w-full bg-white border border-gray-200 mt-2">
+                    <thead>
+                      <tr>
+                        <th className="py-2 px-4 border-b">Full Name</th>
+                        <th className="py-2 px-4 border-b">Average Score</th>
+                        <th className="py-2 px-4 border-b">Edit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {scoreMap &&
+                        Object.entries(scoreMap).map(([fullName, { idNilai, averageScore }]) => (
+                          <tr key={idNilai}>
+                            <td className="py-2 px-4 border-b text-center">{fullName}</td>
+                            <td className="py-2 px-4 border-b text-center">{averageScore.toFixed(2)}</td>
+                            <td className="py-2 px-4 border-b text-center">
+                              <Link legacyBehavior href={`/score/${idNilai}`}>
+                                <a className="text-blue-500 hover:underline text-center">Edit</a>
+                              </Link>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
             </div>
           )}
         </main>
         <div className='flex flex-col gap-4'>
-          {decodedToken.role === "GURU" && (
+          {decodedToken.role === "GURU" && activeTab === 'materi' && (
             <Link href={`/kelas/mapel/${idMapel}/create-materi`} className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'
               onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
               onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}

@@ -1,4 +1,4 @@
-import React  ,{ useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getUsersById } from '../api/user';
 
 
@@ -10,12 +10,11 @@ const Navbarmurid = ({ role }) => {
       getUsersById(role)
         .then(user => {
           if (user) {
-            console.log(user)
             setUserName(user.firstname + ' ' + user.lastname);
           }
         })
         .catch(error => {
-          console.error('Error fetching user:', error);
+          //
         });
     }
   }, [role]);
