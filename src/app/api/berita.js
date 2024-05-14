@@ -3,8 +3,8 @@ const BASE_URL = 'https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita';
 export const getAllBeritas = async () => {
   try {
     const response = await fetch(`${BASE_URL}/view-all`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    if (response.status == 404) {
+      return null;
     }
     const data = await response.json();
     return data.data;
