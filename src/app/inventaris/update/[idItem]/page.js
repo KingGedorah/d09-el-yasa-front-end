@@ -10,8 +10,10 @@ import Navbar from '../../../components/navbar';
 import { redirect } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import * as InventoryApi from '../../../api/inventaris';
+import Navbaradmin from '@/app/components/navbaradmin';
 
 const UpdateInventoryForm = ({ params }) => {
+  const [id, setId] = useState('');
   const { idItem } = params;
   const [decodedToken, setDecodedToken] = useState('');
   const [namaItem, setNamaItem] = useState('');
@@ -23,7 +25,9 @@ const UpdateInventoryForm = ({ params }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
     } else {
       console.log("Need to login");
       redirect('/user/login');
@@ -102,7 +106,8 @@ const UpdateInventoryForm = ({ params }) => {
 
   return (
     <div className="bg-white dark:bg-gray-950">
-      <Navbar />
+      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
+      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}   
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="w-full max-w-sm space-y-4">
         <Link href="/inventaris/view-all" passHref>
@@ -154,12 +159,15 @@ const UpdateInventoryForm = ({ params }) => {
                 className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
+            <div className="flex flex-col items-center">
             <button
               type="submit"
               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
             >
               Perbarui
             </button>
+            </div>
+           
           </form>
           {errorPopup && (
             <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
