@@ -17,9 +17,29 @@ const UpdateAbsensiForm = ({ params }) => {
     const [showSuccess, setShowSuccess] = useState(false);
     const [dataAbsensi, setDataAbsensi] = useState(undefined);
     const router = useRouter();
-    const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+    // const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+    const [decodedToken, setDecodedToken] = useState('');
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        const token = sessionStorage.getItem('jwtToken');
+        if (token) {
+            setDecodedToken(parseJwt(token));
+        } else {
+            redirect('/user/login');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (decodedToken) {
+            if (decodedToken.role === 'GURU' || decodedToken.role === 'STAFF') {
+                // Authorized
+            } else {
+                console.log("Not authorized");
+                redirect(`/absensi/${idKelas}`);
+            }
+        }
+    }, [decodedToken]);
 
     useEffect(() => {
         if (!dataAbsensi?.kelas) return;
@@ -90,8 +110,8 @@ const UpdateAbsensiForm = ({ params }) => {
     };
 
     if (loading) {
-        return <SpinLoading/>;
-      }
+        return <SpinLoading />;
+    }
 
     return (
         <div className="bg-white dark:bg-gray-950">

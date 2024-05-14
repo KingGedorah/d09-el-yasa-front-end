@@ -6,6 +6,7 @@ import * as KelasApi from '../../../api/kelas';
 import Layout from '@/app/components/layout';
 import { useRouter } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
+import { parseJwt } from '@/app/utils/jwtUtils';
 
 const CreateAbsensiForm = ({ params }) => {
     const { idKelas } = params;
@@ -15,6 +16,7 @@ const CreateAbsensiForm = ({ params }) => {
     const [loading, setLoading] = useState(true);
     const [showSuccess, setShowSuccess] = useState(false);
     const router = useRouter()
+    const [decodedToken, setDecodedToken] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,6 +32,26 @@ const CreateAbsensiForm = ({ params }) => {
 
         fetchData();
     }, [idKelas]);
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('jwtToken');
+        if (token) {
+            setDecodedToken(parseJwt(token));
+        } else {
+            redirect('/user/login');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (decodedToken) {
+            if (decodedToken.role === 'GURU' || decodedToken.role === 'STAFF') {
+                // Authorized
+            } else {
+                console.log("Not authorized");
+                redirect(`/absensi/${idKelas}`);
+            }
+        }
+    }, [decodedToken]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -71,8 +93,8 @@ const CreateAbsensiForm = ({ params }) => {
     };
 
     if (loading) {
-        return <SpinLoading/>;
-      }
+        return <SpinLoading />;
+    }
 
     const handleAttendanceChange = (index, type) => {
         const updatedNisnList = [...selectedNisn];
