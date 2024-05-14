@@ -11,6 +11,7 @@ import Image from 'next/image';
 import DOMPurify from 'dompurify';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import { FaRegSadCry } from 'react-icons/fa';
 
 const ArtikelList = () => {
   const router = useRouter();
@@ -21,19 +22,28 @@ const ArtikelList = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 6;
+  let totalPages;
+  let paginatedArticles;
+  let totalArticles;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const articlesData = await getAllArticles();
-        articlesData.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
-        articlesData.forEach(article => {
+        if (articles.length === 0) {
+          setLoading(false);
+        } else {
+          articlesData.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
+          articlesData.forEach(article => {
           article.isiArtikel = DOMPurify.sanitize(article.isiArtikel);
-        });
-        setArticles(articlesData);
-        setLoading(false);
+          });
+          setArticles(articlesData);
+          setLoading(false);
+        }
       } catch (error) {
+        setLoading(false);
         router.push(`/error/500`);
+        console.log(error);
       }
     };
 
@@ -54,20 +64,27 @@ const ArtikelList = () => {
     setCurrentPage(pageNumber);
   };
 
-  const indexOfLastArticle = currentPage * articlesPerPage;
-  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-  const currentArticles = articles.filter(article => {
-    const containsCategory = selectedCategory ? (Array.isArray(article.kategori) && article.kategori.includes(selectedCategory)) : true;
-    const containsQuery = query ? article.judulArtikel.toLowerCase().includes(query.toLowerCase()) : true;
-    return containsCategory && containsQuery;
-  });
 
-  const totalArticles = currentArticles.length;
-  const totalPages = Math.ceil(totalArticles / articlesPerPage);
-  const paginatedArticles = currentArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+
+  if (articles.length === 0) {
+    console.log("No data found")
+  } else {
+    let indexOfLastArticle = currentPage * articlesPerPage;
+    let indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+    let currentArticles = articles.filter(article => {
+      let containsCategory = selectedCategory ? (Array.isArray(article.kategori) && article.kategori.includes(selectedCategory)) : true;
+      let containsQuery = query ? article.judulArtikel.toLowerCase().includes(query.toLowerCase()) : true;
+      return containsCategory && containsQuery;
+    });
+
+    let totalArticles = currentArticles.length;
+    totalPages = Math.ceil(totalArticles / articlesPerPage);
+    paginatedArticles = currentArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+  }
+
 
   if (loading) {
-    return <SpinLoading/>;
+    return <SpinLoading />;
   }
 
   return (
@@ -95,38 +112,48 @@ const ArtikelList = () => {
             {error && <div>Error: {error.message}</div>}
             {!loading && !error && (
               <div className="flex flex-col gap-4 w-full">
-                {paginatedArticles.map(article => (
-                  <div
-                    key={article.idArtikel}
-                    className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl artikel-item"
-                    style={{
-                      transition: 'transform 0.3s',
-                      transform: 'scale(1)',
-                      ':hover': {
-                        transform: 'scale(1.05)',
-                      },
-                    }}
-                    onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
-                    onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}
-                  >
-                    <div className='flex justify-center'>
-                      {article.imageArtikel ? (
-                        <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
-                      ) : (
-                        <Image src="https://via.placeholder.com/600x400" width="600" height="400" objectFit="cover" alt="Placeholder" loading="lazy" />
-                      )}
-                    </div>
-                    <Link href={`/artikel/${article.idArtikel}`} passHref>
-                      <h2 className='text-lg text-bold mb-4 mt-4'>{article.judulArtikel}</h2>
-                    </Link>
-                    <div dangerouslySetInnerHTML={{ __html: article.isiArtikel.slice(0, 150) }} />
-                    <Link href={`/artikel/${article.idArtikel}`} passHref>
-                      <button className="mt-2 bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] px-4 py-2 rounded-md cursor-pointer">Baca Selengkapnya</button>
-                    </Link>
+                {articles.length === 0 ? (
+                  <div className="text-center">
+                    <FaRegSadCry size={64} className="text-gray-400 mx-auto" />
+                    <p className="text-lg font-semibold mt-4">There's no artikel has been posted</p>
+                    <p className="text-sm text-gray-600">Make one now !</p>
                   </div>
-                ))}
+                ) : (
+                  <>
+                    {paginatedArticles.map(article => (
+                      <div
+                        key={article.idArtikel}
+                        className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl artikel-item"
+                        style={{
+                          transition: 'transform 0.3s',
+                          transform: 'scale(1)',
+                          ':hover': {
+                            transform: 'scale(1.05)',
+                          },
+                        }}
+                        onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
+                        onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}
+                      >
+                        <div className='flex justify-center'>
+                          {article.imageArtikel ? (
+                            <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
+                          ) : (
+                            <Image src="https://via.placeholder.com/600x400" width="600" height="400" objectFit="cover" alt="Placeholder" loading="lazy" />
+                          )}
+                        </div>
+                        <Link href={`/artikel/${article.idArtikel}`} passHref>
+                          <h2 className='text-lg text-bold mb-4 mt-4'>{article.judulArtikel}</h2>
+                        </Link>
+                        <div dangerouslySetInnerHTML={{ __html: article.isiArtikel.slice(0, 150) }} />
+                        <Link href={`/artikel/${article.idArtikel}`} passHref>
+                          <button className="mt-2 bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] px-4 py-2 rounded-md cursor-pointer">Baca Selengkapnya</button>
+                        </Link>
+                      </div>
+                    ))}
+                  </>
+                )}
                 {totalArticles === 0 && <div>Tidak ada hasil pencarian.</div>}
-                <ul className="flex justify-center mb-8" style={{marginBottom: '30px'}}> {/* Updated with margin-bottom */}
+                <ul className="flex justify-center mb-8" style={{ marginBottom: '30px' }}> {/* Updated with margin-bottom */}
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
                     <li key={number}>
                       <button
@@ -150,11 +177,11 @@ const ArtikelList = () => {
             </svg>
               Post Artikel
             </Link>
-            <Sidebar />
+            <Sidebar/>
           </div>
         </div>
       </div>
-      <Footer/> {/* Menambahkan margin atas pada footer */}
+      <Footer /> {/* Menambahkan margin atas pada footer */}
     </div>
   );
 
