@@ -10,10 +10,12 @@ import { getAllGuru, getAllMurid, getUsersById } from '@/app/api/user';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import Navbarguru from '@/app/components/navbarguru';
 
 
 const CreateKelasForm = () => {
   const router = useRouter();
+  const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
@@ -28,8 +30,13 @@ const CreateKelasForm = () => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
-    } else {
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log("id: " + decoded.id);
+      console.log("role: " + decoded.role)
+    } 
+    else {
       redirect('/user/login');
     }
   }, []);
@@ -132,7 +139,8 @@ const CreateKelasForm = () => {
 
   return (
     <div className="bg-[#F3F5FB]">
-      <Navbar />
+      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
+      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}      
       <div className="container mx-auto flex items-center justify-center py-16 ">
         <div className="w-full max-w-sm space-y-4 bg-white shadow-md rounded-xl px-8 py-4">
           <div className="space-y-2">
