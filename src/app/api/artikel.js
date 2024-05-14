@@ -6,6 +6,7 @@ export const getAllArticles = async () => {
     if (response.status == 404) {
       return null;
     }
+    const data = await response.json();
     return data.data;
   } catch (error) {
     console.error('Error fetching articles:', error);
