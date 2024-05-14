@@ -30,7 +30,7 @@ const ArtikelList = () => {
     const fetchData = async () => {
       try {
         const articlesData = await getAllArticles();
-        if (articles.length === 0) {
+        if (articlesData == null) {
           setLoading(false);
         } else {
           articlesData.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
@@ -41,7 +41,6 @@ const ArtikelList = () => {
           setLoading(false);
         }
       } catch (error) {
-        setLoading(false);
         router.push(`/error/500`);
       }
     };
