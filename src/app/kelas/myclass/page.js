@@ -15,6 +15,7 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import Navbar2 from '@/app/components/navbarmurid';
+import {AiOutlineWarning} from 'react-icons/ai';
 
 const KelasByUserId = () => {
   const router = useRouter();
