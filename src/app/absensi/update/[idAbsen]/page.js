@@ -7,6 +7,7 @@ import Layout from '@/app/components/layout';
 import { retrieveAbsensiKelas, retrieveDetailAbsensi, updateAbsensi } from '@/app/api/absensi';
 import { useRouter } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import SpinLoading from '@/app/components/spinloading';
 
 const UpdateAbsensiForm = ({ params }) => {
     const { idAbsen } = params;
@@ -16,8 +17,29 @@ const UpdateAbsensiForm = ({ params }) => {
     const [showSuccess, setShowSuccess] = useState(false);
     const [dataAbsensi, setDataAbsensi] = useState(undefined);
     const router = useRouter();
-    const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+    // const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+    const [decodedToken, setDecodedToken] = useState('');
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        const token = sessionStorage.getItem('jwtToken');
+        if (token) {
+            setDecodedToken(parseJwt(token));
+        } else {
+            redirect('/user/login');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (decodedToken) {
+            if (decodedToken.role === 'GURU' || decodedToken.role === 'STAFF') {
+                // Authorized
+            } else {
+                console.log("Not authorized");
+                redirect(`/absensi/${idKelas}`);
+            }
+        }
+    }, [decodedToken]);
 
     useEffect(() => {
         if (!dataAbsensi?.kelas) return;
@@ -30,8 +52,9 @@ const UpdateAbsensiForm = ({ params }) => {
                     label: nisn,
                     attendance: dataAbsensi.keteranganAbsen[index].toLowerCase()
                 })));
+                setLoading(false);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                router.push(`/error/500`);
             }
         };
         fetchData();
@@ -85,6 +108,10 @@ const UpdateAbsensiForm = ({ params }) => {
         updatedNisnList[index].attendance = type;
         setSelectedNisn(updatedNisnList);
     };
+
+    if (loading) {
+        return <SpinLoading />;
+    }
 
     return (
         <div className="bg-white dark:bg-gray-950">

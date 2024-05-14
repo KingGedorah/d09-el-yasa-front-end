@@ -10,6 +10,7 @@ import Image from 'next/image';
 import * as AbsensiApi from '../../api/absensi';
 import { useRouter } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import SpinLoading from '@/app/components/spinloading';
 
 const AbsensiList = ({ params }) => {
   const { idKelas } = params;
@@ -17,7 +18,23 @@ const AbsensiList = ({ params }) => {
   const [error, setError] = useState(null);
   const [absensiList, setAbsensiList] = useState(null);
   const router = useRouter();
-  const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  // const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+  const [decodedToken, setDecodedToken] = useState('');
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      setDecodedToken(parseJwt(token));
+    } else {
+      redirect('/user/login');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (decodedToken) {
+      //Authorized
+    }
+  }, [decodedToken]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +42,7 @@ const AbsensiList = ({ params }) => {
         const response = await AbsensiApi.retrieveAbsensiKelas(idKelas);
         setAbsensiList(response)
       } catch (error) {
-        console.error('Error fetching data:', error);
+        router.push(`/error/500`);
       } finally {
         setLoading(false);
       }
@@ -39,6 +56,10 @@ const AbsensiList = ({ params }) => {
     month: "long",
     year: "numeric",
   });
+
+  if (loading) {
+    return <SpinLoading />;
+  }
 
   return (
     <div>
