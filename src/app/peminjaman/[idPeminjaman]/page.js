@@ -84,6 +84,16 @@ const DetailPeminjaman = (params) => {
   }, []);
 
   useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.role === 'MURID' || decodedToken.role === 'STAFF') {
+        //Authorized
+      } else {
+        redirect(`/inventaris/view-all`);
+      }
+    }
+  }, [decodedToken]);
+
+  useEffect(() => {
     const fetchData = async () => {
       const token = sessionStorage.getItem('jwtToken');
       if (token) {
