@@ -16,6 +16,7 @@ import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import {AiOutlineWarning} from 'react-icons/ai';
 import Navbarguru from '@/app/components/navbarguru';
+import Navbaradmin from '@/app/components/navbaradmin';
 
 
 const ViewAllKelas = ({ params }) => {
