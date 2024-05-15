@@ -7,8 +7,13 @@ import Layout from '@/app/components/layout';
 import { useRouter } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import Navbarguru from '@/app/components/navbarguru';
+import Navbar from '@/app/components/navbar';
+import Footer from '@/app/components/footer';
+import Navbarmurid from '@/app/components/navbarmurid';
 
 const CreateAbsensiForm = ({ params }) => {
+    const [id, setId] = useState('');
     const { idKelas } = params;
     const [selectedNisn, setSelectedNisn] = useState([]);
     const [tanggalAbsen, setTanggalAbsen] = useState('');
@@ -36,7 +41,10 @@ const CreateAbsensiForm = ({ params }) => {
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
         if (token) {
-            setDecodedToken(parseJwt(token));
+            const decoded = parseJwt(token);
+            setDecodedToken(decoded);
+            setId(decoded.id);
+            console.log(decoded.role)
         } else {
             redirect('/user/login');
         }
@@ -109,7 +117,9 @@ const CreateAbsensiForm = ({ params }) => {
 
     return (
         <div className="bg-[#F3F5FB]">
-            <Layout>
+            {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}
+            {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+            {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}
                 <div className="container px-4 md:px-6 mx-auto py-16 md:py-24 lg:py-32">
                     <div className="max-w-lg mx-auto">
                         <h1 className="text-3xl md:text-4xl font-extrabold font-nunito-sans text-center mb-4">Create Attendance</h1>
@@ -192,7 +202,7 @@ const CreateAbsensiForm = ({ params }) => {
                         </form>
                     </div>
                 </div>
-            </Layout>
+                <Footer/>
         </div>
     );
 };
