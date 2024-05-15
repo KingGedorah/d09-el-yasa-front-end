@@ -95,7 +95,7 @@ const CreateArticle = () => {
   };
 
   return (
-    <div>
+    <div style={{marginBottom:'100px'}}>
       {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
         <h1 className="text-2xl font-semibold mb-4 text-center">Buat Artikel</h1>

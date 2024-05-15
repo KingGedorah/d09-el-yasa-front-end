@@ -13,6 +13,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbarguru from '@/app/components/navbarguru';
+import Navbaradmin from '@/app/components/navbaradmin';
 
 const CreateBerita = () => {
   const [id, setId] = useState('');
@@ -39,7 +40,7 @@ const CreateBerita = () => {
   
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'GURU' || decodedToken.role === 'STAFF') {
+      if (decodedToken.role === 'GURU' || decodedToken.role === 'STAFF' || decodedToken.role === 'ADMIN') {
         // Authorized
       } else {
         redirect('/berita');
@@ -93,7 +94,8 @@ const CreateBerita = () => {
   };
 
   return (
-    <div>
+    <div style={{marginBottom:'100px'}}>
+        {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
         {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}
         {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
