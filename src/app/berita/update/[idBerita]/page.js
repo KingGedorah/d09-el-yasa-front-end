@@ -14,6 +14,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SpinLoading from '@/app/components/spinloading';
+import Navbarguru from '@/app/components/navbarguru';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
