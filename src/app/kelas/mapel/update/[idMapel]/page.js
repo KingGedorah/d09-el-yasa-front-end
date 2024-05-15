@@ -11,6 +11,7 @@ import { parseJwt } from '@/app/utils/jwtUtils';
 import { redirect } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import Navbarguru from '@/app/components/navbarguru';
 
 const UpdateMapelForm = ({ params }) => {
   const router = useRouter();
@@ -112,22 +113,22 @@ const UpdateMapelForm = ({ params }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-950">
-      <Navbar />
+    <div className="bg-[#F3F5FB]">
+      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}      
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="w-full max-w-sm space-y-4">
           <div className="space-y-2">
-            <h1 className="text-3xl font-extrabold font-nunito-sans">Perbarui mata pelajaran</h1>
+            <h1 className="text-3xl font-extrabold font-nunito-sans">Update Subject</h1>
             <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
-              Masukkan informasi mata pelajaran di sini.
+              Please update the information of the subject.
             </p>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="inline-block text-sm font-medium" htmlFor="namaMapel">Nama Mapel:</label>
+              <label className="inline-block text-sm font-medium" htmlFor="namaMapel">Subject Name</label>
               <input
                 type="text"
-                className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="h-10 w-full rounded-lg border border-[#6C80FF] bg-white px-3 py-1 text-sm placeholder-gray-400"
                 id="namaMapel"
                 value={namaMapel}
                 onChange={(e) => setNamaMapel(e.target.value)}
@@ -135,17 +136,26 @@ const UpdateMapelForm = ({ params }) => {
               />
             </div>
             <div className="mb-4">
-              <label className="inline-block text-sm font-medium" htmlFor="nuptkGuruMengajar">NUPTK Guru Mengajar:</label>
+              <label className="inline-block text-sm font-medium" htmlFor="nuptkGuruMengajar">Teacher</label>
               <Select
                 options={nuptkOptions}
                 value={selectedNuptk}
                 onChange={setSelectedNuptk}
                 placeholder="Pilih NUPTK Guru Mengajar"
+                className='border-[#6C80FF] border-0 rounded-lg !hover:border-[#6C80FF] h-10'
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: '#6C80FF',
+                    borderRadius: '8px',
+                    height: '40px'
+                  }),
+                }}
               />
             </div>
             <div className='grid place-items-center'>
               <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 items-center">
-                Perbarui mata pelajaran
+                Update
               </button>
             </div>
             {error && <p className="text-danger mt-2">{error}</p>}

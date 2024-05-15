@@ -102,7 +102,7 @@ const FormCreateMapel = ({ params }) => {
           <div className="space-y-2">
             <h1 className="text-3xl font-extrabold font-nunito">Add Subject</h1>
             <p className="text-gray-500 dark:text-gray-400 font-nunito">
-              Please fill in the information about the subject.
+              Please fill in the information of the subject.
             </p>
           </div>
           <form onSubmit={handleSubmit}>
