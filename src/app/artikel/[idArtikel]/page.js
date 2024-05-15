@@ -15,6 +15,7 @@ import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 
 const ArtikelDetail = ({ params }) => {
+  const [id, setId] = useState('');
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const { idArtikel } = params;
@@ -27,7 +28,10 @@ const ArtikelDetail = ({ params }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log(decoded.id + decoded.role)
     }
   }, []);
 
@@ -84,7 +88,7 @@ const ArtikelDetail = ({ params }) => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar role={id}/>
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">

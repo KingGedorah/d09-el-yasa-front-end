@@ -6,6 +6,7 @@ const Navbarmurid = ({ role }) => {
 
   useEffect(() => {
     if (role) {
+      console.log(role)
       getUsersById(role)
         .then(user => {
           if (user) {
@@ -38,17 +39,14 @@ const Navbarmurid = ({ role }) => {
             <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
               Beranda
             </a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+            <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
               Akademik
             </a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+            <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
               Peminjaman Fasilitas
             </a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+            <a className="font-medium text-gray-500 dark:text-gray-400" href={`/nilai/${role}`}>
               Nilai
-            </a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-              Tentang Kami
             </a>
           </nav>
           <div className="flex items-center gap-4 md:gap-6">

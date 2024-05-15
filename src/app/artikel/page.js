@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+
 import { getAllArticles } from '../api/artikel';
 import ArticleImage from '../artikelimage/page';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
+import { parseJwt } from '../utils/jwtUtils';
 import Sidebar from '../components/sidebar';
 import Image from 'next/image';
 import DOMPurify from 'dompurify';
@@ -16,6 +18,8 @@ import FadeIn from '../components/fadein-div';
 
 const ArtikelList = () => {
   const router = useRouter();
+  const [decodedToken, setDecodedToken] = useState('');
+  const [id, setId] = useState('');
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,6 +30,18 @@ const ArtikelList = () => {
   let totalPages;
   let paginatedArticles;
   let totalArticles;
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log(decoded.id + decoded.role)
+    } else {
+
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,7 +104,7 @@ const ArtikelList = () => {
 
   return (
     <FadeIn>
-      <Navbar />
+      <Navbar  role={id}/>
       <div className="mx-auto mt-8 px-12 rounded-lg">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">
@@ -169,7 +185,7 @@ const ArtikelList = () => {
             )}
           </div>
           <div className='flex flex-col gap-4'>
-            {decodedToken.role === "ADMIN" && (
+            {decodedToken && decodedToken.role === "ADMIN" && (
               <Link href="/artikel/create" className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'
                 onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
                 onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}

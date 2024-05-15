@@ -8,16 +8,17 @@ import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import Sidebar from '../components/sidebar';
 import Image from 'next/image';
-import { parseJwt } from '../utils/jwtUtils';
 import DOMPurify from 'dompurify';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 import { FaRegSadCry } from 'react-icons/fa';
 import FadeIn from '../components/fadein-div';
+import { parseJwt } from '../utils/jwtUtils';
 
 const BeritaList = () => {
   const router = useRouter();
+  const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [beritas, setBeritas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +34,10 @@ const BeritaList = () => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log(decoded.id + decoded.role)
     } else {
       redirect('/user/login');
     }
@@ -103,7 +107,7 @@ const BeritaList = () => {
 
   return (
     <FadeIn>
-      <Navbar />
+      <Navbar role={id}/>
       <div className="mx-auto mt-8 px-12 rounded-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">
