@@ -1,10 +1,10 @@
 import Navbar from "./navbar"
 import Footer from "./footer"
 
-const Layout = ({ children }) => {
+const Layout = ({ children, role }) => {
     return (
         <div className="flex flex-col">
-            <Navbar />
+            <Navbar role={role} />
             {children}
             <Footer />
         </ div>

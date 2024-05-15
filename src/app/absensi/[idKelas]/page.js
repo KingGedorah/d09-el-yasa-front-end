@@ -11,9 +11,12 @@ import * as AbsensiApi from '../../api/absensi';
 import { useRouter } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
+import Navbarmurid from '@/app/components/navbarmurid';
+import Navbarguru from '@/app/components/navbarguru';
 
 const AbsensiList = ({ params }) => {
   const { idKelas } = params;
+  const [id, setId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [absensiList, setAbsensiList] = useState(null);
@@ -27,6 +30,8 @@ const AbsensiList = ({ params }) => {
       try {
         const decoded = parseJwt(token);
         setDecodedToken(decoded);
+        setId(decoded.id);
+        console.log(decoded.role)
       } catch (error) {
         console.error('Failed to parse token', error);
       }
@@ -68,7 +73,8 @@ const AbsensiList = ({ params }) => {
 
   return (
     <div>
-      <Navbar />
+      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}
+      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
       <div className="container mx-auto mt-8 p-8 bg-[#F3F5FB] rounded-lg shadow-md max-w-screen-lg">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">

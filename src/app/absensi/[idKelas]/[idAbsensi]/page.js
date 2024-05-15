@@ -8,9 +8,11 @@ import Layout from '@/app/components/layout';
 import { useRouter } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
+import Navbar from '@/app/components/navbar';
 
 const CreateAbsensiForm = ({ params }) => {
     // const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
+    const [id, setId] = useState('');
     const [decodedToken, setDecodedToken] = useState('');
     const { idKelas, idAbsensi } = params;
     const [loading, setLoading] = useState(true);
@@ -22,7 +24,10 @@ const CreateAbsensiForm = ({ params }) => {
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
         if (token) {
-            setDecodedToken(parseJwt(token));
+            const decoded = parseJwt(token);
+            setDecodedToken(decoded);
+            setId(decoded.id);
+            console.log(decoded.role)
         } else {
             redirect('/user/login');
         }
@@ -56,7 +61,8 @@ const CreateAbsensiForm = ({ params }) => {
 
     return (
         <div className="bg-[#F3F5FB]">
-            <Layout>
+            <div className="flex flex-col">
+            <Navbar role={id}/>
                 <div className="container px-4 md:px-6 mx-auto py-16 md:py-24 lg:py-32">
                     {loading && <div>Loading...</div>}
                     {error && <div>Error: {error.message}</div>}
@@ -100,7 +106,7 @@ const CreateAbsensiForm = ({ params }) => {
                         </div>
                     </div>
                 </div>
-            </Layout>
+            </div>
         </div>
     );
 };

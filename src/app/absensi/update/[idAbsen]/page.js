@@ -8,8 +8,12 @@ import { retrieveAbsensiKelas, retrieveDetailAbsensi, updateAbsensi } from '@/ap
 import { useRouter } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import SpinLoading from '@/app/components/spinloading';
+import Footer from '@/app/components/footer';
+import Navbarguru from '@/app/components/navbarguru';
+import Navbar from '@/app/components/navbar';
 
 const UpdateAbsensiForm = ({ params }) => {
+    const [id, setId] = useState('');
     const { idAbsen } = params;
     const [selectedNisn, setSelectedNisn] = useState([]);
     const [tanggalAbsen, setTanggalAbsen] = useState('2024-01-02');
@@ -19,12 +23,15 @@ const UpdateAbsensiForm = ({ params }) => {
     const router = useRouter();
     // const decodedToken = parseJwt(sessionStorage.getItem('jwtToken'));
     const [decodedToken, setDecodedToken] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
         if (token) {
-            setDecodedToken(parseJwt(token));
+            const decoded = parseJwt(token);
+            setDecodedToken(decoded);
+            setId(decoded.id);
+            console.log(decoded.role)
         } else {
             redirect('/user/login');
         }
@@ -115,7 +122,8 @@ const UpdateAbsensiForm = ({ params }) => {
 
     return (
         <div className="bg-[#F3F5FB]">
-            <Layout>
+            {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}
+            {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
                 <div className="container px-4 md:px-6 mx-auto py-16 md:py-24 lg:py-32">
                     <div className="max-w-lg mx-auto">
                         <h1 className="text-3xl md:text-4xl font-extrabold font-nunito-sans text-center mb-4">Update Attendance</h1>
@@ -198,7 +206,7 @@ const UpdateAbsensiForm = ({ params }) => {
                         </form>
                     </div>
                 </div>
-            </Layout>
+            <Footer/>
         </div>
     );
 };
