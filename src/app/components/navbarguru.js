@@ -38,12 +38,32 @@ const Navbarguru = ({ role }) => {
             <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
               Beranda
             </a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-              Akademik
-            </a>
-            <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-              Tentang Kami
-            </a>
+            <div className="relative group">
+              <button className="font-medium text-gray-500 dark:text-gray-400">
+                Akademik
+              </button>
+              <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <a href="/kelas/view-all" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  List kelas
+                </a>
+                <a href="/kelas/myclass" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Kelas anda
+                </a>
+              </div>
+            </div>
+            <div className="relative group">
+              <button className="font-medium text-gray-500 dark:text-gray-400">
+                Manajemen Konten
+              </button>
+              <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <a href="/artikel" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Artikel
+                </a>
+                <a href="/berita" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Berita
+                </a>
+              </div>
+            </div>
           </nav>
           <div className="flex items-center gap-4 md:gap-6">
             {userName ? (

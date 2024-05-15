@@ -104,7 +104,7 @@ export default function Home() {
             </div>
             <div className="space-y-2">
               <a
-                href="https://bit.ly/enrollmentJIScTA20242025"
+                href="https://bit.ly/enrollmentJIScTA20242025" target='blank'
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full inline-block"
               >
                 Daftar Sekarang
