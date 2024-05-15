@@ -12,8 +12,10 @@ import { redirect } from 'next/navigation';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import Link from 'next/link';
 import Image from 'next/image';
+import Navbarguru from '@/app/components/navbarguru';
 
 const CreateBerita = () => {
+  const [id, setId] = useState('');
   const router = useRouter()
   const [decodedToken, setDecodedToken] = useState('');
   const [judulBerita, setJudulBerita] = useState('');
@@ -26,7 +28,10 @@ const CreateBerita = () => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log(decoded.id + decoded.role)
     } else {
       redirect('/user/login');
     }
@@ -89,7 +94,8 @@ const CreateBerita = () => {
 
   return (
     <div>
-      <Navbar />
+        {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}
+        {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <h1 className="text-2xl font-semibold mb-4 text-center">Buat Berita</h1>
         <form onSubmit={handleSubmit}>
