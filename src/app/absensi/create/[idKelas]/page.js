@@ -108,17 +108,17 @@ const CreateAbsensiForm = ({ params }) => {
     };
 
     return (
-        <div className="bg-white dark:bg-gray-950">
+        <div className="bg-[#F3F5FB]">
             <Layout>
                 <div className="container px-4 md:px-6 mx-auto py-16 md:py-24 lg:py-32">
                     <div className="max-w-lg mx-auto">
-                        <h1 className="text-3xl md:text-4xl font-extrabold font-nunito-sans text-center mb-4">Tambahkan absensi baru</h1>
+                        <h1 className="text-3xl md:text-4xl font-extrabold font-nunito-sans text-center mb-4">Create Attendance</h1>
                         <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 text-center mb-8">
-                            Masukkan informasi absensi di sini.
+                            Insert attendance information
                         </p>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="mb-4">
-                                <label htmlFor="tanggalAbsen" className="block text-sm font-medium">Tanggal absen:</label>
+                                <label htmlFor="tanggalAbsen" className="block text-sm font-medium">Date</label>
                                 <input
                                     type="date"
                                     id="tanggalAbsen"
@@ -129,14 +129,14 @@ const CreateAbsensiForm = ({ params }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <table className="w-full border-collapse border border-gray-300">
+                                <table className="w-full border-collapse border border-gray-300 text-center">
                                     <thead>
                                         <tr className="bg-gray-200">
                                             <th className="p-2 border border-gray-300">No.</th>
                                             <th className="p-2 border border-gray-300">NISN</th>
-                                            <th className="p-2 border border-gray-300">Hadir</th>
-                                            <th className="p-2 border border-gray-300">Izin</th>
-                                            <th className="p-2 border border-gray-300">Sakit</th>
+                                            <th className="p-2 border border-gray-300">Present</th>
+                                            <th className="p-2 border border-gray-300">Permitted</th>
+                                            <th className="p-2 border border-gray-300">Sick</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -144,7 +144,7 @@ const CreateAbsensiForm = ({ params }) => {
                                             <tr key={siswa.value}>
                                                 <td className="p-2 border border-gray-300">{index + 1}</td>
                                                 <td className="p-2 border border-gray-300">{siswa.value}</td>
-                                                <td className="p-2 border border-gray-300">
+                                                <td className="p-2 border-t border-b border-gray-300">
                                                     <input
                                                         type="radio"
                                                         name={`attendance_${index}`}
@@ -175,19 +175,19 @@ const CreateAbsensiForm = ({ params }) => {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full py-2 px-4 bg-[#6C80FF]  hover:bg-blue-600 text-white rounded-lg focus:outline-none"
+                                className="w-full py-2 px-4 bg-[#6C80FF]  hover:bg-indigo-600 text-white rounded-lg focus:outline-none"
                             >
-                                Tambahkan absensi
+                                Create Attendance
                             </button>
                             <button
                                 type='button'
                                 onClick={() => router.back()}
                                 className="w-full py-2 px-4 bg-white hover:bg-gray-200 text-red-500 border-red-500 border-[1px] rounded-lg focus:outline-none"
                             >
-                                Batal
+                                Cancel
                             </button>
                             {showSuccess && (
-                                <p className="text-green-500 dark:text-green-400 text-center mt-2">Absensi berhasil ditambahkan!</p>
+                                <p className="text-green-500 dark:text-green-400 text-center mt-2">Attendance created succesfully</p>
                             )}
                         </form>
                     </div>
