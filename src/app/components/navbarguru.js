@@ -36,31 +36,31 @@ const Navbarguru = ({ role }) => {
           </a>
           <nav className="hidden md:flex gap-4 text-sm">
             <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
-              Beranda
+              Home
             </a>
             <div className="relative group">
               <button className="font-medium text-gray-500 dark:text-gray-400">
-                Akademik
+                Academics
               </button>
               <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <a href="/kelas/view-all" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  List kelas
+                  List of Classes
                 </a>
                 <a href="/kelas/myclass" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  Kelas anda
+                  Your Class
                 </a>
               </div>
             </div>
             <div className="relative group">
               <button className="font-medium text-gray-500 dark:text-gray-400">
-                Manajemen Konten
+                Content Management
               </button>
               <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <a href="/artikel" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  Artikel
+                  Articles
                 </a>
                 <a href="/berita" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  Berita
+                  News
                 </a>
               </div>
             </div>
@@ -79,7 +79,7 @@ const Navbarguru = ({ role }) => {
               </div>
             ) : (
               <button type="button" className="text-sm font-medium">
-                <a href='/user/login'>Masuk</a>
+                <a href='/user/login'>Login</a>
               </button>
             )}
           </div>

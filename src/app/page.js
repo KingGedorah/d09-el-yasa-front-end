@@ -105,18 +105,17 @@ export default function Home() {
           <div className="w-full max-w-sm space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-extrabold font-nunito-sans text-white">
-                Selamat Datang di Jakarta Islamic School
+                Welcome to Jakarta Islamic School
               </h1>
               <p className="dark:text-gray-400 font-nunito-sans text-white">
-                Memberikan Pendidikan Berkualitas Tinggi untuk Masa Depan yang Cerah
-              </p>
+              Providing High-Quality Education for a Bright Future</p>
             </div>
             <div className="space-y-2">
               <a
                 href="https://bit.ly/enrollmentJIScTA20242025" target='blank'
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full inline-block"
               >
-                Daftar Sekarang
+                Register Now
               </a>
             </div>
           </div>
@@ -130,10 +129,9 @@ export default function Home() {
         className="bg-white py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-bold text-center mb-8">Tentang Kami</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">About</h2>
           <p className="text-lg text-center">
-            Jakarta Islamic School adalah sekolah menengah atas yang berkomitmen untuk memberikan pendidikan berkualitas
-            tinggi yang membentuk karakter unggul bagi para generasi masa depan.
+          Jakarta Islamic School is a high school committed to providing high-quality education that shapes excellent character for future generations.
           </p>
         </div>
       </section>
@@ -145,27 +143,24 @@ export default function Home() {
         className="bg-gray-100 py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-bold text-center mb-8">Program Unggulan</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">Featured Program</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">STEM</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Program pendidikan ilmu pengetahuan, teknologi, teknik, dan matematika yang menantang untuk membekali siswa
-                dengan keterampilan inovatif dan keahlian teknis.
+              Explore self-expression through visual arts, music, theater, and more in a supportive and creativity-encouraging environment.
               </p>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-md">
-              <h3 className="text-xl font-bold mb-2">Bahasa dan Budaya</h3>
+              <h3 className="text-xl font-bold mb-2">Literature and culture</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Pelajari bahasa asing dan apresiasi terhadap berbagai budaya di dunia dengan program bahasa dan budaya kami
-                yang komprehensif.
+              Learn a foreign language and appreciate the world's cultures with our comprehensive language and culture programs.
               </p>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-md">
-              <h3 className="text-xl font-bold mb-2">Seni dan Kreativitas</h3>
+              <h3 className="text-xl font-bold mb-2">Arts and Craft</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Eksplorasi ekspresi diri melalui seni rupa, musik, teater, dan banyak lagi, dalam lingkungan yang mendukung
-                dan mendorong kreativitas.
+              Explore self-expression through visual arts, music, theater, and more in an environment that supports and fosters creativity.
               </p>
             </div>
           </div>
@@ -179,7 +174,7 @@ export default function Home() {
         className="bg-white py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-bold text-center mb-8">Artikel Terbaru</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">Recent news</h2>
           {loading && <div>Loading...</div>}
           {error && <div>Error: {error.message}</div>}
           {!loading && !error && (
@@ -233,12 +228,12 @@ export default function Home() {
         className="bg-white py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-bold text-center mb-8">Hubungi Kami</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">Contact Us</h2>
           <p className="text-lg text-center">
-            Alamat: Jalan Manunggal I, Komplek Kodam No.17, RT.11/RW.6, Cipinang Melayu, Kec. Makasar, Kota Jakarta Timur,
+            Address: Jalan Manunggal I, Komplek Kodam No.17, RT.11/RW.6, Cipinang Melayu, Kec. Makasar, Kota Jakarta Timur,
             Daerah Khusus Ibukota Jakarta 13620
           </p>
-          <p className="text-lg text-center">Telepon: (XXX) XXX-XXXX</p>
+          <p className="text-lg text-center">Call: (021) 7200182</p>
           <p className="text-lg text-center">Email: info@jakartaislamicschool.com</p>
           <p className="text-lg text-center">
             Website: <a href="#" className="text-blue-500 hover:underline">www.jakartaislamicschool.com</a>

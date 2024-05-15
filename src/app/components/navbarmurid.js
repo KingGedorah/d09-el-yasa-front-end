@@ -37,16 +37,16 @@ const Navbarmurid = ({ role }) => {
           </a>
           <nav className="hidden md:flex gap-4 text-sm">
             <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
-              Beranda
+              Home
             </a>
             <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
-              Akademik
+              Academics
             </a>
             <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
-              Peminjaman Fasilitas
+              Facility Request
             </a>
             <a className="font-medium text-gray-500 dark:text-gray-400" href={`/nilai/${role}`}>
-              Nilai
+              Scores
             </a>
           </nav>
           <div className="flex items-center gap-4 md:gap-6">
@@ -63,7 +63,7 @@ const Navbarmurid = ({ role }) => {
               </div>
             ) : (
               <button type="button" className="text-sm font-medium">
-                <a href='/user/login'>Masuk</a>
+                <a href='/user/login'>Login</a>
               </button>
             )}
           </div>
