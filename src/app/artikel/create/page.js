@@ -10,10 +10,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import 'react-quill/dist/quill.snow.css';
+import Navbaradmin from '@/app/components/navbaradmin';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const CreateArticle = () => {
+  const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [judulArtikel, setJudulArtikel] = useState('');
   const [isiArtikel, setIsiArtikel] = useState('');
@@ -25,7 +27,10 @@ const CreateArticle = () => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      const decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      console.log(decoded.id + decoded.role)
     } else {
       console.log("Need to login");
       redirect('/user/login');
@@ -91,7 +96,7 @@ const CreateArticle = () => {
 
   return (
     <div>
-      <Navbar />
+      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
         <h1 className="text-2xl font-semibold mb-4 text-center">Buat Artikel</h1>
         <form onSubmit={handleSubmit}>
