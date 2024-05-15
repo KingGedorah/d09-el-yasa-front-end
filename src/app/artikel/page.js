@@ -15,6 +15,7 @@ import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import { FaRegSadCry } from 'react-icons/fa';
 import FadeIn from '../components/fadein-div';
+import { parseJwt } from '../utils/jwtUtils';
 
 const ArtikelList = () => {
   const router = useRouter();
@@ -185,7 +186,7 @@ const ArtikelList = () => {
             )}
           </div>
           <div className='flex flex-col gap-4'>
-            {decodedToken.role === "ADMIN" && (
+            {decodedToken && decodedToken.role === "ADMIN" && (
               <Link href="/artikel/create" className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'
                 onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
                 onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}
