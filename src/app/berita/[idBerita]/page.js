@@ -13,6 +13,7 @@ import axios from 'axios';
 import { FaArrowLeft } from 'react-icons/fa';
 import { redirect } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
+import Navbarguru from '@/app/components/navbarguru';
 
 const BeritaDetail = ({ params }) => {
   const router = useRouter();
