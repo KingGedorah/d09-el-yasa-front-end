@@ -15,7 +15,6 @@ import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import { FaRegSadCry } from 'react-icons/fa';
 import FadeIn from '../components/fadein-div';
-import { parseJwt } from '../utils/jwtUtils';
 
 const ArtikelList = () => {
   const router = useRouter();
