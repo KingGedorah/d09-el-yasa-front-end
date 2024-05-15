@@ -88,9 +88,13 @@ export default function Home() {
       <Navbar role={id} />
       <main
         ref={(el) => (sectionsRef.current[0] = el)}
-        style={sectionStyle}
+        style={{
+          ...sectionStyle,
+          backgroundImage: `url('https://lh3.googleusercontent.com/p/AF1QipOh2VaGBWKKwXGEHF6hzevdXpC_biIRDbxrvHgF=s1360-w1360-h1020')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
         className="py-16 md:py-24 lg:py-32 hero-bg"
-        style={{ backgroundImage: `url('https://lh3.googleusercontent.com/p/AF1QipOh2VaGBWKKwXGEHF6hzevdXpC_biIRDbxrvHgF=s1360-w1360-h1020')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         <div className="container px-4 md:px-6 flex items-center justify-center">
           <div className="w-full max-w-sm space-y-4">

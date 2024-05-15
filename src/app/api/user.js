@@ -113,3 +113,18 @@ export const getScoreByIdSiswa = async (IdUser) => {
     throw error;
   }
 };
+
+export const getScoreByIdScore = async (idScore) => {
+  try {
+    const response = await fetch(`${BASE_URL}/score/${idScore}`);
+    if (response.status == 404) {
+      return null
+    } else {
+      const data = await response.json();
+    return data.data;
+    }
+  } catch (error) {
+    console.error('Error fetching score by ID User:', error);
+    throw error;
+  }
+};
