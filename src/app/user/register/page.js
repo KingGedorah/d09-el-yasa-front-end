@@ -1,11 +1,14 @@
 // ./src/app/user/register/page.js
 
+
+
 "use client";
 
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
+import Link from 'next/link';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -13,8 +16,8 @@ const RegisterPage = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [role, setRole] = useState('guru'); // Default role
   const [error, setError] = useState('');
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false); // State for modal visibility
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -45,6 +48,11 @@ const RegisterPage = () => {
       setIsError(true)
       setError('Registration failed. Please try again.');
     }
+  };
+
+  const closeModal = () => {
+    setIsSuccessModalOpen(false);
+    window.location.href = '/user/login';
   };
 
   return (
@@ -164,9 +172,24 @@ const RegisterPage = () => {
               </button>
             </div>
           </form>
+          {/* Error message */}
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </div>
+      {/* Success modal */}
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6">
+            <p className="text-center text-green-600 text-xl font-semibold mb-4">Registrasi Berhasil!</p>
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 font-nunito-sans"
+            >
+              Login
+            </button>
+          </div>
+        </div>
+      )}
       <Footer />
       {isSuccess && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">

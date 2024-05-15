@@ -13,8 +13,10 @@ import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 import Select from 'react-select'; // Import react-select
+import Navbarmurid from '@/app/components/navbarmurid';
 
 const CreatePeminjaman = () => {
+  const [id, setId] = useState('');
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const [idPeminjam, setIdPeminjam] = useState('');
@@ -149,7 +151,7 @@ const CreatePeminjaman = () => {
 
   return (
     <div>
-      <Navbar />
+      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg mb-32">
         <h1 className="text-2xl font-semibold mb-4 text-center">Create Request</h1>
         <form onSubmit={handleSubmit}>
