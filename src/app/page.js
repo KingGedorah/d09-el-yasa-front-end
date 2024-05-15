@@ -83,6 +83,11 @@ export default function Home() {
     transition: 'opacity 1s ease-in-out'
   };
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 100 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
     <div>
       <Navbar role={id} />
@@ -122,7 +127,7 @@ export default function Home() {
       <section
         ref={(el) => (sectionsRef.current[1] = el)}
         style={sectionStyle}
-        className="bg-white dark:bg-gray-950 py-16 md:py-24 lg:py-32"
+        className="bg-white py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl font-bold text-center mb-8">Tentang Kami</h2>
@@ -137,26 +142,26 @@ export default function Home() {
       <section
         ref={(el) => (sectionsRef.current[2] = el)}
         style={sectionStyle}
-        className="bg-gray-100 dark:bg-gray-900 py-16 md:py-24 lg:py-32"
+        className="bg-gray-100 py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl font-bold text-center mb-8">Program Unggulan</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+            <div className="bg-white p-8 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">STEM</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Program pendidikan ilmu pengetahuan, teknologi, teknik, dan matematika yang menantang untuk membekali siswa
                 dengan keterampilan inovatif dan keahlian teknis.
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+            <div className="bg-white p-8 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">Bahasa dan Budaya</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Pelajari bahasa asing dan apresiasi terhadap berbagai budaya di dunia dengan program bahasa dan budaya kami
                 yang komprehensif.
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+            <div className="bg-white p-8 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">Seni dan Kreativitas</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Eksplorasi ekspresi diri melalui seni rupa, musik, teater, dan banyak lagi, dalam lingkungan yang mendukung
@@ -171,7 +176,7 @@ export default function Home() {
       <section
         ref={(el) => (sectionsRef.current[3] = el)}
         style={sectionStyle}
-        className="bg-white dark:bg-gray-950 py-16 md:py-24 lg:py-32"
+        className="bg-white py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl font-bold text-center mb-8">Artikel Terbaru</h2>
@@ -225,7 +230,7 @@ export default function Home() {
       <section
         ref={(el) => (sectionsRef.current[4] = el)}
         style={sectionStyle}
-        className="bg-white dark:bg-gray-950 py-16 md:py-24 lg:py-32"
+        className="bg-white py-16 md:py-24 lg:py-32"
       >
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl font-bold text-center mb-8">Hubungi Kami</h2>
