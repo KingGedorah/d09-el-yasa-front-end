@@ -55,7 +55,7 @@ const FormInputScore = ({ params }) => {
                 const response = await getKelasByIdKelas(idKelas);
                 setKelasInfo(response.data);
             } catch (error) {
-                router.push(`/error/500`);
+                // router.push(`/error/500`);
             }
         };
 
@@ -164,7 +164,7 @@ const FormInputScore = ({ params }) => {
 
     const handleSuccessPopup = () => {
         setIsSuccess(false);
-        router.push(`/kelas/${idKelas}`)
+        router.push(`/kelas/mapel/${idMapel}`)
     };
 
     const handleErrorPopup = () => {

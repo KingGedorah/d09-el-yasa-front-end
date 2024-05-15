@@ -25,7 +25,7 @@ const DetailMapel = ({ params }) => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [materiInfo, setMateriInfo] = useState([]);
-  const [mapelInfo, setMapelInfo] = useState({});
+  const [mapelInfo, setMapelInfo] = useState('');
   const [scoreInfo, setScoreInfo] = useState([]);
   const [materiFetched, setMateriFetched] = useState(false);
   const [nilaiFetched, setNilaiFetched] = useState(false);
@@ -62,6 +62,7 @@ const DetailMapel = ({ params }) => {
     const fetchMapelInfo = async () => {
       try {
         const mapelData = await KelasApi.getMapelByIdMapel(idMapel);
+        setMapelInfo(mapelData.data.idKelas);
         if (mapelData.data.listKontenMapel == null) {
           setLoading(false);
           setMateriInfo([])
@@ -72,7 +73,6 @@ const DetailMapel = ({ params }) => {
           })
           const materiData = await Promise.all(materiPromises);
           setMateriInfo(materiData);
-          setMapelInfo(mapelData.data);
           setLoading(false);
         }
         setMateriFetched(true);
@@ -448,7 +448,7 @@ const DetailMapel = ({ params }) => {
                             <td className="py-2 px-4 border-b text-center">{fullName}</td>
                             <td className="py-2 px-4 border-b text-center">{averageScore.toFixed(2)}</td>
                             <td className="py-2 px-4 border-b text-center">
-                              <Link legacyBehavior href={`/score/${idNilai}`}>
+                              <Link legacyBehavior href={`/nilai/update/${idNilai}`}>
                                 <a className="text-blue-500 hover:underline text-center">Edit</a>
                               </Link>
                             </td>
@@ -481,7 +481,7 @@ const DetailMapel = ({ params }) => {
             </Link>
           )}
           {decodedToken.role === "GURU" && activeTab === 'nilai' && (
-            <Link href={`/kelas/${mapelInfo.idKelas}/input-score`} className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'
+            <Link href={`/kelas/${mapelInfo}/input-score`} className='flex gap-4 text-white bg-[#6C80FF] text-center justify-center px-5 py-3 rounded-3xl'
               onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
               onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}
             >
