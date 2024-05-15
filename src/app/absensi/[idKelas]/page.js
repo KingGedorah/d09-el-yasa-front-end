@@ -75,6 +75,7 @@ const AbsensiList = ({ params }) => {
     <div>
       {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}
       {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}
       <div className="container mx-auto mt-8 p-8 bg-[#F3F5FB] rounded-lg shadow-md max-w-screen-lg">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">
