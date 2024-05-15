@@ -16,6 +16,8 @@ import FadeIn from '../components/fadein-div';
 
 const ArtikelList = () => {
   const router = useRouter();
+  const [decodedToken, setDecodedToken] = useState('');
+
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

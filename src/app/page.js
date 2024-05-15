@@ -4,10 +4,26 @@ import Head from 'next/head';
 import Navbar from './components/navbar';
 import { useState, useEffect, useRef } from 'react';
 import { parseJwt } from '@/app/utils/jwtUtils';
+import { getAllArticles, fetchImageData } from '@/app/api/artikel'
+import Link from 'next/link';
+import Image from 'next/image';
+import { FaRegSadCry } from 'react-icons/fa';
+
+const ArticleImage = ({ idArtikel, className }) => {
+  const [imageSrc, setImageSrc] = useState('');
+
+  useEffect(() => {
+    fetchImageData(idArtikel).then(setImageSrc).catch(console.error);
+  }, [idArtikel]);
+
+  return imageSrc ? <img src={imageSrc} className={className} alt="Article" /> : null;
+};
 
 export default function Home() {
   const [id, setId] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [articles, setArticles] = useState([]);
   const sectionsRef = useRef([]);
 
   useEffect(() => {
@@ -17,6 +33,22 @@ export default function Home() {
       setId(decodedToken.id);
     }
     setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    getAllArticles().then((data) => {
+      if (data && data.length > 0) {
+        setArticles(data.slice(0, 3)); // Mengambil 3 artikel terbaru
+      } else {
+        setArticles([]);
+      }
+      setLoading(false);
+    }).catch(error => {
+      console.error('Error fetching articles:', error);
+      setError(error);
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -58,6 +90,7 @@ export default function Home() {
         ref={(el) => (sectionsRef.current[0] = el)}
         style={sectionStyle}
         className="py-16 md:py-24 lg:py-32 hero-bg"
+        style={{ backgroundImage: `url('https://lh3.googleusercontent.com/p/AF1QipOh2VaGBWKKwXGEHF6hzevdXpC_biIRDbxrvHgF=s1360-w1360-h1020')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         <div className="container px-4 md:px-6 flex items-center justify-center">
           <div className="w-full max-w-sm space-y-4">
@@ -130,9 +163,63 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact */}
+      {/* Artikel Terbaru */}
       <section
         ref={(el) => (sectionsRef.current[3] = el)}
+        style={sectionStyle}
+        className="bg-white dark:bg-gray-950 py-16 md:py-24 lg:py-32"
+      >
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl font-bold text-center mb-8">Artikel Terbaru</h2>
+          {loading && <div>Loading...</div>}
+          {error && <div>Error: {error.message}</div>}
+          {!loading && !error && (
+            <div className="flex flex-col gap-4 w-full">
+              {articles.length === 0 ? (
+                <div className="text-center">
+                  <FaRegSadCry size={64} className="text-gray-400 mx-auto" />
+                  <p className="text-lg font-semibold mt-4">There's no artikel has been posted</p>
+                  <p className="text-sm text-gray-600">Make one now !</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {articles.map((article, index) => (
+                    <div
+                      key={index}
+                      className="p-4 border-[1px] border-[#8D6B94] w-full rounded-xl artikel-item"
+                      style={{
+                        transition: 'transform 0.3s',
+                        transform: 'scale(1)',
+                      }}
+                      onMouseEnter={(event) => event.target.style.transform = 'scale(1.05)'}
+                      onMouseLeave={(event) => event.target.style.transform = 'scale(1)'}
+                    >
+                      <div className='flex justify-center'>
+                        {article.imageArtikel ? (
+                          <ArticleImage idArtikel={article.idArtikel} className="w-full h-48 object-cover" />
+                        ) : (
+                          <Image src="https://via.placeholder.com/600x400" width="600" height="400" objectFit="cover" alt="Placeholder" loading="lazy" />
+                        )}
+                      </div>
+                      <Link href={`/artikel/${article.idArtikel}`} passHref>
+                        <h2 className='text-2xl text-center mb-4 mt-4 font-extrabold'>{article.judulArtikel}</h2>
+                      </Link>
+                      <div dangerouslySetInnerHTML={{ __html: article.isiArtikel.slice(0, 150) }} />
+                      <Link href={`/artikel/${article.idArtikel}`} passHref>
+                        <button className="mt-2 bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] px-4 py-2 rounded-md cursor-pointer">Baca Selengkapnya</button>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section
+        ref={(el) => (sectionsRef.current[4] = el)}
         style={sectionStyle}
         className="bg-white dark:bg-gray-950 py-16 md:py-24 lg:py-32"
       >
@@ -152,7 +239,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer
-        ref={(el) => (sectionsRef.current[4] = el)}
+        ref={(el) => (sectionsRef.current[5] = el)}
         style={sectionStyle}
         className="bg-gray-900 text-white text-center py-6"
       >
