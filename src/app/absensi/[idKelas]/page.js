@@ -81,7 +81,6 @@ const AbsensiList = ({ params }) => {
           <div className="w-full lg:w-2/3">
             {loading && <div>Loading...</div>}
             {error && <div>Error: {error.message}
-            {absensiList?.length === 0 && (<div className='text-center text-black'>No Attendance Recorded</div>)}
             </div>}
             {!loading && !error && (
             <div className="flex flex-col gap-4">
@@ -105,7 +104,7 @@ const AbsensiList = ({ params }) => {
                   </div>
                 </div>
               )) : (
-                <div className='text-center text-black'>Tidak ada absensi</div>
+                <div className='text-center text-black'>No Attendance Recorded</div>
               )}
             </div>
           )}
