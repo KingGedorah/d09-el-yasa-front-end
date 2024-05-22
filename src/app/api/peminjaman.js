@@ -17,10 +17,13 @@ export const getAllInventory = async () => {
 export const getAllPeminjaman = async () => {
   try {
     const response = await fetch(`${BASE_URL}/borrow/view-all`);
+    const data = await response.json();
+    if (!response.ok && data.message && data.message === 'Data not found') {
+      return [];
+    }
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    const data = await response.json();
     return data.data;
   } catch (error) {
     console.error('Error fetching peminjaman:', error);

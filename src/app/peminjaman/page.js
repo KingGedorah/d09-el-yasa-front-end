@@ -41,7 +41,7 @@ const PeminjamanList = () => {
       setId(decoded.id);
       console.log(decodedToken)
       // Redirect
-      if (decoded.role !== "STAFF" && decoded.role !== "MURID") {
+      if (decoded.role !== "STAFF" && decoded.role !== "MURID" && decoded.role !== "ADMIN") {
         router.push('/inventory/view-all');
       }
     } else {
@@ -83,12 +83,13 @@ const PeminjamanList = () => {
           return statusPriority[a.status] - statusPriority[b.status];
         })
 
-        console.log(finalData)
+        console.log(finalData);
         setPeminjaman(finalData);
-        setLoading(false);
       } catch (error) {
-        console.log(error)
-        router.push('/error/500');
+        console.log(error);
+        setError(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -119,7 +120,8 @@ const PeminjamanList = () => {
   return (
     <div>
       {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={decodedToken.id} />}  
-      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}  
+      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
+      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={decodedToken.id} />}  
 
       <div className="mx-auto mt-8 px-12 rounded-lg mb-32">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
