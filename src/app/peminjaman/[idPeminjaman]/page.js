@@ -19,9 +19,10 @@ import { confirmPeminjaman } from '@/app/api/peminjaman';
 import { declinePeminjaman } from '@/app/api/peminjaman';
 import { deletePeminjaman } from '@/app/api/peminjaman';
 import Navbarmurid from '@/app/components/navbarmurid';
+import Navbaradmin from '@/app/components/navbaradmin';
 
 const DetailPeminjaman = (params) => {
-  const {idPeminjaman} = params;
+  const {idPeminjaman} = params.params;
   const router = useRouter()
   const [decodedToken, setDecodedToken] = useState('');
 
@@ -86,7 +87,7 @@ const DetailPeminjaman = (params) => {
 
   useEffect(() => {
     if (decodedToken) {
-      if (decodedToken.role === 'MURID' || decodedToken.role === 'STAFF') {
+      if (decodedToken.role === 'MURID' || decodedToken.role === 'STAFF' || decodedToken.role === 'ADMIN') {
         //Authorized
       } else {
         redirect(`/inventaris/view-all`);
@@ -111,7 +112,7 @@ const DetailPeminjaman = (params) => {
     };
 
     fetchData();
-  }, [decodedToken]); 
+  }, []); 
 
 
   useEffect(() => {
@@ -220,6 +221,7 @@ const DetailPeminjaman = (params) => {
     <div>
       {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
       {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={decodedToken.id} />}
+      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={decodedToken.id} />}
 
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg mb-32">
         <h1 className="text-2xl font-semibold mb-4 text-center">Request Detail</h1>
