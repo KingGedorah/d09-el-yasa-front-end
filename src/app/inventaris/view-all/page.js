@@ -36,11 +36,12 @@ const ViewAllInventory = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const inventoryData = await InventoryApi.getAllInventory();
+        const inventoryData = await InventoryApi.getAllInventory(); 
         setInventoryList(inventoryData);
         setLoading(false);
       } catch (error) {
         setError(error);
+      } finally {
         setLoading(false);
       }
     };
@@ -49,33 +50,33 @@ const ViewAllInventory = () => {
   }, []);
 
   return (
-    <div className="bg-white dark:bg-gray-950">
+    <div className="bg-[#F3F5FB] ">
       {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
       {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}   
       {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}   
       {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}    
       <div className="container mx-auto flex justify-center mt-8">
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
-          <h2 className="text-3xl font-bold mb-4 text-center">Daftar Inventaris</h2>
+          <h2 className="text-3xl font-bold mb-4 text-center">Inventory</h2>
           <Link href="/inventaris/create" passHref>
             <div className="flex flex-col items-center">
-              <button className="btext-white bg-[#6C80FF] text-center text-white px-4 py-2 rounded-md cursor-pointer mb-4">
-                Tambah Inventaris
+              <button className=" bg-[#6C80FF] text-center text-white px-4 py-2 rounded-md cursor-pointer mb-4">
+                Create Inventory
               </button>
             </div>
           </Link>
           {loading && <p>Loading...</p>}
-          {!loading && !error && inventoryList.length > 0 ? (
+          {!loading && !error && inventoryList?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {inventoryList.map((item, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden border border-dotted border-gray-300 transition-transform duration-300 hover:transform hover:scale-105">
-                  <div className="p-4 flex flex-col items-center border-[1px] border-[#6C80FF]">
+                <div key={index} className="bg-white rounded-lg shadow-sm border border-[#6C80FF] transition-transform duration-300 hover:transform hover:scale-105">
+                  <div className="p-4 flex flex-col items-center ">
                     <div className="flex justify-center items-center mb-4">
                       <div className="w-32 h-32">
                         <InventoryImage idInventaris={item.idItem} className="w-full h-full object-cover"/>
                       </div>
                     </div>
-                    <h2 className="text-base mb-2">Nama Item: {item.namaItem}</h2>
+                    <h2 className="text-base mb-2">Item name: {item.namaItem}</h2>
                     <h2 className="text-base mb-2">Quantity: {item.quantityItem}</h2>
                     <h2 className="text-base mb-4">Quantity Borrowed: {item.quantityBorrowed}</h2>
                     <Link href={`/inventaris/update/${item.idItem}`} passHref>
@@ -87,9 +88,13 @@ const ViewAllInventory = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <p>Tidak ada inventaris yang tersedia.</p>
-          )}
+          ) : inventoryList.length === 0 && (
+              <div className="text-center">
+                <p className="text-lg font-semibold mt-4">Inventory Data Not Found</p>
+                <p className="text-sm text-gray-600">You don't have any existing Inventory</p>
+              </div>
+            )
+          }
         </main>
       </div>
       <Footer />

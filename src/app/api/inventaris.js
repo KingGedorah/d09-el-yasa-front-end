@@ -4,13 +4,38 @@ const baseUrl = 'https://myjisc-inventaris-146c107038ee.herokuapp.com/api/invent
 
 export const getAllInventory = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/view-all`);
-    return response.data.data;
+    const response = await fetch(`${baseUrl}/view-all`);
+    const data = await response.json();
+    if (!response.ok && data.message && data.message === 'Data not found') {
+      return [];
+    }
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return data.data;
   } catch (error) {
     console.error('Error fetching inventory:', error);
     return null;
   }
 };
+
+export const getAllPeminjaman = async () => {
+  try {
+    const response = await fetch(`${baseUrl}/borrow/view-all`);
+    const data = await response.json();
+    if (!response.ok && data.message && data.message === 'Data not found') {
+      return [];
+    }
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching peminjaman:', error);
+    throw error; // Re-throw the error for handling in the component
+  }
+};
+
 
 export const getInventoryById = async (idInventory) => {
     try {
