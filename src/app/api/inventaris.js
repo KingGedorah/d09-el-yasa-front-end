@@ -12,6 +12,24 @@ export const getAllInventory = async () => {
   }
 };
 
+export const getAllPeminjaman = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/borrow/view-all`);
+    const data = await response.json();
+    if (!response.ok && data.message && data.message === 'Data not found') {
+      return [];
+    }
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching peminjaman:', error);
+    throw error; // Re-throw the error for handling in the component
+  }
+};
+
+
 export const getInventoryById = async (idInventory) => {
     try {
       const response = await axios.get(`${baseUrl}/${idInventory}`);
