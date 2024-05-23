@@ -118,7 +118,7 @@ const ViewAllKelas = () => {
       <div class="bg-[#F3F5FB]" style={{ marginBottom: '100px' }}>
         {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
         {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
-        <div class="container mx-auto flex justify-center mt-8 mb-16 justify-center">
+        <div class="container mx-auto flex justify-center mt-8 mb-16">
           <main class="w-4/5 md:w-3/5 lg:w-1/2 p-4">
             <div class="search-container">
               <h2 className="text-2xl mx-auto font-bold mb-4">Classes</h2>

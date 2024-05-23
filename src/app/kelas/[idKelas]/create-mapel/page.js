@@ -11,6 +11,7 @@ import { redirect } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import Navbarguru from '@/app/components/navbarguru';
+import Link from 'next/link';
 
 const FormCreateMapel = ({ params }) => {
   const [id, setId] = useState('');
@@ -135,8 +136,9 @@ const FormCreateMapel = ({ params }) => {
                 }}
               />
             </div>
-            <div className='grid place-items-end'>
-              <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 items-center">
+            <div className='flex gap-2 justify-end'>
+              <Link href={`/kelas/${idKelas}`} className="bg-white border-[1px] border-[#6C80FF] text-[#6C80FF] py-2 px-4 transition duration-300 w-20 rounded-md text-center">Cancel</Link>
+              <button type="submit" className="bg-[#6C80FF] text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 items-center">
                 Submit
               </button>
             </div>
