@@ -1,12 +1,13 @@
+// components/navbar.js
 import React, { useState, useEffect } from 'react';
 import { getUsersById } from '../api/user';
 
-const Navbar = ({ role }) => {
+const Navbar = ({ role, id }) => {
     const [userName, setUserName] = useState('');
 
     useEffect(() => {
-        if (role) {
-            getUsersById(role)
+        if (id) {
+            getUsersById(id)
                 .then(user => {
                     if (user) {
                         console.log(user);
@@ -17,13 +18,88 @@ const Navbar = ({ role }) => {
                     console.error('Error fetching user:', error);
                 });
         }
-    }, [role]);
+    }, [id]);
 
     const handleLogout = () => {
         // Clear session storage or remove the token
         sessionStorage.removeItem('jwtToken');
         // Redirect to login page or home page
         window.location.href = '/user/login';
+    };
+
+    const renderNavLinks = () => {
+        switch (role) {
+            case 'ADMIN':
+                return (
+                    <>
+                        <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
+                            Home
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Admin 1
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Admin 2
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Admin 3
+                        </a>
+                    </>
+                );
+            case 'GURU':
+                return (
+                    <>
+                        <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
+                            Menu Guru 1
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Meenu Guru 2
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                           Menu Guru 3
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Guru 4
+                        </a>
+                    </>
+                );
+            case 'STAFF':
+                return (
+                    <>
+                        <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
+                            Menu Staff 1
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Staff 2
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Staff 3
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Staff 4
+                        </a>
+                    </>
+                );
+            case 'MURID':
+                return (
+                    <>
+                        <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
+                            Menu Murid 1
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Murid 2
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Murid 3    
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
+                            Menu Murid 4
+                        </a>
+                    </>
+                );
+            default:
+                return null;
+        }
     };
 
     return (
@@ -36,12 +112,7 @@ const Navbar = ({ role }) => {
                         </span>
                     </a>
                     <nav className="hidden md:flex gap-4 text-sm">
-                        <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
-                            Home
-                        </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
-                            Academics
-                        </a>
+                        {renderNavLinks()}
                     </nav>
                     <div className="flex items-center gap-4 md:gap-6">
                         {userName ? (
