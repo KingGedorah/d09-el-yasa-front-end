@@ -36,11 +36,12 @@ const ViewAllInventory = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const inventoryData = await InventoryApi.getAllInventory();
+        const inventoryData = await InventoryApi.getAllInventory(); 
         setInventoryList(inventoryData);
         setLoading(false);
       } catch (error) {
         setError(error);
+      } finally {
         setLoading(false);
       }
     };
@@ -59,13 +60,13 @@ const ViewAllInventory = () => {
           <h2 className="text-3xl font-bold mb-4 text-center">Inventory</h2>
           <Link href="/inventaris/create" passHref>
             <div className="flex flex-col items-center">
-              <button className="text-white bg-[#6C80FF] text-center text-white px-4 py-2 rounded-md cursor-pointer mb-4">
+              <button className=" bg-[#6C80FF] text-center text-white px-4 py-2 rounded-md cursor-pointer mb-4">
                 Create Inventory
               </button>
             </div>
           </Link>
           {loading && <p>Loading...</p>}
-          {!loading && !error && inventoryList.length > 0 ? (
+          {!loading && !error && inventoryList?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {inventoryList.map((item, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-sm border border-[#6C80FF] transition-transform duration-300 hover:transform hover:scale-105">
@@ -87,9 +88,13 @@ const ViewAllInventory = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <p>No Inventory Available</p>
-          )}
+          ) : inventoryList.length === 0 && (
+              <div className="text-center">
+                <p className="text-lg font-semibold mt-4">Inventory Data Not Found</p>
+                <p className="text-sm text-gray-600">You don't have any existing Inventory</p>
+              </div>
+            )
+          }
         </main>
       </div>
       <Footer />
