@@ -67,7 +67,7 @@ const CreateAbsensiForm = ({ params }) => {
                     {loading && <div>Loading...</div>}
                     {error && <div>Error: {error.message}</div>}
                     <div className="max-w-lg mx-auto">
-                        <h1 className="text-3xl md:text-4xl font-extrabold font-nunito-sans text-center mb-8">Attendance Detail</h1>
+                        <h1 className="text-2xl md:text-4xl font-bold font-nunito text-center mb-8">Attendance Detail</h1>
                         <div className="space-y-4">
                             <div className="mb-4">
                                 <table className="w-full border-collapse border border-gray-300 text-center">
