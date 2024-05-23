@@ -20,6 +20,7 @@ const ArticleImage = ({ idArtikel, className }) => {
 };
 
 export default function Home() {
+  const [role, setRole] = useState('')
   const [id, setId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,6 +31,8 @@ export default function Home() {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
       const decodedToken = parseJwt(token);
+      console.log(decodedToken.role)
+      setRole(decodedToken.role)
       setId(decodedToken.id);
     }
     setLoading(false);
@@ -90,7 +93,7 @@ export default function Home() {
 
   return (
     <div>
-      <Navbar role={id} />
+      <Navbar role={role} id={id}/>
       <main
         ref={(el) => (sectionsRef.current[0] = el)}
         style={{
