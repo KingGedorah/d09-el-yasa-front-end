@@ -94,9 +94,9 @@ const ViewAllKelas = ({ params }) => {
       await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/mapel/${mapelId}`);
 
       // Pengecekan jika terdapat nilai siswa dari mapel tersebut
-      const scoreResponse = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/view-all/mapel/${mapelId}`);
+      const scoreResponse = await axios.get(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/view-all/mapel/${mapelId}`);
       if (scoreResponse.status === 200) {
-        await axios.delete(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/delete/mape/${mapelId}`);
+        await axios.delete(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/delete/mape/${mapelId}`);
       }
 
       setIsSuccessDelete(true);

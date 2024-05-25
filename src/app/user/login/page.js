@@ -1,6 +1,4 @@
-// ./src/app/user/login/page.js
-
-"use client";
+"use client"
 
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
@@ -9,6 +7,7 @@ import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -18,13 +17,13 @@ const LoginPage = () => {
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(true);
-  const [showHomePage, setShowHomePage] = useState(false); 
+  const [showHomePage, setShowHomePage] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('https://myjisc-user-e270dbbfd631.herokuapp.com/api/v1/auth/authenticate', {
+      const response = await axios.post('https://myjisc-user-c9e48ced667a.herokuapp.com/api/v1/auth/authenticate', {
         email,
         password
       });
@@ -47,7 +46,6 @@ const LoginPage = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('jwtToken');
     window.location.href = '/user/login';
-    
   };
 
   useEffect(() => {
@@ -87,10 +85,10 @@ const LoginPage = () => {
           <SpinLoading />
         </div>
       )}
-      
-      <main className={`py-16 md:py-24 lg:py-32 bg-[#F3F5FB] ${showLoginForm ? 'fade-in' : ''}`}>
+
+      <main className={`py-16 md:py-24 lg:py-32 relative`} style={{ backgroundImage: `url('https://static.republika.co.id/uploads/images/inpicture_slide/smu-jakarta-islamic-school-jisc-berhasil-menduduki-peringkat-ke-9_220912204145-829.jpeg')`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '100vh', height: '100vh' }}>
         <div className="container px-4 md:px-6 flex items-center justify-center mx-auto">
-          <div className="w-full max-w-sm space-y-4 p-8 bg-white rounded-xl shadow-lg login-form">
+          <div className="w-full max-w-sm space-y-4 p-8 bg-white rounded-xl shadow-lg login-form" style={{ backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
             <div className="space-y-2">
               <h1 className="text-3xl font-extrabold font-nunito-sans">Welcome Back!</h1>
               <p className="text-gray-400 font-nunito">
@@ -119,7 +117,7 @@ const LoginPage = () => {
                     Password
                   </label>
                   <input
-                    required 
+                    required
                     className="h-10 w-full rounded-md border border-[#6C80FF] px-3 py-2 text-sm placeholder-gray-400 font-nunito-sans"
                     id="password"
                     type="password"
@@ -141,6 +139,7 @@ const LoginPage = () => {
           </div>
         </div>
       </main>
+
 
       {isError && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">

@@ -19,7 +19,7 @@ const UserDetail = ({ params }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/user/${IdUser}`);
+        const response = await axios.get(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/user/${IdUser}`);
         setUser(response.data);
         setLoading(false);
       } catch (error) {

@@ -48,7 +48,7 @@ const InputNilaiForm = ({ params }) => {
         const fetchScoreData = async (idScore) => {
             try {
                 const res = await axios.get(
-                    `https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/${idScore}`
+                    `https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/${idScore}`
                 );
                 return res.data;
             } catch (err) {
@@ -94,7 +94,7 @@ const InputNilaiForm = ({ params }) => {
         e.preventDefault();
         try {
             const res = await axios.put(
-                `https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/update/${idNilai}`,
+                `https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/update/${idNilai}`,
                 nilaiData
             );
             console.log("Nilai submitted successfully");

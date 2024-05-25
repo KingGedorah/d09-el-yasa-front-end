@@ -147,7 +147,7 @@ const FormInputScore = ({ params }) => {
         }
 
         try {
-            const response = await axios.post('https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/input', {
+            const response = await axios.post('https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/input', {
                 idSiswa: selectedNisn.value,
                 idMapel: selectedMapel.value,
                 tipeNilai: tipeNilai,

@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 
 const fetchUserScores = async (IdUser) => {
   try {
-    const response = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/score/view-all/siswa/${IdUser}`);
+    const response = await axios.get(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/view-all/siswa/${IdUser}`);
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch user scores');

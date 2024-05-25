@@ -1,7 +1,5 @@
 // ./src/app/user/register/page.js
 
-
-
 "use client";
 
 import React, { useState } from 'react';
@@ -34,7 +32,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://myjisc-user-e270dbbfd631.herokuapp.com/api/v1/auth/Register', {
+      await axios.post('https://myjisc-user-c9e48ced667a.herokuapp.com/api/v1/auth/Register', {
         username,
         firstname: firstName,
         lastname: lastName,
@@ -144,22 +142,10 @@ const RegisterPage = () => {
                 />
               </div>
 
-              {/* <div className="space-y-1">
-                <label htmlFor="role" className="inline-block text-sm font-medium font-nunito-sans">
-                  Role
-                </label>
-                <select
-                  className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-nunito-sans"
-                  id="role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  style={{ color: 'black' }}
-                >
-                  <option value="guru">Guru</option>
-                  <option value="siswa">Siswa</option>
-                  <option value="admin">ADMIN</option>
-                </select>
-              </div> */}
+              {/* Already have an account link */}
+              <div className="text-sm font-nunito-sans">
+                <p>Already have an account? <Link legacyBehavior href="/user/login"><a className="text-blue-500">Login</a></Link></p>
+              </div>
             </div>
 
             {/* Submit */}
@@ -194,7 +180,7 @@ const RegisterPage = () => {
       {isSuccess && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
-            <p className="text-green-600 font-semibold">Account registered succesfully</p>
+            <p className="text-green-600 font-semibold">Account registered successfully</p>
             <button onClick={handleSuccessPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
           </div>
         </div>
