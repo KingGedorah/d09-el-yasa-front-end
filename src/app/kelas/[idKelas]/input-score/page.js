@@ -37,10 +37,7 @@ const FormInputScore = ({ params }) => {
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
         if (token) {
-            decoded = parseJwt(token);
-            setDecodedToken(decoded);
-            setId(decoded.id);
-            setRole(decoded.role);
+            setDecodedToken(parseJwt(token));
         } else {
             redirect('/user/login');
         }
@@ -50,6 +47,8 @@ const FormInputScore = ({ params }) => {
         if (decodedToken) {
             if (decodedToken.role === 'GURU') {
                 //Authorized
+                setId(decodedToken.id)
+                setRole(decodedToken.role)
             } else {
                 redirect(`/kelas/${idKelas}`);
             }
