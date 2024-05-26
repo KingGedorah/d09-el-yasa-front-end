@@ -25,6 +25,8 @@ const DetailPeminjaman = (params) => {
   const {idPeminjaman} = params.params;
   const router = useRouter()
   const [decodedToken, setDecodedToken] = useState('');
+  const [role, setRole] = useState('');
+  const [id, setId] = useState('');
 
   const [idPeminjam, setIdPeminjam] = useState('');
   const [namaPeminjam, setNamaPeminjam] = useState('');
@@ -49,7 +51,10 @@ const DetailPeminjaman = (params) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      setRole(decoded.role);
     }
   }, []);
   
@@ -219,9 +224,7 @@ const DetailPeminjaman = (params) => {
 
   return (
     <div>
-      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
-      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={decodedToken.id} />}
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={decodedToken.id} />}
+      <Navbar id={id} role={role}/>
 
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg mb-32">
         <h1 className="text-2xl font-semibold mb-4 text-center">Request Detail</h1>

@@ -19,6 +19,7 @@ import Navbarmurid from '../components/navbarmurid';
 const PeminjamanList = () => {
   const router = useRouter();
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const [decodedToken, setDecodedToken] = useState(null);
   const [peminjaman, setPeminjaman] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,8 @@ const PeminjamanList = () => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
       const decoded = parseJwt(token);
+      setId(decoded.id);
+      setRole(decoded.role);
       setDecodedToken(decoded); 
       if (!decodedToken) {
         return
