@@ -18,7 +18,7 @@ import { AiOutlineWarning } from 'react-icons/ai';
 import Navbarguru from '@/app/components/navbarguru';
 import Navbaradmin from '@/app/components/navbaradmin';
 import FadeIn from '@/app/components/fadein-div';
-import { FaBook } from 'react-icons/fa';
+import { FaBook, FaArrowLeft } from 'react-icons/fa';
 
 
 const ViewAllKelas = ({ params }) => {
@@ -134,6 +134,12 @@ const ViewAllKelas = ({ params }) => {
         <Navbar id={id} role={role}/>
         <div class="container mx-auto flex justify-center mt-8 mb-16">
           <main class="w-4/5 md:w-3/5 lg:w-1/2 p-4">
+          <div className="flex items-center mb-4">
+            <Link href="/kelas/myclass" className="text-[#6C80FF] flex items-center gap-2">
+              <FaArrowLeft className="text-[#6C80FF]" />
+              MyClass
+            </Link>
+          </div>
             <div class="search-container">
               <h2 className="text-2xl text-center font-bold mb-4">Welcome to {kelasInfo.namaKelas}</h2>
               <div className='relative'>

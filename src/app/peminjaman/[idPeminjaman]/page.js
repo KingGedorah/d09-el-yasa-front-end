@@ -235,25 +235,6 @@ const DetailPeminjaman = (params) => {
               <input disabled type="text" id="namaPeminjam" value={peminjaman?.nama} onChange={(e) => setNamaPeminjam(e.target.value)} name="namaPeminjam" className="border disabled cursor-not-allowed border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />
             </div>
 
-            {/* <div className="mb-4">
-            <label htmlFor="kelasDipinjam" className="block text-gray-700 font-bold mb-2">Kelas Dipinjam</label>
-            <select
-                id="kelasDipinjam"
-                value={kelasDipinjam}
-                onChange={(e) => setKelasDipinjam(e.target.value)}
-                name="kelasPeminjam"
-                className="border border-[#6C80FF] rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500"
-                required
-            >
-                <option value="">Select a class</option>
-                {kelas.map((item) => (
-                <option key={item.idKelas} value={item.idKelas}>
-                    {item.namaKelas}
-                </option>
-                ))}
-            </select>
-            </div> */}
-
             <div className="mb-4">
               <label htmlFor="keperluanPeminjaman" className="block text-gray-700 font-bold mb-2">Request Purpose</label>
               <input disabled type="text" id="keperluanPeminjaman" value={peminjaman?.keperluanPeminjaman} onChange={(e) => setKeperluanPeminjaman(e.target.value)} name="keperluanPeminjaman" className="border border-[#6C80FF] cursor-not-allowed rounded-xl py-2 px-4 w-full focus:outline-none focus:border-blue-500" required />

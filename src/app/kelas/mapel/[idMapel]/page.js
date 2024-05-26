@@ -11,8 +11,7 @@ import SpinLoading from '@/app/components/spinloading';
 import { useRouter } from 'next/navigation';
 import { AiOutlineWarning } from 'react-icons/ai';
 import { parseJwt } from '@/app/utils/jwtUtils';
-import Navbarmurid from '@/app/components/navbarmurid';
-import Navbarguru from '@/app/components/navbarguru';
+import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import FadeIn from '@/app/components/fadein-div';
 import Chart from 'chart.js/auto';
@@ -28,6 +27,7 @@ const DetailMapel = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [materiInfo, setMateriInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState('');
+  const [idKelas, setIdKelas] = useState(null);
   const [scoreInfo, setScoreInfo] = useState([]);
   const [materiFetched, setMateriFetched] = useState(false);
   const [nilaiFetched, setNilaiFetched] = useState(false);
@@ -67,6 +67,7 @@ const DetailMapel = ({ params }) => {
       try {
         const mapelData = await KelasApi.getMapelByIdMapel(idMapel);
         setMapelInfo(mapelData.data.idKelas);
+        setIdKelas(mapelData.data.idKelas);
         if (mapelData.data.listKontenMapel == null) {
           setLoading(false);
           setMateriInfo([])
@@ -280,40 +281,14 @@ const DetailMapel = ({ params }) => {
 
   return (
     <FadeIn>
-      <Navbar id={id} role={role}/>
+      <Navbar id={id} role={role} />
       <div className="container mx-auto flex justify-center mt-8" style={{ marginBottom: '100px' }}>
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
-          <div className="tabs mb-4 flex" style={{ display: 'flex', gap: '10px' }}>
-            <button
-              className={`tab${activeTab === 'materi' ? ' active' : ''}`}
-              onClick={() => setActiveTab('materi')}
-              style={{
-                padding: '10px 20px',
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-                backgroundColor: activeTab === 'materi' ? '#007bff' : '#fff',
-                color: activeTab === 'materi' ? '#fff' : '#000',
-                cursor: 'pointer',
-                outline: 'none',
-              }}
-            >
-              Materi
-            </button>
-            <button
-              className={`tab${activeTab === 'nilai' ? ' active' : ''}`}
-              onClick={() => setActiveTab('nilai')}
-              style={{
-                padding: '10px 20px',
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-                backgroundColor: activeTab === 'nilai' ? '#007bff' : '#fff',
-                color: activeTab === 'nilai' ? '#fff' : '#000',
-                cursor: 'pointer',
-                outline: 'none',
-              }}
-            >
-              Nilai
-            </button>
+          <div className="flex items-center mb-4">
+            <Link href={`/kelas/${idKelas}`} className="text-[#6C80FF] flex items-center gap-2">
+              <FaArrowLeft className="text-[#6C80FF]" />
+              My Subject
+            </Link>
           </div>
 
           {activeTab === 'materi' && (
@@ -326,6 +301,38 @@ const DetailMapel = ({ params }) => {
                       <path d="M9 0C13.968 0 18 4.032 18 9C18 13.968 13.968 18 9 18C4.032 18 0 13.968 0 9C0 4.032 4.032 0 9 0ZM9 16C12.867 16 16 12.867 16 9C16 5.132 12.867 2 9 2C5.132 2 2 5.132 2 9C2 12.867 5.132 16 9 16ZM17.485 16.071L20.314 18.899L18.899 20.314L16.071 17.485L17.485 16.071Z" fill="#6C80FF" />
                     </svg>
                   </div>
+                </div>
+                <div className="tabs mb-4 flex" style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    className={`tab${activeTab === 'materi' ? ' active' : ''}`}
+                    onClick={() => setActiveTab('materi')}
+                    style={{
+                      padding: '10px 20px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px',
+                      backgroundColor: activeTab === 'materi' ? '#007bff' : '#fff',
+                      color: activeTab === 'materi' ? '#fff' : '#000',
+                      cursor: 'pointer',
+                      outline: 'none',
+                    }}
+                  >
+                    Materi
+                  </button>
+                  <button
+                    className={`tab${activeTab === 'nilai' ? ' active' : ''}`}
+                    onClick={() => setActiveTab('nilai')}
+                    style={{
+                      padding: '10px 20px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px',
+                      backgroundColor: activeTab === 'nilai' ? '#007bff' : '#fff',
+                      color: activeTab === 'nilai' ? '#fff' : '#000',
+                      cursor: 'pointer',
+                      outline: 'none',
+                    }}
+                  >
+                    Nilai
+                  </button>
                 </div>
                 {!loading && !error && materiInfo.length > 0 ? (
                   materiInfo
@@ -361,7 +368,7 @@ const DetailMapel = ({ params }) => {
                       </div>
                     ))
                 ) : (
-                  <div className="flex justify-center items-center h-40 bg-white rounded-lg">
+                  <div className="flex justify-center items-center h-40">
                     <svg className="h-16 w-16 text-gray-400 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
@@ -374,6 +381,38 @@ const DetailMapel = ({ params }) => {
           {activeTab === 'nilai' && (
             <div>
               <h2 className="text-2xl font-bold">Nilai</h2>
+              <div className="tabs mb-4 flex" style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  className={`tab${activeTab === 'materi' ? ' active' : ''}`}
+                  onClick={() => setActiveTab('materi')}
+                  style={{
+                    padding: '10px 20px',
+                    border: '1px solid #ccc',
+                    borderRadius: '5px',
+                    backgroundColor: activeTab === 'materi' ? '#007bff' : '#fff',
+                    color: activeTab === 'materi' ? '#fff' : '#000',
+                    cursor: 'pointer',
+                    outline: 'none',
+                  }}
+                >
+                  Materi
+                </button>
+                <button
+                  className={`tab${activeTab === 'nilai' ? ' active' : ''}`}
+                  onClick={() => setActiveTab('nilai')}
+                  style={{
+                    padding: '10px 20px',
+                    border: '1px solid #ccc',
+                    borderRadius: '5px',
+                    backgroundColor: activeTab === 'nilai' ? '#007bff' : '#fff',
+                    color: activeTab === 'nilai' ? '#fff' : '#000',
+                    cursor: 'pointer',
+                    outline: 'none',
+                  }}
+                >
+                  Nilai
+                </button>
+              </div>
               {decodedToken.role === "MURID" && scoreInfo.length > 0 && (
                 <div>
                   <button onClick={toggleView} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

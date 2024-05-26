@@ -10,7 +10,7 @@ const Navbar = ({ role, id }) => {
             getUsersById(id)
                 .then(user => {
                     if (user) {
-                        console.log(user);
+                        // console.log(user);
                         setUserName(user.firstname + ' ' + user.lastname);
                     }
                 })
