@@ -15,6 +15,7 @@ import Navbaradmin from '@/app/components/navbaradmin';
 const UpdateInventoryForm = ({ params }) => {
   const router = useRouter();
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const { idItem } = params;
   const [decodedToken, setDecodedToken] = useState('');
   const [namaItem, setNamaItem] = useState('');
@@ -29,6 +30,7 @@ const UpdateInventoryForm = ({ params }) => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
     } else {
       console.log("Need to login");
       redirect('/user/login');
@@ -110,8 +112,7 @@ const UpdateInventoryForm = ({ params }) => {
 
   return (
     <div className="bg-[#F3F5FB]">
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
-      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}   
+      <Navbar role={role} id={id}/>
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="w-full bg-white rounded-xl max-w-sm px-8 py-8 space-y-4">
           <div className="space-y-2">

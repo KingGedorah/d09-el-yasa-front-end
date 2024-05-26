@@ -15,6 +15,7 @@ import Navbaradmin from '@/app/components/navbaradmin';
 
 const ViewAllInventory = () => {
   const [inventoryList, setInventoryList] = useState([]);
+  const [role, setRole] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState('');
@@ -27,6 +28,7 @@ const ViewAllInventory = () => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
     } else {
       console.log("Need to login");
       redirect('/user/login');
@@ -51,10 +53,7 @@ const ViewAllInventory = () => {
 
   return (
     <div className="bg-[#F3F5FB] ">
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
-      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}   
-      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}   
-      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}    
+      <Navbar role={role} id={id}/>  
       <div className="container mx-auto flex justify-center mt-8">
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
           <h2 className="text-3xl font-bold mb-4 text-center">Inventory</h2>
