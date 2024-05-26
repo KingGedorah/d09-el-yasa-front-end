@@ -42,6 +42,9 @@ const Navbar = ({ role, id }) => {
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/inventaris">
                             Inventory
                         </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
+                            Inventory Request
+                        </a>
                     </>
                 );
             case 'GURU':
@@ -73,6 +76,9 @@ const Navbar = ({ role, id }) => {
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/berita">
                             News
                         </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
+                            Inventory Request 
+                        </a>
                     </>
                 );
                 case '':
@@ -96,7 +102,7 @@ const Navbar = ({ role, id }) => {
                             My class
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
-                            Borrow 
+                            Inventory Request 
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
                             Articles
