@@ -74,6 +74,17 @@ const Navbar = ({ role, id }) => {
                         </a>
                     </>
                 );
+                case '':
+                    return (
+                        <>
+                            <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
+                                Home
+                            </a>
+                            <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
+                                Articles
+                            </a>
+                        </>
+                    );
             case 'MURID':
                 return (
                     <>
