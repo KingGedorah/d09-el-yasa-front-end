@@ -19,6 +19,8 @@ import Chart from 'chart.js/auto';
 
 const DetailMapel = ({ params }) => {
   const router = useRouter();
+  const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const [materiId, setMateriId] = useState(null);
   const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
@@ -43,6 +45,8 @@ const DetailMapel = ({ params }) => {
     if (token) {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
+      setId(decoded.id);
+      setRole(decoded.role);
     } else {
       redirect('/user/login');
     }
@@ -276,8 +280,7 @@ const DetailMapel = ({ params }) => {
 
   return (
     <FadeIn>
-      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
-      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={decodedToken.id} />}
+      <Navbar id={id} role={role}/>
       <div className="container mx-auto flex justify-center mt-8" style={{ marginBottom: '100px' }}>
         <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
           <div className="tabs mb-4 flex" style={{ display: 'flex', gap: '10px' }}>

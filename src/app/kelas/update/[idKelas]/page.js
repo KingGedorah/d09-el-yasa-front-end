@@ -15,6 +15,8 @@ import { useRouter } from 'next/navigation';
 const UpdateKelasForm = ({ params }) => {
   const router = useRouter();
   const { idKelas } = params;
+  const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
@@ -31,7 +33,10 @@ const UpdateKelasForm = ({ params }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      setRole(decoded.role);
     } else {
       redirect('/user/login');
     }
@@ -174,7 +179,7 @@ const UpdateKelasForm = ({ params }) => {
 
   return (
     <div className="bg-[#F2F3FB] pb-20">
-      <Navbar />
+      <Navbar id={id} role={role}/>
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32 mx-auto">
       <div className="w-full max-w-sm space-y-4 p-8 rounded-xl bg-white shadow-lg">
       <div className="space-y-2">

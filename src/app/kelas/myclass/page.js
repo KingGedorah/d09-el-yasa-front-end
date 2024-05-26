@@ -23,6 +23,7 @@ import { FaRegSadCry } from 'react-icons/fa';
 
 const KelasByUserId = () => {
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState(null); // Use null instead of empty string
   const [error, setError] = useState(null);
@@ -38,6 +39,7 @@ const KelasByUserId = () => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
     } else {
       redirect('/user/login');
     }
@@ -103,8 +105,7 @@ const KelasByUserId = () => {
   return (
     <FadeIn>
       <div style={{ marginBottom: '100px' }}>
-        {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={id} />}
-        {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+        <Navbar id={id} role={role}/>
         <div className="container mx-auto flex justify-center mt-8">
           <main className="w-4/5 md:w-3/5 lg:w-1/2 p-4">
             <div className="search-container">

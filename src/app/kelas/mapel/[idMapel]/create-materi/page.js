@@ -12,6 +12,7 @@ import Navbarguru from '@/app/components/navbarguru';
 const FormCreateMateri = ({ params }) => {
     const [decodedToken, setDecodedToken] = useState('');
     const [id, setId] = useState('');
+    const [role, setRole] = useState('');
     const { idMapel } = params;
     const [judulKonten, setJudulKonten] = useState('');
     const [isiKonten, setIsiKonten] = useState('');
@@ -27,6 +28,7 @@ const FormCreateMateri = ({ params }) => {
             const decoded = parseJwt(token);
             setDecodedToken(decoded);
             setId(decoded.id);
+            setRole(decoded.role);
         } else {
             redirect('/user/login');
         }
@@ -100,7 +102,7 @@ const FormCreateMateri = ({ params }) => {
 
     return (
         <div className="bg-white min-h-screen flex flex-col justify-between">
-            {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+            <Navbar id={id} role={role}/>
             <div className="flex-grow flex items-center justify-center py-16 md:py-24 lg:py-32">
                 <div className="w-full max-w-md space-y-6">
                     <div className="space-y-2 text-center">

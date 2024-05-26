@@ -17,6 +17,7 @@ import Navbaradmin from '@/app/components/navbaradmin';
 const CreateKelasForm = () => {
   const router = useRouter();
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [namaKelas, setNamaKelas] = useState('');
   const [deskripsiKelas, setDeskripsiKelas] = useState('');
@@ -34,6 +35,7 @@ const CreateKelasForm = () => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
       console.log("id: " + decoded.id);
       console.log("role: " + decoded.role)
     } 
@@ -140,8 +142,7 @@ const CreateKelasForm = () => {
 
   return (
     <div className="bg-[#F3F5FB]">
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
-      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}      
+      <Navbar id={id} role={role} />     
       <div className="container mx-auto flex items-center justify-center py-16 ">
         <div className="w-full max-w-sm space-y-4 bg-white shadow-md rounded-xl px-8 py-4">
           <div className="space-y-2">

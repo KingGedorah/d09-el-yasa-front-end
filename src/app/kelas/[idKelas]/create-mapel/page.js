@@ -15,6 +15,7 @@ import Link from 'next/link';
 
 const FormCreateMapel = ({ params }) => {
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const router = useRouter();
   const { idKelas } = params;
   const [namaMapel, setNamaMapel] = useState('');
@@ -32,6 +33,7 @@ const FormCreateMapel = ({ params }) => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
       console.log("id: " + decoded.id);
       console.log("role: " + decoded.role)
     } else {
@@ -97,7 +99,7 @@ const FormCreateMapel = ({ params }) => {
 
   return (
     <div className="bg-[#F3F5FB]">
-      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}      
+      <Navbar role={role} id={id}/>
       <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32 mx-auto">
         <div className="w-full max-w-sm space-y-4 p-8 bg-white rounded-xl shadow-lg">
           <div className="space-y-2">

@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 const FormInputScore = ({ params }) => {
     const router = useRouter();
     const { idKelas } = params;
+    const [id, setId] = useState('');
+    const [role, setRole] = useState('');
     const [decodedToken, setDecodedToken] = useState('');
     const [tipeNilai, setTipeNilai] = useState([]);
     const [listNilai, setListNilai] = useState([]);
@@ -33,7 +35,10 @@ const FormInputScore = ({ params }) => {
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
         if (token) {
-            setDecodedToken(parseJwt(token));
+            decoded = parseJwt(token);
+            setDecodedToken(decoded);
+            setId(decoded.id);
+            setRole(decoded.role);
         } else {
             redirect('/user/login');
         }
@@ -177,7 +182,7 @@ const FormInputScore = ({ params }) => {
 
     return (
         <div className="bg-[#F3F5FB]">
-            <Navbar />
+            <Navbar id={id} role={role}/>
             <div className="container mx-auto flex items-center justify-center py-16">
                 <div className="w-full max-w-sm space-y-4 bg-white shadow-md rounded-xl px-8 py-4">
                     <form onSubmit={handleSubmit}>

@@ -23,6 +23,7 @@ import { FaBook } from 'react-icons/fa';
 
 const ViewAllKelas = ({ params }) => {
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const [kelasList, setKelasList] = useState([]);
@@ -43,6 +44,7 @@ const ViewAllKelas = ({ params }) => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
     } else {
       redirect('/user/login');
     }
@@ -129,8 +131,7 @@ const ViewAllKelas = ({ params }) => {
   return (
     <FadeIn>
       <div class="bg-[#F3F5FB]">
-        {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
-        {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+        <Navbar id={id} role={role}/>
         <div class="container mx-auto flex justify-center mt-8 mb-16">
           <main class="w-4/5 md:w-3/5 lg:w-1/2 p-4">
             <div class="search-container">

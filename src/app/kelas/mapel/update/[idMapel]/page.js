@@ -18,6 +18,7 @@ import Link from 'next/link';
 const UpdateMapelForm = ({ params }) => {
   const router = useRouter();
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const { idMapel } = params;
   const [namaMapel, setNamaMapel] = useState('');
@@ -33,7 +34,10 @@ const UpdateMapelForm = ({ params }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      setDecodedToken(parseJwt(token));
+      decoded = parseJwt(token);
+      setDecodedToken(decoded);
+      setId(decoded.id);
+      setRole(decoded.role);
     } else {
       redirect('/user/login');
     }
@@ -122,8 +126,7 @@ const UpdateMapelForm = ({ params }) => {
 
   return (
     <div className="bg-[#F3F5FB]">
-      {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}     
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />} 
+      <Navbar id={id} role={role}/>
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
         <div className="bg-white w-full max-w-sm shadow-sm rounded-xl py-8 px-8 space-y-4">
           <div className="space-y-2">
