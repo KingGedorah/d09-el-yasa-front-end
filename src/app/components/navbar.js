@@ -39,7 +39,7 @@ const Navbar = ({ role, id }) => {
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/view-all">
                             List of class
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/inventaris">
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/inventaris/view-all">
                             Inventory
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
