@@ -60,7 +60,7 @@ const UserDetail = ({ params }) => {
                   <p className="text-gray-900"><strong>Full Name:</strong> {user.firstname} {user.lastname}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg shadow hover:bg-gray-100 transition duration-300 ease-in-out">
-                  <p className="text-gray-900"><strong>NISN:</strong> {user.id}</p>
+                  <p className="text-gray-900"><strong>ID:</strong> {user.id}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg shadow hover:bg-gray-100 transition duration-300 ease-in-out">
                   <p className="text-gray-900"><strong>Username:</strong> {user.username}</p>

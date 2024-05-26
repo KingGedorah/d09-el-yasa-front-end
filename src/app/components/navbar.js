@@ -57,7 +57,7 @@ const Navbar = ({ role, id }) => {
                             List of class
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
-                           My class
+                            My class
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/berita">
                             News
@@ -77,21 +77,21 @@ const Navbar = ({ role, id }) => {
                             News
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
-                            Inventory Request 
+                            Inventory Request
                         </a>
                     </>
                 );
-                case '':
-                    return (
-                        <>
-                            <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
-                                Home
-                            </a>
-                            <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
-                                Articles
-                            </a>
-                        </>
-                    );
+            case '':
+                return (
+                    <>
+                        <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
+                            Home
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
+                            Articles
+                        </a>
+                    </>
+                );
             case 'MURID':
                 return (
                     <>
@@ -102,7 +102,7 @@ const Navbar = ({ role, id }) => {
                             My class
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
-                            Inventory Request 
+                            Inventory Request
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
                             Articles
@@ -139,9 +139,11 @@ const Navbar = ({ role, id }) => {
                                     <a href={`/user/${id}`} className="block px-4 py-2 hover:bg-gray-100 w-full text-left font-medium">
                                         Profile
                                     </a>
-                                    <a href={`/nilai/${id}`} className="block px-4 py-2 hover:bg-gray-100 w-full text-left font-medium">
-                                        Scores
-                                    </a>
+                                    {role === 'MURID' && (
+                                        <a href={`/nilai/${id}`} className="block px-4 py-2 hover:bg-gray-100 w-full text-left font-medium">
+                                            Scores
+                                        </a>
+                                    )}
                                     <button onClick={handleLogout} className="block px-4 py-2 text-red-500 hover:bg-gray-100 w-full text-left font-extrabold">
                                         Logout
                                     </button>
