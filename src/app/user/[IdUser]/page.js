@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import SpinLoading from '@/app/components/spinloading';
 
 const UserDetail = ({ params }) => {
+  const [role, setRole] = useState('')
   const router = useRouter();
   const { IdUser } = params;
   const [user, setUser] = useState(null);
@@ -21,42 +22,60 @@ const UserDetail = ({ params }) => {
       try {
         const response = await axios.get(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/user/${IdUser}`);
         setUser(response.data);
+        setRole(response.data.role);
         setLoading(false);
       } catch (error) {
         router.push(`/error/500`);
       }
     };
-    console.log(IdUser);
 
     fetchUser();
   }, [IdUser]);
 
   if (loading) {
-    return <SpinLoading/>;
+    return <SpinLoading />;
   }
 
   return (
-    <div className="bg-white dark:bg-gray-950">
-      <Navbar />
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto', border: '1px solid #ccc', borderRadius: '5px', padding: '20px', marginBottom: '20px', textAlign: 'center' }}>
-          <h2 style={{ marginBottom: '20px', color: 'white' }}>User Detail</h2>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="bg-white min-h-screen flex flex-col">
+      <Navbar role={role} id={IdUser} />
+      <div className="flex flex-grow items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl w-full space-y-8 bg-white p-10 rounded-lg shadow-lg">
+          <h2 className="text-center text-3xl font-extrabold text-gray-900">User Profile</h2>
+          {error && <p className="text-red-500 text-center">{error}</p>}
           {user && (
-            <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '5px', marginTop: '20px' }}>
-              <p style={{ marginBottom: '10px', color: 'black' }}><strong>Username:</strong> {user.username}</p>
-              <p style={{ marginBottom: '10px', color: 'black' }}><strong>First Name:</strong> {user.firstname}</p>
-              <p style={{ marginBottom: '10px', color: 'black' }}><strong>Last Name:</strong> {user.lastname}</p>
-              <p style={{ marginBottom: '10px', color: 'black' }}><strong>Email:</strong> {user.email}</p>
-              <p style={{ marginBottom: '10px', color: 'black' }}><strong>Role:</strong> {user.role}</p>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-3xl text-gray-500">{user.firstname[0]}{user.lastname[0]}</span>
+                </div>
+                <div>
+                  <p className="text-lg font-medium text-gray-900">{user.firstname} {user.lastname}</p>
+                  <p className="text-sm text-gray-500">{user.role}</p>
+                </div>
+              </div>
+              <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div className="bg-gray-50 p-4 rounded-lg shadow hover:bg-gray-100 transition duration-300 ease-in-out">
+                  <p className="text-gray-900"><strong>Full Name:</strong> {user.firstname} {user.lastname}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg shadow hover:bg-gray-100 transition duration-300 ease-in-out">
+                  <p className="text-gray-900"><strong>NISN:</strong> {user.id}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg shadow hover:bg-gray-100 transition duration-300 ease-in-out">
+                  <p className="text-gray-900"><strong>Username:</strong> {user.username}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg shadow hover:bg-gray-100 transition duration-300 ease-in-out">
+                  <p className="text-gray-900"><strong>Email:</strong> {user.email}</p>
+                </div>
+              </div>
+              <div className="mt-6">
+              </div>
             </div>
           )}
         </div>
       </div>
       <Footer />
     </div>
-
-
   );
 };
 

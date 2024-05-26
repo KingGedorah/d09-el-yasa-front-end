@@ -53,7 +53,7 @@ const Navbar = ({ role, id }) => {
                             Menu Guru 1
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Meenu Guru 2
+                            Menu Guru 2
                         </a>
                         <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
                            Menu Guru 3
@@ -121,6 +121,12 @@ const Navbar = ({ role, id }) => {
                                     Halo, {userName}
                                 </button>
                                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <a href={`/user/${id}`} className="block px-4 py-2 hover:bg-gray-100 w-full text-left font-medium">
+                                        Profile
+                                    </a>
+                                    <a href={`/nilai/${id}`} className="block px-4 py-2 hover:bg-gray-100 w-full text-left font-medium">
+                                        Scores
+                                    </a>
                                     <button onClick={handleLogout} className="block px-4 py-2 text-red-500 hover:bg-gray-100 w-full text-left font-extrabold">
                                         Logout
                                     </button>
