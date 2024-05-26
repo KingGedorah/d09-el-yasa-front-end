@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 
 const ArtikelDetail = ({ params }) => {
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
   const { idArtikel } = params;
@@ -31,6 +32,7 @@ const ArtikelDetail = ({ params }) => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
       console.log(decoded.id + decoded.role)
     }
   }, []);
@@ -88,7 +90,7 @@ const ArtikelDetail = ({ params }) => {
 
   return (
     <div>
-      <Navbar role={id}/>
+      <Navbar role={role} id={id}/>
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">

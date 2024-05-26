@@ -19,6 +19,7 @@ import FadeIn from '../components/fadein-div';
 const ArtikelList = () => {
   const router = useRouter();
   const [decodedToken, setDecodedToken] = useState('');
+  const [role, setRole] = useState('')
   const [id, setId] = useState('');
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ const ArtikelList = () => {
     if (token) {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
+      setRole(decoded.role)
       setId(decoded.id);
       console.log(decoded.id + decoded.role)
     } else {
@@ -104,7 +106,7 @@ const ArtikelList = () => {
 
   return (
     <FadeIn>
-      <Navbar  role={id}/>
+      <Navbar role={role} id={id}/>
       <div className="mx-auto mt-8 px-12 rounded-lg">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">

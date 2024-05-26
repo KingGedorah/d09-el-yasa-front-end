@@ -16,6 +16,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const CreateArticle = () => {
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [judulArtikel, setJudulArtikel] = useState('');
   const [isiArtikel, setIsiArtikel] = useState('');
@@ -30,6 +31,7 @@ const CreateArticle = () => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role)
       console.log(decoded.id + decoded.role)
     } else {
       console.log("Need to login");
@@ -96,7 +98,7 @@ const CreateArticle = () => {
 
   return (
     <div style={{marginBottom:'100px'}}>
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
+      <Navbar role={role} id={id}/>
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg">
         <h1 className="text-2xl font-semibold mb-4 text-center">Buat Artikel</h1>
         <form onSubmit={handleSubmit}>
