@@ -33,7 +33,7 @@ const UpdateKelasForm = ({ params }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      decoded = parseJwt(token);
+      const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
       setRole(decoded.role);
