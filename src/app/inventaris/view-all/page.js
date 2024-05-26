@@ -51,6 +51,17 @@ const ViewAllInventory = () => {
     fetchInventory();
   }, []);
 
+  const handleDelete = async (idItem) => {
+    if (confirm("Hapus item?")) {
+      try {
+        await InventoryApi.deleteInventory(idItem);
+        setInventoryList(inventoryList.filter(item => item.idItem !== idItem));
+      } catch (error) {
+        setError(error);
+      }
+    }
+  };
+
   return (
     <div className="bg-[#F3F5FB] ">
       <Navbar role={role} id={id}/>  
@@ -82,6 +93,14 @@ const ViewAllInventory = () => {
                       <button className="text-white bg-[#6C80FF] text-center px-4 py-2 rounded-md cursor-pointer">
                         Update
                       </button>
+                      {(role === 'STAFF') && (
+                      <button 
+                        onClick={() => handleDelete(item.idItem)}
+                        className="text-white bg-red-500 text-center px-4 py-2 rounded-md cursor-pointer"
+                      >
+                        Delete
+                      </button>
+                    )}
                     </Link>
                   </div>
                 </div>
