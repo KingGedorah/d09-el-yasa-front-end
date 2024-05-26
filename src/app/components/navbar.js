@@ -35,14 +35,11 @@ const Navbar = ({ role, id }) => {
                         <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
                             Home
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Admin 1
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
+                            Articles
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Admin 2
-                        </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Admin 3
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/view-all">
+                            List of class
                         </a>
                     </>
                 );
@@ -50,16 +47,16 @@ const Navbar = ({ role, id }) => {
                 return (
                     <>
                         <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
-                            Menu Guru 1
+                            Home
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Guru 2
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/view-all">
+                            List of class
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                           Menu Guru 3
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
+                           My class
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Guru 4
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/berita">
+                            News
                         </a>
                     </>
                 );
@@ -67,33 +64,44 @@ const Navbar = ({ role, id }) => {
                 return (
                     <>
                         <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
-                            Menu Staff 1
+                            Home
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Staff 2
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
+                            Inventory
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Staff 3
-                        </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Staff 4
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/berita">
+                            News
                         </a>
                     </>
                 );
+                case '':
+                    return (
+                        <>
+                            <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
+                                Home
+                            </a>
+                            <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
+                                Articles
+                            </a>
+                        </>
+                    );
             case 'MURID':
                 return (
                     <>
                         <a className="font-medium text-gray-900 dark:text-gray-100" href="/">
-                            Menu Murid 1
+                            Home
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Murid 2
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/kelas/myclass">
+                            My class
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Murid 3    
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/peminjaman">
+                            Borrow 
                         </a>
-                        <a className="font-medium text-gray-500 dark:text-gray-400" href="#">
-                            Menu Murid 4
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/artikel">
+                            Articles
+                        </a>
+                        <a className="font-medium text-gray-500 dark:text-gray-400" href="/berita">
+                            News
                         </a>
                     </>
                 );
