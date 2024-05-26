@@ -107,7 +107,7 @@ const ArtikelList = () => {
   return (
     <FadeIn>
       <Navbar role={role} id={id}/>
-      <div className="mx-auto mt-8 px-12 rounded-lg">
+      <div className="mx-auto mt-8 px-12 rounded-lg" style={{marginBottom : '100px'}}> 
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">
             <div className='relative'>
