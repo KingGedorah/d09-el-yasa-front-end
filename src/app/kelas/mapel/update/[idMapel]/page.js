@@ -30,6 +30,7 @@ const UpdateMapelForm = ({ params }) => {
   const [nuptkOptions, setNuptkOptions] = useState(null);
   const [fetchedNuptk, setFetchedNuptk] = useState(false);
   const [idKelas, setIdKelas] = useState('');
+  const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -101,7 +102,7 @@ const UpdateMapelForm = ({ params }) => {
       return;
     }
     try {
-      const response = await axios.put(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/mapel/update/${idMapel}`, {
+      const response = await axios.put(`${baseUrlKelas}/mapel/update/${idMapel}`, {
         namaMapel,
         nuptkGuruMengajar: selectedNuptk.value,
       });

@@ -13,7 +13,8 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 const fetchUserScores = async (IdUser) => {
   try {
-    const response = await axios.get(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/view-all/siswa/${IdUser}`);
+    const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
+    const response = await axios.get(`${baseUrlUser}/score/view-all/siswa/${IdUser}`);
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch user scores');

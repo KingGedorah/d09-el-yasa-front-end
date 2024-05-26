@@ -21,6 +21,7 @@ const FormCreateMateri = ({ params }) => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
@@ -57,7 +58,7 @@ const FormCreateMateri = ({ params }) => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/${idMapel}/create-materi`, formData, {
+            const response = await axios.post(`${baseUrlKelas}/${idMapel}/create-materi`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -102,7 +103,7 @@ const FormCreateMateri = ({ params }) => {
 
     return (
         <div className="bg-white min-h-screen flex flex-col justify-between">
-            <Navbar id={id} role={role}/>
+            <Navbar id={id} role={role} />
             <div className="flex-grow flex items-center justify-center py-16 md:py-24 lg:py-32">
                 <div className="w-full max-w-md space-y-6">
                     <div className="space-y-2 text-center">

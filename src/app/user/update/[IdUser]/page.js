@@ -21,6 +21,7 @@ const UpdateUserPage = ({ params }) => {
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -36,7 +37,7 @@ const UpdateUserPage = ({ params }) => {
       try {
         const token = sessionStorage.getItem('jwtToken'); // Retrieve the JWT token from sessionStorage
         console.log(token);
-        const response = await axios.get(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/user/${IdUser}`, {
+        const response = await axios.get(`${baseUrlUser}/user/${IdUser}`, {
         });
         const userData = response.data;
         setFirstname(userData.firstname);
@@ -65,7 +66,7 @@ const UpdateUserPage = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://myjisc-user-e270dbbfd631.herokuapp.com/api/user/update/${IdUser}`, {
+      await axios.put(`${baseUrlUser}/user/update/${IdUser}`, {
         firstname,
         lastname,
         username,

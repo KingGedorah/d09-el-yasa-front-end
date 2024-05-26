@@ -32,6 +32,7 @@ const CreatePeminjaman = () => {
   const [fetchedUser, setFetchedUser] = useState(false);
   const [fetchedInventory, setFetchedInventory] = useState(false);
   const [selectedItemsList, setSelectedItemsList] = useState([]);
+  const baseUrlInventory = process.env.NEXT_PUBLIC_BASE_INVENTARIS_API
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,7 +128,7 @@ const CreatePeminjaman = () => {
     };
 
     try {
-      const response = await axios.post('https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/borrow', formData, {
+      const response = await axios.post(`${baseUrlInventory}/borrow`, formData, {
         headers: {
           'Content-Type': 'application/json'
         }

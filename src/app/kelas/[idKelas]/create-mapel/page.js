@@ -26,6 +26,7 @@ const FormCreateMapel = ({ params }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [nuptkOptions, setNuptkOptions] = useState();
+  const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -74,7 +75,7 @@ const FormCreateMapel = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/${idKelas}/create-mapel`, {
+      const response = await axios.post(`${baseUrlKelas}/${idKelas}/create-mapel`, {
         namaMapel,
         nuptkGuruMengajar: selectedNuptk.value,
       });

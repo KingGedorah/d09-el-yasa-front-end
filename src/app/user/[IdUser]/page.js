@@ -16,11 +16,12 @@ const UserDetail = ({ params }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/user/${IdUser}`);
+        const response = await axios.get(`${baseUrlUser}/user/${IdUser}`);
         setUser(response.data);
         setRole(response.data.role);
         setLoading(false);

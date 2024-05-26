@@ -32,6 +32,7 @@ const KelasByUserId = () => {
   const [isSuccessDelete, setIsSuccessDelete] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isErrorDelete, setIsErrorDelete] = useState(false);
+  const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -77,7 +78,7 @@ const KelasByUserId = () => {
 
   const handleDeleteKelas = async (kelasId) => {
     try {
-      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/${kelasId}`);
+      await axios.delete(`${baseUrlKelas}/delete/${kelasId}`);
       setIsSuccessDelete(true);
     } catch (error) {
       console.error('Error deleting kelas:', error);

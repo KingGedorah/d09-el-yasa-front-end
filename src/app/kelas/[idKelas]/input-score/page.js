@@ -31,6 +31,8 @@ const FormInputScore = ({ params }) => {
     const [selectedMapel, setSelectedMapel] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
+    const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
+
 
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
@@ -152,7 +154,7 @@ const FormInputScore = ({ params }) => {
         }
 
         try {
-            const response = await axios.post('https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/input', {
+            const response = await axios.post(`${baseUrlUser}/score/input`, {
                 idSiswa: selectedNisn.value,
                 idMapel: selectedMapel.value,
                 tipeNilai: tipeNilai,

@@ -29,6 +29,7 @@ const UpdateKelasForm = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [nisnFetched, setNisnFetched] = useState(false);
   const [nuptkFetched, setNuptkFetched] = useState(false);
+  const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -146,7 +147,7 @@ const UpdateKelasForm = ({ params }) => {
 
     try {
       const response = await axios.put(
-        `https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/update/${idKelas}`,
+        `${baseUrlKelas}/update/${idKelas}`,
         {
           namaKelas,
           deskripsiKelas,

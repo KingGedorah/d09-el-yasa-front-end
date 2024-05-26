@@ -16,9 +16,9 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false); // State for modal visibility
-
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
 
   const handleSuccessPopup = () => {
     setIsSuccess(false);
@@ -32,7 +32,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://myjisc-user-c9e48ced667a.herokuapp.com/api/v1/auth/Register', {
+      await axios.post(`${baseUrlUser}/v1/auth/Register`, {
         username,
         firstname: firstName,
         lastname: lastName,

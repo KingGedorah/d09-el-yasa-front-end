@@ -37,6 +37,8 @@ const ViewAllKelas = ({ params }) => {
   const { idKelas } = params;
   const [kelasInfo, setKelasInfo] = useState([]);
   const [mapelInfo, setMapelInfo] = useState([]);
+  const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
+  const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -93,12 +95,12 @@ const ViewAllKelas = ({ params }) => {
   // Fungsi untuk menghapus mata pelajaran
   const handleDeleteMapel = async (mapelId) => {
     try {
-      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/mapel/${mapelId}`);
+      await axios.delete(`${baseUrlKelas}/delete/mapel/${mapelId}`);
 
       // Pengecekan jika terdapat nilai siswa dari mapel tersebut
-      const scoreResponse = await axios.get(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/view-all/mapel/${mapelId}`);
+      const scoreResponse = await axios.get(`${baseUrlUser}/score/view-all/mapel/${mapelId}`);
       if (scoreResponse.status === 200) {
-        await axios.delete(`https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/delete/mape/${mapelId}`);
+        await axios.delete(`${baseUrlUser}/score/delete/mape/${mapelId}`);
       }
 
       setIsSuccessDelete(true);

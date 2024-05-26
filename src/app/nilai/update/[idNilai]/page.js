@@ -20,6 +20,7 @@ const InputNilaiForm = ({ params }) => {
         tipeNilai: [],
         listNilai: [],
     });
+    const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
 
     useEffect(() => {
         const token = sessionStorage.getItem('jwtToken');
@@ -48,7 +49,7 @@ const InputNilaiForm = ({ params }) => {
         const fetchScoreData = async (idScore) => {
             try {
                 const res = await axios.get(
-                    `https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/${idScore}`
+                    `${baseUrlUser}/score/${idScore}`
                 );
                 return res.data;
             } catch (err) {
@@ -94,7 +95,7 @@ const InputNilaiForm = ({ params }) => {
         e.preventDefault();
         try {
             const res = await axios.put(
-                `https://myjisc-user-c9e48ced667a.herokuapp.com/api/score/update/${idNilai}`,
+                `${baseUrlUser}/score/update/${idNilai}`,
                 nilaiData
             );
             console.log("Nilai submitted successfully");

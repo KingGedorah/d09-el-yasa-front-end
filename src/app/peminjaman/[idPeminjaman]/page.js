@@ -27,23 +27,19 @@ const DetailPeminjaman = (params) => {
   const [decodedToken, setDecodedToken] = useState('');
   const [role, setRole] = useState('');
   const [id, setId] = useState('');
-
   const [idPeminjam, setIdPeminjam] = useState('');
   const [namaPeminjam, setNamaPeminjam] = useState('');
   const [keperluanPeminjaman, setKeperluanPeminjaman] = useState('');
   const [tanggalPengembalian, setTanggalPengembalian] = useState('');
   const [itemQuantities, setItemQuantities] = useState([]);
-
   const [inventories, setInventories] = useState([])
   const [kelas, setKelas] = useState([])
-
   const [isSuccessConfirm, setIsSuccessConfirm] = useState(false);
   const [isErrorConfirm, setIsErrorConfirm] = useState(false);
   const [isSuccessDecline, setIsSuccessDecline] = useState(false);
   const [isErrorDecline, setIsErrorDecline] = useState(false);
   const [isSuccessDelete, setIsSuccessDelete] = useState(false);
   const [isErrorDelete, setIsErrorDelete] = useState(false);
-
   const [peminjaman, setPeminjaman] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

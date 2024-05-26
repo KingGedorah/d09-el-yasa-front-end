@@ -39,6 +39,7 @@ const DetailMapel = ({ params }) => {
   const [activeTab, setActiveTab] = useState('materi');
   const [chartData, setChartData] = useState({});
   const [scoreMap, setScoreMap] = useState(null);
+  const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -138,7 +139,7 @@ const DetailMapel = ({ params }) => {
   // Fungsi untuk menghapus materi
   const handleDeleteMateri = async (materiId) => {
     try {
-      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/materi/${materiId}`);
+      await axios.delete(`${baseUrlKelas}/delete/materi/${materiId}`);
     } catch (error) {
       setIsErrorDelete(true);
     }
@@ -346,7 +347,7 @@ const DetailMapel = ({ params }) => {
                           <h2 className="text-base">{materi.isiKonten}</h2>
                           {materi.nama_file && (
                             <div className="flex items-center">
-                              <a href={`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/get/materi/${materi.idKonten}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                              <a href={`${baseUrlKelas}/get/materi/${materi.idKonten}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
                                 <svg className="h-6 w-6 text-blue-500 mr-2" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                   <path stroke="none" d="M0 0h24v24H0z" />
                                   <path d="M14 3v4a1 1 0 0 0 1 1h4" />

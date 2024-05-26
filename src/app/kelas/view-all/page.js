@@ -34,6 +34,7 @@ const ViewAllKelas = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isErrorDelete, setIsErrorDelete] = useState(false);
   const [query, setQuery] = useState("")
+  const baseUrlKelas = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
 
   useEffect(() => {
@@ -85,7 +86,7 @@ const ViewAllKelas = () => {
   // Fungsi untuk menghapus kelas
   const handleDeleteKelas = async (idKelas) => {
     try {
-      await axios.delete(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
+      await axios.delete(`${baseUrlKelas}/delete/${idKelas}`); // Menghapus data dengan menggunakan Axios
       // Refresh halaman setelah penghapusan berhasil
       setIsSuccessDelete(true);
     } catch (error) {

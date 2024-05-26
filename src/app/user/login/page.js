@@ -18,12 +18,13 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(true);
   const [showHomePage, setShowHomePage] = useState(false);
+  const baseUrlUser = process.env.NEXT_PUBLIC_BASE_USER_API
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('https://myjisc-user-c9e48ced667a.herokuapp.com/api/v1/auth/authenticate', {
+      const response = await axios.post(`${baseUrlUser}/v1/auth/authenticate`, {
         email,
         password
       });
