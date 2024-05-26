@@ -21,6 +21,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const BeritaDetail = ({ params }) => {
   const router = useRouter()
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const { idBerita } = params;
   const [decodedToken, setDecodedToken] = useState('');
   const [judulBerita, setJudulBerita] = useState('');
@@ -38,6 +39,7 @@ const BeritaDetail = ({ params }) => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role);
       console.log(decoded.id + decoded.role)
     } else {
       redirect('/user/login');
@@ -132,8 +134,7 @@ const BeritaDetail = ({ params }) => {
 
   return (
     <div>
-        {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}
-        {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+      <Navbar role={role} id={id} />
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <h1 className="text-2xl font-semibold mb-4 text-center">Update Berita</h1>
         <form onSubmit={handleSubmit}>

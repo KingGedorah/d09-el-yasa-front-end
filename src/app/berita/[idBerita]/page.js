@@ -17,6 +17,7 @@ import Navbarguru from '@/app/components/navbarguru';
 
 const BeritaDetail = ({ params }) => {
   const router = useRouter();
+  const [role, setRole] = useState('')
   const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const { idBerita } = params;
@@ -32,6 +33,7 @@ const BeritaDetail = ({ params }) => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role)
       console.log(decoded.id + decoded.role)
     } else {
       redirect('/user/login');
@@ -105,7 +107,7 @@ const BeritaDetail = ({ params }) => {
 
   return (
     <div>
-      <Navbar role={id} />
+      <Navbar role={role} id={id} />
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">

@@ -18,6 +18,7 @@ import { parseJwt } from '../utils/jwtUtils';
 
 const BeritaList = () => {
   const router = useRouter();
+  const [role, setRole] = useState('');
   const [id, setId] = useState('');
   const [decodedToken, setDecodedToken] = useState('');
   const [beritas, setBeritas] = useState([]);
@@ -36,6 +37,7 @@ const BeritaList = () => {
     if (token) {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
+      setRole(decoded.role);
       setId(decoded.id);
       console.log(decoded.id + decoded.role)
     } else {
@@ -107,7 +109,7 @@ const BeritaList = () => {
 
   return (
     <FadeIn>
-      <Navbar role={id}/>
+      <Navbar role={role} id={id} />
       <div className="mx-auto mt-8 px-12 rounded-lg" style={{ marginBottom: '100px' }}>
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-2/3">

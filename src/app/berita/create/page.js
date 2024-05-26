@@ -17,6 +17,7 @@ import Navbaradmin from '@/app/components/navbaradmin';
 
 const CreateBerita = () => {
   const [id, setId] = useState('');
+  const [role, setRole] = useState('');
   const router = useRouter()
   const [decodedToken, setDecodedToken] = useState('');
   const [judulBerita, setJudulBerita] = useState('');
@@ -32,6 +33,7 @@ const CreateBerita = () => {
       const decoded = parseJwt(token);
       setDecodedToken(decoded);
       setId(decoded.id);
+      setRole(decoded.role)
       console.log(decoded.id + decoded.role)
     } else {
       redirect('/user/login');
@@ -95,9 +97,7 @@ const CreateBerita = () => {
 
   return (
     <div style={{marginBottom:'100px'}}>
-        {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={id} />}
-        {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={id} />}
-        {decodedToken && decodedToken.role === 'GURU' && <Navbarguru role={id} />}
+      <Navbar role={role} id={id} />
       <div className="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md max-w-screen-lg" style={{ marginBottom: '100px' }}>
         <h1 className="text-2xl font-semibold mb-4 text-center">Buat Berita</h1>
         <form onSubmit={handleSubmit}>
