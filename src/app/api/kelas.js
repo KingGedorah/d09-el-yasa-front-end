@@ -1,4 +1,4 @@
-const BASE_URL = 'https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/kelas'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_KELAS_API
 
 export const getAllKelas = async () => {
   try {

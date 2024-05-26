@@ -1,4 +1,4 @@
-const BASE_URL = 'https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_BERITA_API;
 
 export const getAllBeritas = async () => {
   try {

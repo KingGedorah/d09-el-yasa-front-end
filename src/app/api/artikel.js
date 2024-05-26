@@ -1,4 +1,4 @@
-const BASE_URL = 'https://myjisc-artikel-29c0ad65b512.herokuapp.com/api/artikel';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_ARTIKEL_API
 
 export const getAllArticles = async () => {
   try {

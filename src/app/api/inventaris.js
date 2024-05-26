@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory'; 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_INVENTARIS_API;
 
 export const getAllInventory = async () => {
   try {

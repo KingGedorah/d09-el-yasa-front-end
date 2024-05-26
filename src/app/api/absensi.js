@@ -1,4 +1,4 @@
-const BASE_URL = 'https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/absensi'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_ABSENSI_API
 
 export const retrieveAbsensiKelas = async (idKelas) => {
   try {
