@@ -2,15 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Select from 'react-select';
 import Link from 'next/link';
 import Footer from '../../../components/footer';
 import Navbar from '../../../components/navbar';
-// import { parseJwt } from '@/app/utils/jwtUtils';
 import { useRouter, redirect } from 'next/navigation';
 import { parseJwt } from '@/app/utils/jwtUtils';
 import * as InventoryApi from '../../../api/inventaris';
-import Navbaradmin from '@/app/components/navbaradmin';
 
 const UpdateInventoryForm = ({ params }) => {
   const router = useRouter();
@@ -111,13 +108,13 @@ const UpdateInventoryForm = ({ params }) => {
   };
 
   return (
-    <div className="bg-[#F3F5FB]">
+    <div className="bg-[#F3F5FB] min-h-screen flex flex-col">
       <Navbar role={role} id={id}/>
-      <div className="container px-4 md:px-6 flex items-center justify-center py-16 md:py-24 lg:py-32">
+      <div className="flex-grow container mx-auto flex items-center justify-center py-16">
         <div className="w-full bg-white rounded-xl max-w-sm px-8 py-8 space-y-4">
           <div className="space-y-2">
-            <h1 className="text-3xl font-extrabold font-nunito-sans">Update Inventory</h1>
-            <p className="text-gray-500 dark:text-gray-400 font-nunito-sans">
+            <h1 className="text-3xl font-extrabold font-nunito-sans text-center">Update Inventory</h1>
+            <p className="text-gray-500 dark:text-gray-400 font-nunito-sans text-center">
               Update inventory detail
             </p>
           </div>
@@ -136,7 +133,7 @@ const UpdateInventoryForm = ({ params }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="quantity-item" className="inline-block text-sm font-medium">
+              <label htmlFor="quantity-item" className="inline-block text-lg font-bold">
                 Item Quantity
               </label>
               <input
@@ -149,7 +146,7 @@ const UpdateInventoryForm = ({ params }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="image" className="inline-block text-sm font-medium">
+              <label htmlFor="image" className="inline-block text-lg font-bold">
                 Image (max 1 MB)
               </label>
               <input
@@ -160,8 +157,8 @@ const UpdateInventoryForm = ({ params }) => {
               />
             </div>
             <div className="flex flex-row gap-2 justify-end">
-            <Link href="/inventaris/view-all" passHref>
-                <button className="bg-white border border-[#6C80FF] text-[#6C80FF] px-4 py-2 rounded-md cursor-pointer">
+              <Link href="/inventaris/view-all" passHref>
+                <button type="button" className="bg-white border border-[#6C80FF] text-[#6C80FF] px-4 py-2 rounded-md cursor-pointer">
                   Cancel
                 </button>
               </Link>
@@ -172,7 +169,6 @@ const UpdateInventoryForm = ({ params }) => {
                 Update
               </button>
             </div>
-           
           </form>
           {errorPopup && (
             <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
