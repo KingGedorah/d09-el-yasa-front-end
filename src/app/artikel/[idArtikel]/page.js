@@ -25,6 +25,7 @@ const ArtikelDetail = ({ params }) => {
   const [error, setError] = useState(null);
   const [isSuccessDelete, setIsSuccessDelete] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const baseUrlArticle = process.env.NEXT_PUBLIC_BASE_ARTIKEL_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -57,7 +58,7 @@ const ArtikelDetail = ({ params }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://myjisc-artikel-29c0ad65b512.herokuapp.com/api/artikel/delete/${idArtikel}`).then(() => {
+      await axios.delete(`${baseUrlArticle}/delete/${idArtikel}`).then(() => {
         setIsSuccessDelete(true)
       })
     } catch (error) {

@@ -22,6 +22,7 @@ const CreateAbsensiForm = ({ params }) => {
     const [showSuccess, setShowSuccess] = useState(false);
     const router = useRouter()
     const [decodedToken, setDecodedToken] = useState('');
+    const baseUrlAbsensi = process.env.NEXT_PUBLIC_BASE_ABSENSI_API
 
     useEffect(() => {
         const fetchData = async () => {
@@ -83,7 +84,7 @@ const CreateAbsensiForm = ({ params }) => {
             })
 
         try {
-            const response = await axios.post(`https://myjisc-kelas-cdbf382fd9cb.herokuapp.com/api/absensi/create/${idKelas}`, {
+            const response = await axios.post(`${baseUrlAbsensi}/create/${idKelas}`, {
                 tanggalAbsen: new Date(tanggalAbsen),
                 keteranganAbsen: updatedKeteranganAbsen,
             });

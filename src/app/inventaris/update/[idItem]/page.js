@@ -20,6 +20,7 @@ const UpdateInventoryForm = ({ params }) => {
   const [imageFile, setImageFile] = useState(null); // Tambah state untuk file gambar
   const [errorPopup, setErrorPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const baseUrlInventaris = process.env.NEXT_PUBLIC_BASE_INVENTARIS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -81,7 +82,7 @@ const UpdateInventoryForm = ({ params }) => {
       }
 
       const response = await axios.put(
-        `https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/update/${idItem}`,
+        `${baseUrlInventaris}/update/${idItem}`,
         formData,
         {
           headers: {

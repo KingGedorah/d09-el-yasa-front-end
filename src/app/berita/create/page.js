@@ -26,6 +26,7 @@ const CreateBerita = () => {
   const [kategori, setKategori] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const baseUrlBerita = process.env.NEXT_PUBLIC_BASE_BERITA_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -61,7 +62,7 @@ const CreateBerita = () => {
     });
 
     try {
-      const response = await axios.post('https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita/create', formData, {
+      const response = await axios.post(`${baseUrlBerita}/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

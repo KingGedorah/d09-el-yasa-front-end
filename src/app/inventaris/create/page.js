@@ -17,6 +17,7 @@ const CreateInventoryForm = () => {
   const [quantityItem, setQuantityItem] = useState(0);
   const [image, setImage] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const baseUrlInventaris = process.env.NEXT_PUBLIC_BASE_INVENTARIS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -51,7 +52,7 @@ const CreateInventoryForm = () => {
       formData.append('quantityItem', quantityItem);
       formData.append('image', image);
 
-      const response = await axios.post('https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/create', formData, {
+      const response = await axios.post(`${baseUrlInventaris}/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

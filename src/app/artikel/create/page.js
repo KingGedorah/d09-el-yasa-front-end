@@ -24,6 +24,7 @@ const CreateArticle = () => {
   const [selectedKategori, setSelectedKategori] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const baseUrlArticle = process.env.NEXT_PUBLIC_BASE_ARTIKEL_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -61,7 +62,7 @@ const CreateArticle = () => {
     });
 
     try {
-      const response = await axios.post('https://myjisc-artikel-29c0ad65b512.herokuapp.com/api/artikel/create', formData, {
+      const response = await axios.post(`${baseUrlArticle}/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -32,6 +32,7 @@ const BeritaDetail = ({ params }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const baseUrlBerita = process.env.NEXT_PUBLIC_BASE_BERITA_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -90,7 +91,7 @@ const BeritaDetail = ({ params }) => {
     })
 
     try {
-      const response = await axios.put(`https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita/update/${idBerita}`, formData, {
+      const response = await axios.put(`${baseUrlBerita}/update/${idBerita}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

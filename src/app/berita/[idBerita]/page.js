@@ -26,6 +26,7 @@ const BeritaDetail = ({ params }) => {
   const [error, setError] = useState(null);
   const [isSuccessDelete, setIsSuccessDelete] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const baseUrlBerita = process.env.NEXT_PUBLIC_BASE_BERITA_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -78,7 +79,7 @@ const BeritaDetail = ({ params }) => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita/delete/${idBerita}`);
+      await axios.delete(`${baseUrlBerita}/delete/${idBerita}`);
       setIsSuccessDelete(true);
       setShowDeleteConfirmation(false);
     } catch (error) {

@@ -23,6 +23,7 @@ const ViewAllInventory = () => {
   const [itemToDeleteId, setItemToDeleteId] = useState('');
   const [deleteSuccess, setDeleteSuccess] = useState(false); // State untuk menandai penghapusan berhasil
   const itemsPerPage = 6;
+  const baseUrlInventaris = process.env.NEXT_PUBLIC_BASE_INVENTARIS_API
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -62,7 +63,7 @@ const ViewAllInventory = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://myjisc-inventaris-146c107038ee.herokuapp.com/api/inventory/delete/${itemToDeleteId}`);
+      await axios.delete(`${baseUrlInventaris}/delete/${itemToDeleteId}`);
       // Set state deleteSuccess menjadi true untuk menandai penghapusan berhasil
       setDeleteSuccess(true);
     } catch (error) {
