@@ -21,9 +21,7 @@ const Navbar = ({ role, id }) => {
     }, [id]);
 
     const handleLogout = () => {
-        // Clear session storage or remove the token
         sessionStorage.removeItem('jwtToken');
-        // Redirect to login page or home page
         window.location.href = '/user/login';
     };
 
