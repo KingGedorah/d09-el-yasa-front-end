@@ -122,9 +122,7 @@ const PeminjamanList = () => {
 
   return (
     <div>
-      {decodedToken && decodedToken.role === 'STAFF' && <Navbar role={decodedToken.id} />}  
-      {decodedToken && decodedToken.role === 'MURID' && <Navbarmurid role={decodedToken.id} />}
-      {decodedToken && decodedToken.role === 'ADMIN' && <Navbaradmin role={decodedToken.id} />}  
+      <Navbar role={role} id={id} />
 
       <div className="mx-auto mt-8 px-12 rounded-lg mb-32">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
