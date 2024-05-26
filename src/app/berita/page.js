@@ -91,7 +91,7 @@ const BeritaList = () => {
     let indexOfFirstBerita = indexOfLastBerita - beritasPerPage;
     let currentBeritas = beritas.filter(berita => {
       let containsCategory = selectedCategory ? (Array.isArray(berita.kategori) && berita.kategori.includes(selectedCategory)) : true;
-      let containsQuery = query ? berita.judulBerita.toLowerCase().includes(query.toLowerCase()) : true;
+      let containsQuery = query ? (berita.judulBerita.toLowerCase().includes(query.toLowerCase()) || berita.isiBerita.toLowerCase().includes(query.toLowerCase())) :true;
       return containsCategory && containsQuery;
     });
 

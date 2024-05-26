@@ -14,6 +14,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Navbarguru from '@/app/components/navbarguru';
 import Navbaradmin from '@/app/components/navbaradmin';
+import { getAllBeritas } from '@/app/api/berita';
 
 const CreateBerita = () => {
   const [id, setId] = useState('');
@@ -25,6 +26,7 @@ const CreateBerita = () => {
   const [kategori, setKategori] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isDuplicate, setIsDuplicate] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
@@ -51,14 +53,21 @@ const CreateBerita = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('judulBerita', judulBerita);
-    formData.append('isiBerita', isiBerita);
-    formData.append('image', gambar);
-    kategori.forEach((kat) => {
-      formData.append('kategori[]', kat);
-    });
-
+    const beritasData = await getAllBeritas();
+    
     try {
+      console.log(beritasData)
+      beritasData.forEach(berita => {
+        if(berita.judulBerita.toLowerCase() === judulBerita.toLowerCase()){
+          throw new Error('Title is the same with an existing one')
+        }
+      })
+      formData.append('judulBerita', judulBerita);
+      formData.append('isiBerita', isiBerita);
+      formData.append('image', gambar);
+      kategori.forEach((kat) => {
+        formData.append('kategori[]', kat);
+      });
       const response = await axios.post('https://myjisc-berita-e694a34d5b58.herokuapp.com/api/berita/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -71,7 +80,12 @@ const CreateBerita = () => {
       setGambar(null);
       setKategori([]);
     } catch (error) {
-      setIsError(true);
+      if (error.message === "Title is the same with an existing one") {
+        setIsDuplicate(true)
+      }
+      else{
+        setIsError(true);
+      }
     }
   };
 
@@ -82,6 +96,10 @@ const CreateBerita = () => {
 
   const handleErrorPopup = () => {
     setIsError(false);
+  };
+
+  const handleDuplicatePopup = () => {
+    setIsDuplicate(false);
   };
 
   const handleCheckboxChange = (e) => {
@@ -175,6 +193,15 @@ const CreateBerita = () => {
           <div className="bg-white p-8 rounded-lg shadow-md absolute">
             <p className="text-red-600 font-semibold">Gagal membuat berita!</p>
             <button onClick={handleErrorPopup} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center mx-auto">Close</button>
+          </div>
+        </div>
+      )}
+      {isDuplicate && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-md absolute">
+            <h2 className="text-black font-bold">Title is already used</h2>
+            <p className="text-grey-600 font-semibold">Title must be unique</p>
+            <button onClick={handleDuplicatePopup} className="mt-4 bg-[#6C80FF] text-white py-2 px-4 rounded-md transition duration-300 flex items-center justify-center mx-auto">Close</button>
           </div>
         </div>
       )}
