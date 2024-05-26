@@ -47,10 +47,7 @@ const DetailPeminjaman = (params) => {
   useEffect(() => {
     const token = sessionStorage.getItem('jwtToken');
     if (token) {
-      decoded = parseJwt(token);
-      setDecodedToken(decoded);
-      setId(decoded.id);
-      setRole(decoded.role);
+      setDecodedToken(parseJwt(token));
     }
   }, []);
   
@@ -89,6 +86,8 @@ const DetailPeminjaman = (params) => {
   useEffect(() => {
     if (decodedToken) {
       if (decodedToken.role === 'MURID' || decodedToken.role === 'STAFF' || decodedToken.role === 'ADMIN') {
+        setId(decodedToken.id);
+        setRole(decodedToken.role);
         //Authorized
       } else {
         redirect(`/inventaris/view-all`);
